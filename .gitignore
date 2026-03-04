@@ -1,0 +1,11 @@
+/.idea/
+/vendor/
+/var/
+/.env.local
+/.phpunit.result.cache
+/node_modules/
+/public/build/
+/__MACOSX/
+/composer.phar
+.DS_Store
+.env
