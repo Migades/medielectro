@@ -1,87 +1,161 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Catálogo{% endblock %}
 
 {% block body %}
-    <div style="max-width: 1400px; margin: 0 auto; padding: 2rem; font-family: Arial, sans-serif;">
-        <h1 style="margin-bottom: 0.5rem;">Catálogo de productos</h1>
-        <p style="margin-bottom: 2rem; color: #666;">
-            Total productos: <strong>{{ totalProducts }}</strong>
-        </p>
 
-        <div style="overflow-x: auto; border: 1px solid #ddd; border-radius: 10px;">
-            <table style="width: 100%; border-collapse: collapse; min-width: 1100px;">
-                <thead style="background: #f5f5f5;">
-                <tr>
-                    <th style="text-align: left; padding: 12px; border-bottom: 1px solid #ddd;">Artículo</th>
-                    <th style="text-align: left; padding: 12px; border-bottom: 1px solid #ddd;">Modelo</th>
-                    <th style="text-align: left; padding: 12px; border-bottom: 1px solid #ddd;">Marca</th>
-                    <th style="text-align: left; padding: 12px; border-bottom: 1px solid #ddd;">Familia</th>
-                    <th style="text-align: left; padding: 12px; border-bottom: 1px solid #ddd;">Subfamilia</th>
-                    <th style="text-align: right; padding: 12px; border-bottom: 1px solid #ddd;">Precio</th>
-                    <th style="text-align: right; padding: 12px; border-bottom: 1px solid #ddd;">Stock</th>
-                    <th style="text-align: center; padding: 12px; border-bottom: 1px solid #ddd;">Activo</th>
-                    <th style="text-align: center; padding: 12px; border-bottom: 1px solid #ddd;">Obsoleto</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for product in products %}
-                    <tr style="border-bottom: 1px solid #eee;">
-                        <td style="padding: 12px;">{{ product.article }}</td>
-                        <td style="padding: 12px;">{{ product.model }}</td>
-                        <td style="padding: 12px;">{{ product.brand ?: '-' }}</td>
-                        <td style="padding: 12px;">{{ product.family ? product.family.name : '-' }}</td>
-                        <td style="padding: 12px;">{{ product.subfamily ? product.subfamily.name : '-' }}</td>
-                        <td style="padding: 12px; text-align: right;">
-                            {{ product.price|number_format(2, ',', '.') }} €
-                        </td>
-                        <td style="padding: 12px; text-align: right;">{{ product.stock }}</td>
-                        <td style="padding: 12px; text-align: center;">
-                            {% if product.isActive %}
-                                ✅
-                            {% else %}
-                                ❌
-                            {% endif %}
-                        </td>
-                        <td style="padding: 12px; text-align: center;">
-                            {% if product.obsolete %}
-                                ⚠️
-                            {% else %}
-                                —
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="9" style="padding: 20px; text-align: center;">
-                            No hay productos.
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+    <section class="section">
+        <div class="section-title">
+            <div>
+                <h2>Catálogo</h2>
+                <p>{{ totalProducts }} productos · busca y filtra</p>
+            </div>
         </div>
 
-        {% if totalPages > 1 %}
-            <div style="display: flex; gap: 10px; align-items: center; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
-                {% if currentPage > 1 %}
-                    <a href="{{ path('app_catalog', {page: currentPage - 1}) }}"
-                       style="padding: 10px 14px; border: 1px solid #ccc; border-radius: 8px; text-decoration: none; color: #222;">
-                        ← Anterior
-                    </a>
-                {% endif %}
+        <div class="catalog-layout">
+            <aside class="card filters">
+                <form method="get" action="{{ path('app_catalog') }}">
+                    <div class="group">
+                        <label>Buscar</label>
+                        <input name="q" value="{{ filters.q }}" placeholder="Artículo, modelo, marca…">
+                    </div>
 
-                <span style="padding: 10px 14px;">
-                    Página <strong>{{ currentPage }}</strong> de <strong>{{ totalPages }}</strong>
-                </span>
+                    <div class="group">
+                        <label>Familia</label>
+                        <select name="family">
+                            <option value="0">Todas</option>
 
-                {% if currentPage < totalPages %}
-                    <a href="{{ path('app_catalog', {page: currentPage + 1}) }}"
-                       style="padding: 10px 14px; border: 1px solid #ccc; border-radius: 8px; text-decoration: none; color: #222;">
-                        Siguiente →
-                    </a>
+                            {# deduplicar por nombre #}
+                            {% set seenFamilies = [] %}
+                            {% for f in families %}
+                                {% set key = (f.name ?? '')|lower|trim %}
+                                {% if key and (key not in seenFamilies) %}
+                                    {% set seenFamilies = seenFamilies|merge([key]) %}
+                                    <option value="{{ f.id }}" {% if filters.family == f.id %}selected{% endif %}>
+                                        {{ f.name }}
+                                    </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="group">
+                        <label>Subfamilia</label>
+                        <select name="subfamily">
+                            <option value="0">Todas</option>
+
+                            {% set seenSub = [] %}
+                            {% for s in subfamilies %}
+                                {% set key = (s.name ?? '')|lower|trim %}
+                                {% if key and (key not in seenSub) %}
+                                    {% set seenSub = seenSub|merge([key]) %}
+                                    <option value="{{ s.id }}" {% if filters.subfamily == s.id %}selected{% endif %}>
+                                        {{ s.name }}
+                                    </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="group">
+                        <label>Marca</label>
+                        <select name="brand">
+                            <option value="">Todas</option>
+                            {% for item in brands %}
+                                <option value="{{ item }}" {% if filters.brand == item %}selected{% endif %}>
+                                    {{ item }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="group">
+                        <label>Ordenar por</label>
+                        <select name="sort">
+                            <option value="recent" {% if filters.sort == 'recent' %}selected{% endif %}>Más recientes</option>
+                            <option value="price_asc" {% if filters.sort == 'price_asc' %}selected{% endif %}>Precio: menor a mayor</option>
+                            <option value="price_desc" {% if filters.sort == 'price_desc' %}selected{% endif %}>Precio: mayor a menor</option>
+                            <option value="stock_desc" {% if filters.sort == 'stock_desc' %}selected{% endif %}>Mayor stock</option>
+                            <option value="brand_asc" {% if filters.sort == 'brand_asc' %}selected{% endif %}>Marca A-Z</option>
+                        </select>
+                    </div>
+
+                    <div class="group">
+                        <label>
+                            <input type="checkbox" name="inStock" value="1" {% if filters.inStock == 1 %}checked{% endif %}>
+                            Solo con stock
+                        </label>
+                    </div>
+
+                    <button class="btn btn-primary" type="submit" style="width:100%;">Aplicar filtros</button>
+
+                    <div style="margin-top:10px;">
+                        <a class="btn" href="{{ path('app_catalog') }}" style="width:100%; justify-content:center;">Limpiar</a>
+                    </div>
+                </form>
+            </aside>
+
+            <section>
+                <div class="grid catalog-grid">
+                    {% for p in products %}
+                        <a class="card product-card" href="{{ path('app_product_show', {article: p.article}) }}">
+                            <div class="product-image">
+                                {% if p.image %}
+                                    <img src="{{ p.image }}" alt="{{ p.model }}">
+                                {% else %}
+                                    <div class="product-image-placeholder">
+                                        <span>📦</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="product-top">
+                                <div class="badge"><span class="dot"></span> {{ p.brand ?: 'Marca' }}</div>
+                                <div class="product-ref">Ref. {{ p.article }}</div>
+                            </div>
+
+                            <div class="product-title">{{ p.model }}</div>
+
+                            <div class="product-meta">
+                                <span class="muted">{{ p.family ? p.family.name : '' }}</span>
+                            </div>
+
+                            <div class="product-bottom">
+                                <div class="product-price">
+                                    {{ p.price|number_format(2, ',', '.') }} €
+                                </div>
+
+                                {% if p.stock > 0 %}
+                                    <div class="product-stock ok">Disponible</div>
+                                {% else %}
+                                    <div class="product-stock warn">Consultar</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="product-cta">
+                                <span class="btn btn-primary" style="width:100%; justify-content:center;">Ver detalle</span>
+                            </div>
+                        </a>
+                    {% else %}
+                        <div class="card">No hay resultados con esos filtros.</div>
+                    {% endfor %}
+                </div>
+
+                {% if totalPages > 1 %}
+                    <div class="pagination">
+                        {% set params = filters|merge({}) %}
+                        {% if currentPage > 1 %}
+                            <a href="{{ path('app_catalog', params|merge({page: currentPage - 1})) }}">← Anterior</a>
+                        {% endif %}
+
+                        <span class="pill">Página {{ currentPage }} / {{ totalPages }}</span>
+
+                        {% if currentPage < totalPages %}
+                            <a href="{{ path('app_catalog', params|merge({page: currentPage + 1})) }}">Siguiente →</a>
+                        {% endif %}
+                    </div>
                 {% endif %}
-            </div>
-        {% endif %}
-    </div>
+            </section>
+        </div>
+    </section>
+
 {% endblock %}
