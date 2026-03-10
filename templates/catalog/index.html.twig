@@ -2,12 +2,11 @@
 {% block title %}Catálogo{% endblock %}
 
 {% block body %}
-
     <section class="section">
         <div class="section-title">
             <div>
                 <h2>Catálogo</h2>
-                <p>{{ totalProducts }} productos · busca y filtra</p>
+                <p>{{ totalProducts }} productos</p>
             </div>
         </div>
 
@@ -16,41 +15,19 @@
                 <form method="get" action="{{ path('app_catalog') }}">
                     <div class="group">
                         <label>Buscar</label>
-                        <input name="q" value="{{ filters.q }}" placeholder="Artículo, modelo, marca…">
+                        <input name="q" value="{{ filters.q }}" placeholder="Buscar por modelo o marca…">
                     </div>
 
                     <div class="group">
-                        <label>Familia</label>
+                        <label>Categoría</label>
                         <select name="family">
                             <option value="0">Todas</option>
-
-                            {# deduplicar por nombre #}
                             {% set seenFamilies = [] %}
                             {% for f in families %}
                                 {% set key = (f.name ?? '')|lower|trim %}
                                 {% if key and (key not in seenFamilies) %}
                                     {% set seenFamilies = seenFamilies|merge([key]) %}
-                                    <option value="{{ f.id }}" {% if filters.family == f.id %}selected{% endif %}>
-                                        {{ f.name }}
-                                    </option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="group">
-                        <label>Subfamilia</label>
-                        <select name="subfamily">
-                            <option value="0">Todas</option>
-
-                            {% set seenSub = [] %}
-                            {% for s in subfamilies %}
-                                {% set key = (s.name ?? '')|lower|trim %}
-                                {% if key and (key not in seenSub) %}
-                                    {% set seenSub = seenSub|merge([key]) %}
-                                    <option value="{{ s.id }}" {% if filters.subfamily == s.id %}selected{% endif %}>
-                                        {{ s.name }}
-                                    </option>
+                                    <option value="{{ f.id }}" {% if filters.family == f.id %}selected{% endif %}>{{ f.name }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
@@ -61,33 +38,28 @@
                         <select name="brand">
                             <option value="">Todas</option>
                             {% for item in brands %}
-                                <option value="{{ item }}" {% if filters.brand == item %}selected{% endif %}>
-                                    {{ item }}
-                                </option>
+                                <option value="{{ item }}" {% if filters.brand == item %}selected{% endif %}>{{ item }}</option>
                             {% endfor %}
                         </select>
                     </div>
 
                     <div class="group">
-                        <label>Ordenar por</label>
+                        <label>Ordenar</label>
                         <select name="sort">
-                            <option value="recent" {% if filters.sort == 'recent' %}selected{% endif %}>Más recientes</option>
+                            <option value="recent" {% if filters.sort == 'recent' %}selected{% endif %}>Recomendados</option>
                             <option value="price_asc" {% if filters.sort == 'price_asc' %}selected{% endif %}>Precio: menor a mayor</option>
                             <option value="price_desc" {% if filters.sort == 'price_desc' %}selected{% endif %}>Precio: mayor a menor</option>
-                            <option value="stock_desc" {% if filters.sort == 'stock_desc' %}selected{% endif %}>Mayor stock</option>
-                            <option value="brand_asc" {% if filters.sort == 'brand_asc' %}selected{% endif %}>Marca A-Z</option>
                         </select>
                     </div>
 
                     <div class="group">
                         <label>
                             <input type="checkbox" name="inStock" value="1" {% if filters.inStock == 1 %}checked{% endif %}>
-                            Solo con stock
+                            Solo disponibles
                         </label>
                     </div>
 
-                    <button class="btn btn-primary" type="submit" style="width:100%;">Aplicar filtros</button>
-
+                    <button class="btn btn-primary" type="submit" style="width:100%;">Aplicar</button>
                     <div style="margin-top:10px;">
                         <a class="btn" href="{{ path('app_catalog') }}" style="width:100%; justify-content:center;">Limpiar</a>
                     </div>
@@ -102,21 +74,24 @@
                                 {% if p.image %}
                                     <img src="{{ p.image }}" alt="{{ p.model }}">
                                 {% else %}
-                                    <div class="product-image-placeholder">
-                                        <span>📦</span>
-                                    </div>
+                                    <div class="product-image-placeholder">📦</div>
                                 {% endif %}
                             </div>
 
-                            <div class="product-top">
-                                <div class="badge"><span class="dot"></span> {{ p.brand ?: 'Marca' }}</div>
-                                <div class="product-ref">Ref. {{ p.article }}</div>
+                            <div class="product-brand">{{ p.brand ?: 'Marca' }}</div>
+
+                            {# Título más humano: description si existe, si no "Producto <marca>" #}
+                            <div class="product-title">
+                                {% if p.description is not empty %}
+                                    {{ p.description|striptags|u.truncate(60, '…') }}
+                                {% else %}
+                                    Producto {{ p.brand ?: '' }}
+                                {% endif %}
                             </div>
 
-                            <div class="product-title">{{ p.model }}</div>
-
-                            <div class="product-meta">
-                                <span class="muted">{{ p.family ? p.family.name : '' }}</span>
+                            {# Modelo en pequeño para quien lo necesite #}
+                            <div class="product-subtitle">
+                                Modelo: {{ p.model }}
                             </div>
 
                             <div class="product-bottom">
@@ -125,9 +100,9 @@
                                 </div>
 
                                 {% if p.stock > 0 %}
-                                    <div class="product-stock ok">Disponible</div>
+                                    <span class="product-stock ok">Disponible</span>
                                 {% else %}
-                                    <div class="product-stock warn">Consultar</div>
+                                    <span class="product-stock warn">Consultar</span>
                                 {% endif %}
                             </div>
 
@@ -157,5 +132,4 @@
             </section>
         </div>
     </section>
-
 {% endblock %}
