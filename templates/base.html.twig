@@ -1,17 +1,61 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Medielectro{% endblock %}</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <div class="header-top">
+            <a class="logo" href="{{ path('app_home') }}">
+                <img class="logo-img" src="/assets/logo1-mediaelectro.webp" alt="Medielectro">
+            </a>
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+            <form class="search" action="{{ path('app_catalog') }}" method="get">
+                <span style="color:var(--muted)"></span>
+                <input name="q" value="{{ app.request.query.get('q') }}" placeholder="Buscar por artículo, modelo, marca o descripción…">
+            </form>
+
+            <div class="header-actions">
+                <span class="pill">📞 96 350 16 75</span>
+                <a class="btn btn-primary" href="#contacto">Pedir presupuesto</a>
+            </div>
+        </div>
+
+        <nav class="nav">
+            <a href="{{ path('app_home') }}">Inicio</a>
+            <a href="{{ path('app_catalog') }}">Catálogo</a>
+            <a href="#">Reparación</a>
+            <a href="#">Instalación</a>
+            <a href="#">Servicios</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    {% block body %}{% endblock %}
+</main>
+
+<footer class="footer" id="contacto">
+    <div class="container" style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+        <div>
+            <strong style="color:var(--text)">Medielectro</strong><br>
+            Electricidad y reparación de electrodomésticos · Valencia
+        </div>
+        <div>
+            <div> info@medielectro.es</div>
+            <div> 96 350 16 75</div>
+        </div>
+        <div>
+            <a href="#" style="margin-right:10px;">Aviso legal</a>
+            <a href="#" style="margin-right:10px;">Privacidad</a>
+            <a href="#">Cookies</a>
+        </div>
+    </div>
+</footer>
+</body>
 </html>
