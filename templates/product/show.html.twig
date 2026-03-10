@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ product.model }}{% endblock %}
+
+{% block body %}
+    <section class="section">
+        <div class="card" style="padding:18px;">
+            <div style="display:grid; grid-template-columns: 420px 1fr; gap:18px;">
+                <div>
+                    <div class="product-image" style="aspect-ratio: 1 / 1;">
+                        {% if product.image %}
+                            <img src="{{ product.image }}" alt="{{ product.model }}">
+                        {% else %}
+                            <div class="product-image-placeholder"><span>📦</span></div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    <div class="badge"><span class="dot"></span> {{ product.brand ?: 'Marca' }}</div>
+                    <h1 style="margin:10px 0 6px 0;">{{ product.model }}</h1>
+                    <p style="margin:0; color:var(--muted);">
+                        Ref. {{ product.article }}
+                        {% if product.family %} · {{ product.family.name }}{% endif %}
+                        {% if product.subfamily %} / {{ product.subfamily.name }}{% endif %}
+                    </p>
+
+                    <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                        <span class="pill"><strong>{{ product.price|number_format(2, ',', '.') }} €</strong></span>
+                        {% if product.stock > 0 %}
+                            <span class="pill">Disponible</span>
+                        {% else %}
+                            <span class="pill">Consultar disponibilidad</span>
+                        {% endif %}
+                    </div>
+
+                    <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+                        <a class="btn btn-primary" href="#contacto">Pedir presupuesto</a>
+                        <a class="btn" href="{{ path('app_catalog') }}">Volver al catálogo</a>
+                    </div>
+
+                    {% if product.description %}
+                        <div style="margin-top:20px;">
+                            <h3 style="margin:0 0 8px 0;">Descripción</h3>
+                            <p style="margin:0; color:var(--muted);">{{ product.description }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="margin-top:20px;" class="card">
+                <h3 style="margin:0 0 10px 0;">Información técnica</h3>
+                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; font-size:14px; color:var(--muted);">
+                    <div><strong style="color:var(--text)">EAN:</strong> {{ product.ean ?: '-' }}</div>
+                    <div><strong style="color:var(--text)">PVPR:</strong> {{ product.pvpr ?: '-' }}</div>
+                    <div><strong style="color:var(--text)">Canon digital:</strong> {{ product.digitalCanon ?: '-' }}</div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

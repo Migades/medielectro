@@ -61,6 +61,9 @@ class Product
     #[ORM\JoinColumn(nullable: false)]
     private ?Subfamily $subfamily = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -242,6 +245,18 @@ class Product
     public function setSubfamily(?Subfamily $subfamily): static
     {
         $this->subfamily = $subfamily;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

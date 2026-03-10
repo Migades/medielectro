@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+{% block title %}Medielectro{% endblock %}
+
+{% block body %}
+
+    <section class="hero-banner">
+        <div class="hero-banner__main">
+            <div class="hero-banner__overlay"></div>
+
+            <div class="hero-banner__content">
+                <span class="hero-banner__tag">Catálogo actualizado a diario</span>
+
+                <h1>Electrodomésticos, repuestos y servicio técnico en un solo lugar</h1>
+
+                <p>
+                    Encuentra productos por marca, modelo o categoría.
+                    Compra con más claridad y consulta instalación o reparación cuando lo necesites.
+                </p>
+
+                <div class="hero-banner__actions">
+                    <a class="btn btn-primary" href="{{ path('app_catalog') }}">Ver catálogo</a>
+                    <a class="btn" href="#servicios">Ver servicios</a>
+                </div>
+
+                <div class="hero-banner__badges">
+                    <span class="hero-badge"> Venta</span>
+                    <span class="hero-badge"> Reparación</span>
+                    <span class="hero-badge"> Instalación</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-side-card hero-side-card--accent">
+            <span class="hero-side-card__eyebrow">Servicio e instalación</span>
+            <h3>Instalamos y reparamos tus electrodomésticos</h3>
+            <p>
+                Te asesoramos, instalamos y reparamos. Si necesitas ayuda con la compra o una avería,
+                contacta y te orientamos.
+            </p>
+            <a class="btn btn-primary" href="#servicios">Ver servicios</a>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-title">
+            <div>
+                <h2>Categorías destacadas</h2>
+                <p>Accesos rápidos a las familias principales del catálogo</p>
+            </div>
+            <a class="btn" href="{{ path('app_catalog') }}">Ver todo</a>
+        </div>
+
+        <div class="family-grid">
+            {% for family in families %}
+                <a class="family-card" href="{{ path('app_catalog', {family: family.id}) }}">
+                    <div class="family-card__icon">⚡</div>
+                    <div class="family-card__name">{{ family.name }}</div>
+                    <div class="family-card__link">Explorar categoría →</div>
+                </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-title">
+            <div>
+                <h2>Productos destacados</h2>
+                <p>Selección rápida con disponibilidad</p>
+            </div>
+            <a class="btn" href="{{ path('app_catalog', {inStock: 1}) }}">Ver más</a>
+        </div>
+
+        <div class="retail-grid">
+            {% for p in featuredProducts %}
+                <a class="retail-card" href="{{ path('app_product_show', {article: p.article}) }}">
+                    <div class="retail-card__image">
+                        {% if p.image %}
+                            <img src="{{ p.image }}" alt="{{ p.model }}">
+                        {% else %}
+                            <div class="retail-card__placeholder">💶</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="retail-card__brand">{{ p.brand ?: 'Marca' }}</div>
+                    <div class="retail-card__title">{{ p.model }}</div>
+                    <div class="retail-card__meta">{{ p.family ? p.family.name : '' }}</div>
+
+                    <div class="retail-card__bottom">
+                        <strong class="retail-card__price">{{ p.price|number_format(2, ',', '.') }} €</strong>
+
+                        {% if p.stock > 0 %}
+                            <span class="stock-chip stock-chip--ok">Disponible</span>
+                        {% else %}
+                            <span class="stock-chip stock-chip--warn">Consultar</span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% else %}
+                <div class="card">No hay productos destacados para mostrar.</div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="section" id="servicios">
+        <div class="section-title">
+            <div>
+                <h2>Nuestros servicios</h2>
+                <p>Más allá del catálogo: venta, instalación y reparación</p>
+            </div>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-card__icon">🛠️</div>
+                <h3>Reparación</h3>
+                <p>Diagnóstico y reparación de electrodomésticos con atención especializada.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-card__icon">🚚</div>
+                <h3>Instalación</h3>
+                <p>Instalación profesional y logística para una entrega más cómoda y segura.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-card__icon">🛒</div>
+                <h3>Venta</h3>
+                <p>Catálogo amplio de electrodomésticos, repuestos y productos relacionados.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="trust-banner">
+            <div>
+                <span class="home-tag">¿Necesitas ayuda?</span>
+                <h2>Te ayudamos a encontrar el producto adecuado o a resolver una avería</h2>
+                <p>Si no sabes exactamente qué buscar, contacta y te orientamos.</p>
+            </div>
+
+            <div class="trust-banner__actions">
+                <a class="btn btn-primary" href="{{ path('app_catalog') }}">Ir al catálogo</a>
+                <a class="btn" href="#contacto">Contactar</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-title">
+            <div>
+                <h2>Últimos productos añadidos</h2>
+                <p>Una muestra rápida de lo más reciente en catálogo</p>
+            </div>
+        </div>
+
+        <div class="mini-grid">
+            {% for p in latestProducts %}
+                <a class="mini-card" href="{{ path('app_product_show', {article: p.article}) }}">
+                    <div class="mini-card__title">{{ p.model }}</div>
+                    <div class="mini-card__meta">{{ p.brand ?: 'Marca' }}</div>
+                    <div class="mini-card__price">{{ p.price|number_format(2, ',', '.') }} €</div>
+                </a>
+            {% endfor %}
+        </div>
+    </section>
+
+{% endblock %}
