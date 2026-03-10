@@ -88,6 +88,17 @@ class CatalogController extends AbstractController
             ->orderBy('f.name', 'ASC')
             ->getQuery()
             ->getResult();
+        // Filtrar familias no vendibles (internas)
+        $blockedFamilies = [
+            'CARGO PUBLICIDAD CLIENTES',
+            'MERCHANDISING',
+            'MATERIAL PROTECCION',
+        ];
+
+        $families = array_values(array_filter($families, static function ($f) use ($blockedFamilies) {
+            $name = mb_strtoupper(trim((string) $f->getName()));
+            return $name !== '' && !in_array($name, $blockedFamilies, true);
+        }));
 
         $subQb = $em->getRepository(Subfamily::class)->createQueryBuilder('s')
             ->leftJoin('s.family', 'f')->addSelect('f')
