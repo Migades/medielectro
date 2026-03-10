@@ -65,7 +65,7 @@ class ImportCsvCommand extends Command
         $importedRows = 0;
         $errorRows = 0;
 
-        $batchSize = 500;
+        $batchSize = 200;
 
         try {
             $handle = fopen($file, 'r');
@@ -184,6 +184,10 @@ class ImportCsvCommand extends Command
                     $product->setModel($model);
                     $product->setEan($ean);
                     $product->setDescription($description);
+
+                    // ✅ TITLE (cara al usuario): description -> (brand + family + model)
+                    $product->setTitle($this->buildTitleFromValues($description, $brand, $model, $familyName));
+
                     $product->setBrand($brand);
                     $product->setPrice($price);
                     $product->setStock($stock);
@@ -351,5 +355,31 @@ class ImportCsvCommand extends Command
         }
 
         return $result;
+    }
+
+    // ========= NUEVO: helpers para title "cara usuario" =========
+
+    private function cleanText(?string $v): string
+    {
+        $v = trim((string) $v);
+        $v = preg_replace('/\s+/', ' ', $v);
+        return $v;
+    }
+
+    private function buildTitleFromValues(?string $description, ?string $brand, ?string $model, ?string $familyName): string
+    {
+        $desc = $this->cleanText($description);
+        if ($desc !== '') {
+            return $desc;
+        }
+
+        $b = $this->cleanText($brand);
+        $m = $this->cleanText($model);
+        $f = $this->cleanText($familyName);
+
+        // Plan B si no hay descripción: algo legible
+        $title = trim(($b !== '' ? $b : 'Producto') . ' ' . ($f !== '' ? $f : '') . ' ' . $m);
+
+        return trim($title) !== '' ? trim($title) : 'Producto';
     }
 }
