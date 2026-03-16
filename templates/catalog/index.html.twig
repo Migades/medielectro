@@ -80,13 +80,9 @@
 
                             <div class="product-brand">{{ p.brand ?: 'Marca' }}</div>
 
-                            {# Título más humano: description si existe, si no "Producto <marca>" #}
+                            {# ✅ Título comercial (siempre relleno desde CSV) #}
                             <div class="product-title">
-                                {% if p.description is not empty %}
-                                    {{ p.description|striptags|u.truncate(60, '…') }}
-                                {% else %}
-                                    Producto {{ p.brand ?: '' }}
-                                {% endif %}
+                                {{ p.title|striptags|u.truncate(60, '…') }}
                             </div>
 
                             {# Modelo en pequeño para quien lo necesite #}
@@ -99,7 +95,8 @@
                                     {{ p.price|number_format(2, ',', '.') }} €
                                 </div>
 
-                                {% if p.stock > 0 %}
+                                {# ✅ Regla del jefe: disponible solo con 5+ unidades #}
+                                {% if p.stock >= 5 %}
                                     <span class="product-stock ok">Disponible</span>
                                 {% else %}
                                     <span class="product-stock warn">Consultar</span>

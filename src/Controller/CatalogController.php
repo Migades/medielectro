@@ -35,8 +35,13 @@ class CatalogController extends AbstractController
             ->andWhere('p.isActive = true');
 
         if ($q !== '') {
-            $qb->andWhere('(p.article ILIKE :q OR p.model ILIKE :q OR p.brand ILIKE :q OR p.description ILIKE :q)')
-                ->setParameter('q', '%' . $q . '%');
+            $qb->andWhere('(
+                LOWER(p.article) LIKE :q
+                OR LOWER(p.model) LIKE :q
+                OR LOWER(p.brand) LIKE :q
+                OR LOWER(p.description) LIKE :q
+            )')
+                ->setParameter('q', '%' . mb_strtolower($q) . '%');
         }
 
         if ($familyId > 0) {
@@ -47,8 +52,10 @@ class CatalogController extends AbstractController
             $qb->andWhere('s.id = :sid')->setParameter('sid', $subfamilyId);
         }
 
+        // ✅ Regla jefe: "Solo disponibles" = stock >= 5
         if ($inStock === 1) {
-            $qb->andWhere('p.stock > 0');
+            $qb->andWhere('p.stock >= :minStock')
+                ->setParameter('minStock', 5);
         }
 
         if ($brand !== '') {
@@ -88,6 +95,7 @@ class CatalogController extends AbstractController
             ->orderBy('f.name', 'ASC')
             ->getQuery()
             ->getResult();
+
         // Filtrar familias no vendibles (internas)
         $blockedFamilies = [
             'CARGO PUBLICIDAD CLIENTES',
