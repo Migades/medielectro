@@ -1,132 +1,940 @@
 {% extends 'base.html.twig' %}
-{% block title %}Catálogo{% endblock %}
+{% block title %}Catálogo · Medielectro{% endblock %}
 
 {% block body %}
+    <style>
+        /* ════════════════════════════════════════════
+           CATÁLOGO — estilos propios
+           ════════════════════════════════════════════ */
+
+        /* ── Layout principal ── */
+        .catalog-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 18px;
+            align-items: start;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            position: sticky;
+            top: 168px;
+            max-height: calc(100vh - 184px);
+            display: flex;
+            flex-direction: column;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .sidebar__header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar__title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .sidebar__clear {
+            font-size: 12px;
+            color: var(--brand);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .sidebar__clear:hover { text-decoration: underline; }
+
+        .sidebar__body {
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+        .sidebar__body::-webkit-scrollbar { width: 4px; }
+        .sidebar__body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+        /* ── Grupos de filtro ── */
+        .filter-group__label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .filter-input {
+            width: 100%;
+            border: 1px solid var(--border);
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 9px 12px;
+            font-size: 13px;
+            color: var(--text);
+            outline: none;
+            transition: border-color .15s;
+        }
+
+        .filter-input:focus { border-color: var(--brand); background: #fff; }
+
+        /* Disponibilidad toggle */
+        .stock-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #f9fafb;
+            cursor: pointer;
+            transition: background .15s, border-color .15s;
+        }
+
+        .stock-toggle:has(input:checked) {
+            background: #effbf3;
+            border-color: #b7ebc6;
+        }
+
+        .stock-toggle input { display: none; }
+
+        .stock-toggle__track {
+            width: 34px;
+            height: 20px;
+            border-radius: 999px;
+            background: #d1d5db;
+            position: relative;
+            flex-shrink: 0;
+            transition: background .2s;
+        }
+
+        .stock-toggle:has(input:checked) .stock-toggle__track { background: #22c55e; }
+
+        .stock-toggle__thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: white;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: left .2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,.2);
+        }
+
+        .stock-toggle:has(input:checked) .stock-toggle__thumb { left: 17px; }
+
+        .stock-toggle__text { font-size: 13px; font-weight: 600; color: var(--text); }
+
+        /* ── Slider de precio ── */
+        .price-range { display: flex; flex-direction: column; gap: 10px; }
+
+        .price-range__values {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .price-range__val {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 10px;
+            min-width: 0;
+            flex: 1;
+            transition: border-color .15s;
+        }
+
+        .price-range__val:focus-within {
+            border-color: var(--brand);
+            background: #fff;
+        }
+
+        .price-range__symbol { font-size: 13px; color: var(--muted); flex-shrink: 0; }
+
+        .price-range__input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            width: 100%;
+            min-width: 0;
+            -moz-appearance: textfield;
+        }
+
+        .price-range__input::-webkit-outer-spin-button,
+        .price-range__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+        .price-range__sep { color: var(--muted); font-size: 12px; flex-shrink: 0; }
+
+        .price-range__track {
+            position: relative;
+            height: 28px;
+            display: flex;
+            align-items: center;
+        }
+
+        .price-range__rail {
+            width: 100%;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 999px;
+            position: absolute;
+        }
+
+        .price-range__fill {
+            position: absolute;
+            height: 4px;
+            background: var(--brand);
+            border-radius: 999px;
+            pointer-events: none;
+        }
+
+        .price-range__track input[type=range] {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            -webkit-appearance: none;
+            appearance: none;
+            pointer-events: none;
+            outline: none;
+        }
+
+        .price-range__track input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--brand);
+            box-shadow: 0 1px 4px rgba(0,0,0,.15);
+            pointer-events: all;
+            cursor: grab;
+            transition: transform .1s;
+        }
+
+        .price-range__track input[type=range]::-webkit-slider-thumb:active { transform: scale(1.15); cursor: grabbing; }
+        .price-range__track input[type=range]::-moz-range-thumb {
+            width: 18px; height: 18px; border-radius: 50%;
+            background: white; border: 2px solid var(--brand);
+            box-shadow: 0 1px 4px rgba(0,0,0,.15);
+            pointer-events: all; cursor: grab;
+        }
+
+        /* ── Botón aplicar ── */
+        .sidebar__apply {
+            width: 100%;
+            background: var(--brand);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 11px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity .15s;
+        }
+
+        .sidebar__apply:hover { opacity: .88; }
+
+        /* ── Chips de filtros activos ── */
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--brand);
+            text-decoration: none;
+            transition: background .15s;
+        }
+
+        .filter-chip:hover { background: #ffe4e6; }
+
+        .filter-chip__x { font-size: 14px; line-height: 1; font-weight: 400; }
+
+        /* ── Toolbar ── */
+        .catalog-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .catalog-toolbar__count { font-size: 13px; color: var(--muted); }
+
+        .toolbar-sort {
+            border: 1px solid var(--border);
+            background: var(--card);
+            border-radius: 10px;
+            padding: 8px 32px 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            transition: border-color .15s;
+        }
+
+        .toolbar-sort:hover { border-color: #9ca3af; }
+        .toolbar-sort:focus { border-color: var(--brand); }
+
+        .view-toggle { display: flex; gap: 2px; background: #f3f4f6; border-radius: 10px; padding: 3px; }
+
+        .view-toggle__btn {
+            display: flex; align-items: center; justify-content: center;
+            width: 34px; height: 34px;
+            border: none; background: transparent; border-radius: 8px;
+            color: var(--muted); cursor: pointer;
+            transition: background .15s, color .15s;
+        }
+
+        .view-toggle__btn:hover { background: rgba(0,0,0,.06); color: var(--text); }
+        .view-toggle__btn.active { background: var(--card); color: var(--text); box-shadow: 0 1px 4px rgba(17,24,39,.10); }
+
+        /* ── Grid de productos ── */
+        #productGrid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        /* ── Tarjeta GRID — rediseñada ── */
+        .product-card--grid {
+            display: flex;
+            flex-direction: column;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: box-shadow .18s, transform .18s;
+            text-decoration: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        .product-card--grid:hover {
+            box-shadow: 0 8px 28px rgba(17,24,39,.10);
+            transform: translateY(-2px);
+        }
+
+        .pc-image {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .pc-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .pc-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            height: 100%;
+            color: #c8d0da;
+        }
+
+        .pc-placeholder__icon {
+            font-size: 36px;
+            opacity: .5;
+        }
+
+        .pc-placeholder__brand {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            color: #b0b8c4;
+        }
+
+        .pc-stock-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 999px;
+        }
+
+        .pc-stock-badge--ok  { background: #effbf3; color: #15803d; border: 1px solid #b7ebc6; }
+        .pc-stock-badge--warn { background: #fff7ea; color: #92400e; border: 1px solid #ffe2b5; }
+
+        .pc-body { padding: 12px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+
+        .pc-brand {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: var(--muted);
+        }
+
+        .pc-title {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--text);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .pc-ref {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .pc-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        .pc-price {
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: -.5px;
+            color: var(--text);
+        }
+
+        .pc-cta {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--brand);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            white-space: nowrap;
+        }
+
+        /* ── Vista LISTA ── */
+        .product-row { display: none; }
+
+        #productGrid.is-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        #productGrid.is-list .product-card--grid { display: none; }
+
+        #productGrid.is-list .product-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            transition: box-shadow .15s;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        #productGrid.is-list .product-row:hover { box-shadow: 0 4px 16px rgba(17,24,39,.08); }
+
+        .pr-image {
+            flex: 0 0 72px; width: 72px; height: 72px;
+            border-radius: 10px; overflow: hidden;
+            background: #f8fafc; border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .pr-image img { width: 100%; height: 100%; object-fit: cover; }
+        .pr-placeholder { font-size: 24px; color: #c8d0da; }
+
+        .pr-info { flex: 1; min-width: 0; }
+
+        .pr-brand { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); margin-bottom: 3px; }
+
+        .pr-title { font-weight: 700; font-size: 14px; line-height: 1.3; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .pr-meta { font-size: 12px; color: var(--muted); }
+
+        .pr-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+
+        .pr-price { font-weight: 900; font-size: 17px; letter-spacing: -.3px; white-space: nowrap; }
+
+        .pr-stock { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 999px; }
+        .pr-stock--ok  { background: #effbf3; color: #15803d; border: 1px solid #b7ebc6; }
+        .pr-stock--warn { background: #fff7ea; color: #92400e; border: 1px solid #ffe2b5; }
+
+        .pr-cta { font-size: 12px; font-weight: 700; color: var(--brand); white-space: nowrap; }
+
+        /* ── Sin resultados ── */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--muted);
+        }
+
+        .empty-state__icon { font-size: 40px; margin-bottom: 12px; }
+        .empty-state__title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+        .empty-state__sub { font-size: 14px; }
+
+        /* ── Responsive ── */
+        @media (max-width: 980px) {
+            .catalog-layout { grid-template-columns: 1fr; }
+            .sidebar { position: static; }
+            #productGrid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 680px) {
+            #productGrid { grid-template-columns: 1fr; }
+            .pr-right .pr-cta { display: none; }
+            .pr-image { flex: 0 0 56px; width: 56px; height: 56px; }
+        }
+    </style>
+
     <section class="section">
-        <div class="section-title">
+        <div class="section-title" style="margin-bottom:16px;">
             <div>
-                <h2>Catálogo</h2>
-                <p>{{ totalProducts }} productos</p>
+                <h2 style="margin:0 0 2px 0;">Catálogo</h2>
+                <p style="margin:0; color:var(--muted); font-size:13px;">{{ totalProducts }} productos disponibles</p>
             </div>
         </div>
 
         <div class="catalog-layout">
-            <aside class="card filters">
-                <form method="get" action="{{ path('app_catalog') }}">
-                    <div class="group">
-                        <label>Buscar</label>
-                        <input name="q" value="{{ filters.q }}" placeholder="Buscar por modelo o marca…">
-                    </div>
 
-                    <div class="group">
-                        <label>Categoría</label>
-                        <select name="family">
-                            <option value="0">Todas</option>
-                            {% set seenFamilies = [] %}
-                            {% for f in families %}
-                                {% set key = (f.name ?? '')|lower|trim %}
-                                {% if key and (key not in seenFamilies) %}
-                                    {% set seenFamilies = seenFamilies|merge([key]) %}
-                                    <option value="{{ f.id }}" {% if filters.family == f.id %}selected{% endif %}>{{ f.name }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
+            {# ══════════════ SIDEBAR ══════════════ #}
+            <aside class="sidebar">
+                <div class="sidebar__header">
+                    <span class="sidebar__title">Filtros</span>
+                    <a class="sidebar__clear" href="{{ path('app_catalog') }}">Limpiar todo</a>
+                </div>
 
-                    <div class="group">
-                        <label>Marca</label>
-                        <select name="brand">
-                            <option value="">Todas</option>
-                            {% for item in brands %}
-                                <option value="{{ item }}" {% if filters.brand == item %}selected{% endif %}>{{ item }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                <form method="get" action="{{ path('app_catalog') }}" id="filterForm">
+                    <div class="sidebar__body">
 
-                    <div class="group">
-                        <label>Ordenar</label>
-                        <select name="sort">
-                            <option value="recent" {% if filters.sort == 'recent' %}selected{% endif %}>Recomendados</option>
-                            <option value="price_asc" {% if filters.sort == 'price_asc' %}selected{% endif %}>Precio: menor a mayor</option>
-                            <option value="price_desc" {% if filters.sort == 'price_desc' %}selected{% endif %}>Precio: mayor a menor</option>
-                        </select>
-                    </div>
+                        {# Disponibilidad — primero porque es el más usado #}
+                        <div>
+                            <span class="filter-group__label">Disponibilidad</span>
+                            <label class="stock-toggle">
+                                <input type="checkbox" name="inStock" value="1" {% if filters.inStock == 1 %}checked{% endif %} onchange="this.form.submit()">
+                                <span class="stock-toggle__track"><span class="stock-toggle__thumb"></span></span>
+                                <span class="stock-toggle__text">Solo disponibles (stock ≥ 5)</span>
+                            </label>
+                        </div>
 
-                    <div class="group">
-                        <label>
-                            <input type="checkbox" name="inStock" value="1" {% if filters.inStock == 1 %}checked{% endif %}>
-                            Solo disponibles
-                        </label>
-                    </div>
+                        {# Búsqueda #}
+                        <div>
+                            <span class="filter-group__label">Buscar</span>
+                            <input class="filter-input" name="q" value="{{ filters.q }}" placeholder="Modelo, marca, referencia…">
+                        </div>
 
-                    <button class="btn btn-primary" type="submit" style="width:100%;">Aplicar</button>
-                    <div style="margin-top:10px;">
-                        <a class="btn" href="{{ path('app_catalog') }}" style="width:100%; justify-content:center;">Limpiar</a>
+                        {# Rango de precio #}
+                        <div>
+                            <span class="filter-group__label">Precio</span>
+                            <div class="price-range">
+                                <div class="price-range__values">
+                                    <div class="price-range__val">
+                                        <span class="price-range__symbol">€</span>
+                                        <input class="price-range__input" id="inputMin" type="number"
+                                               min="{{ priceRange.globalMin }}" max="{{ priceRange.globalMax }}"
+                                               value="{{ filters.priceMin != priceRange.globalMin ? filters.priceMin : '' }}" placeholder="mín">
+                                    </div>
+                                    <span class="price-range__sep">—</span>
+                                    <div class="price-range__val">
+                                        <span class="price-range__symbol">€</span>
+                                        <input class="price-range__input" id="inputMax" type="number"
+                                               min="{{ priceRange.globalMin }}" max="{{ priceRange.globalMax }}"
+                                               value="{{ filters.priceMax != priceRange.globalMax ? filters.priceMax : '' }}" placeholder="máx">
+                                    </div>
+                                </div>
+                                <div class="price-range__track">
+                                    <div class="price-range__rail"></div>
+                                    <div class="price-range__fill" id="priceFill"></div>
+                                    <input type="range" id="sliderMin" name="priceMin"
+                                           min="{{ priceRange.globalMin }}"
+                                           max="{{ priceRange.globalMax }}"
+                                           value="{{ filters.priceMin }}"
+                                           step="1">
+                                    <input type="range" id="sliderMax" name="priceMax"
+                                           min="{{ priceRange.globalMin }}"
+                                           max="{{ priceRange.globalMax }}"
+                                           value="{{ filters.priceMax }}"
+                                           step="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Categoría #}
+                        <div>
+                            <span class="filter-group__label">Categoría</span>
+                            <select class="filter-input" name="family">
+                                <option value="0">Todas las categorías</option>
+                                {% set seenFamilies = [] %}
+                                {% for f in families %}
+                                    {% set key = (f.name ?? '')|lower|trim %}
+                                    {% if key and (key not in seenFamilies) %}
+                                        {% set seenFamilies = seenFamilies|merge([key]) %}
+                                        <option value="{{ f.id }}" {% if filters.family == f.id %}selected{% endif %}>{{ f.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        {# Marca #}
+                        <div>
+                            <span class="filter-group__label">Marca</span>
+                            <select class="filter-input" name="brand">
+                                <option value="">Todas las marcas</option>
+                                {% for item in brands %}
+                                    <option value="{{ item }}" {% if filters.brand == item %}selected{% endif %}>{{ item }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button class="sidebar__apply" type="submit">Aplicar filtros</button>
+
                     </div>
                 </form>
             </aside>
 
+            {# ══════════════ CONTENIDO ══════════════ #}
             <section>
-                <div class="grid catalog-grid">
+
+                {# Chips de filtros activos #}
+                {% set hasActiveFilters = false %}
+                <div class="active-filters">
+                    {% if filters.q %}
+                        {% set hasActiveFilters = true %}
+                        {% set clearQ = filters|merge({q: '', page: 1}) %}
+                        <a class="filter-chip" href="{{ path('app_catalog', clearQ) }}">
+                            Búsqueda: "{{ filters.q }}" <span class="filter-chip__x">×</span>
+                        </a>
+                    {% endif %}
+
+                    {% if filters.family > 0 %}
+                        {% set hasActiveFilters = true %}
+                        {% set clearFamily = filters|merge({family: 0, page: 1}) %}
+                        {% for f in families %}
+                            {% if f.id == filters.family %}
+                                <a class="filter-chip" href="{{ path('app_catalog', clearFamily) }}">
+                                    {{ f.name }} <span class="filter-chip__x">×</span>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if filters.brand %}
+                        {% set hasActiveFilters = true %}
+                        {% set clearBrand = filters|merge({brand: '', page: 1}) %}
+                        <a class="filter-chip" href="{{ path('app_catalog', clearBrand) }}">
+                            {{ filters.brand }} <span class="filter-chip__x">×</span>
+                        </a>
+                    {% endif %}
+
+                    {% if filters.inStock == 1 %}
+                        {% set hasActiveFilters = true %}
+                        {% set clearStock = filters|merge({inStock: 0, page: 1}) %}
+                        <a class="filter-chip" href="{{ path('app_catalog', clearStock) }}">
+                            Solo disponibles <span class="filter-chip__x">×</span>
+                        </a>
+                    {% endif %}
+
+                    {% if filters.priceMin > priceRange.globalMin or filters.priceMax < priceRange.globalMax %}
+                        {% set hasActiveFilters = true %}
+                        {% set clearPrice = filters|merge({priceMin: priceRange.globalMin, priceMax: priceRange.globalMax, page: 1}) %}
+                        <a class="filter-chip" href="{{ path('app_catalog', clearPrice) }}">
+                            {{ filters.priceMin }} € – {{ filters.priceMax }} € <span class="filter-chip__x">×</span>
+                        </a>
+                    {% endif %}
+                </div>
+
+                {# Toolbar #}
+                <div class="catalog-toolbar">
+                    <select class="toolbar-sort" name="sort" form="filterForm" onchange="document.getElementById('filterForm').submit()">
+                        <option value="recent"     {% if filters.sort == 'recent'     %}selected{% endif %}>Relevancia</option>
+                        <option value="price_asc"  {% if filters.sort == 'price_asc'  %}selected{% endif %}>Precio: menor a mayor</option>
+                        <option value="price_desc" {% if filters.sort == 'price_desc' %}selected{% endif %}>Precio: mayor a menor</option>
+                    </select>
+                    <span class="catalog-toolbar__count">
+                        Mostrando {{ (currentPage - 1) * 24 + 1 }}–{{ min(currentPage * 24, totalProducts) }} de <strong>{{ totalProducts }}</strong> productos
+                    </span>
+                    <div class="view-toggle" id="viewToggle">
+                        <button class="view-toggle__btn active" data-view="grid" title="Vista cuadrícula" type="button">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <rect x="1" y="1" width="6" height="6" rx="1.5" fill="currentColor"/>
+                                <rect x="9" y="1" width="6" height="6" rx="1.5" fill="currentColor"/>
+                                <rect x="1" y="9" width="6" height="6" rx="1.5" fill="currentColor"/>
+                                <rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor"/>
+                            </svg>
+                        </button>
+                        <button class="view-toggle__btn" data-view="list" title="Vista lista" type="button">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <rect x="1" y="1.5" width="14" height="3" rx="1.5" fill="currentColor"/>
+                                <rect x="1" y="6.5" width="14" height="3" rx="1.5" fill="currentColor"/>
+                                <rect x="1" y="11.5" width="14" height="3" rx="1.5" fill="currentColor"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                {# Grid #}
+                <div id="productGrid">
                     {% for p in products %}
-                        <a class="card product-card" href="{{ path('app_product_show', {article: p.article}) }}">
-                            <div class="product-image">
+
+                        {# ── Tarjeta GRID ── #}
+                        <a class="product-card--grid" href="{{ path('app_product_show', {article: p.article}) }}">
+                            <div class="pc-image">
                                 {% if p.image %}
-                                    <img src="{{ p.image }}" alt="{{ p.model }}">
+                                    <img src="{{ p.image }}" alt="{{ p.title }}">
                                 {% else %}
-                                    <div class="product-image-placeholder">📦</div>
+                                    <div class="pc-placeholder">
+                                        <div class="pc-placeholder__icon">📦</div>
+                                        {% if p.brand %}<div class="pc-placeholder__brand">{{ p.brand }}</div>{% endif %}
+                                    </div>
                                 {% endif %}
-                            </div>
-
-                            <div class="product-brand">{{ p.brand ?: 'Marca' }}</div>
-
-                            {# ✅ Título comercial (siempre relleno desde CSV) #}
-                            <div class="product-title">
-                                {{ p.title|striptags|u.truncate(60, '…') }}
-                            </div>
-
-                            {# Modelo en pequeño para quien lo necesite #}
-                            <div class="product-subtitle">
-                                Modelo: {{ p.model }}
-                            </div>
-
-                            <div class="product-bottom">
-                                <div class="product-price">
-                                    {{ p.price|number_format(2, ',', '.') }} €
-                                </div>
-
-                                {# ✅ Regla del jefe: disponible solo con 5+ unidades #}
                                 {% if p.stock >= 5 %}
-                                    <span class="product-stock ok">Disponible</span>
+                                    <span class="pc-stock-badge pc-stock-badge--ok">Disponible</span>
                                 {% else %}
-                                    <span class="product-stock warn">Consultar</span>
+                                    <span class="pc-stock-badge pc-stock-badge--warn">Consultar</span>
                                 {% endif %}
                             </div>
-
-                            <div class="product-cta">
-                                <span class="btn btn-primary" style="width:100%; justify-content:center;">Ver detalle</span>
+                            <div class="pc-body">
+                                {% if p.brand %}<div class="pc-brand">{{ p.brand }}</div>{% endif %}
+                                <div class="pc-title">{{ p.title|striptags }}</div>
+                                <div class="pc-ref">Ref. {{ p.article }}</div>
+                                <div class="pc-footer">
+                                    <div class="pc-price">{{ p.price|number_format(2, ',', '.') }} €</div>
+                                    <div class="pc-cta">Ver detalle →</div>
+                                </div>
                             </div>
                         </a>
+
+                        {# ── Fila LISTA ── #}
+                        <a class="product-row" href="{{ path('app_product_show', {article: p.article}) }}">
+                            <div class="pr-image">
+                                {% if p.image %}
+                                    <img src="{{ p.image }}" alt="{{ p.title }}">
+                                {% else %}
+                                    <div class="pr-placeholder">📦</div>
+                                {% endif %}
+                            </div>
+                            <div class="pr-info">
+                                {% if p.brand %}<div class="pr-brand">{{ p.brand }}</div>{% endif %}
+                                <div class="pr-title">{{ p.title|striptags }}</div>
+                                <div class="pr-meta">
+                                    Ref. {{ p.article }}
+                                    {% if p.family %} · {{ p.family.name }}{% endif %}
+                                    {% if p.subfamily %} / {{ p.subfamily.name }}{% endif %}
+                                </div>
+                            </div>
+                            <div class="pr-right">
+                                <div class="pr-price">{{ p.price|number_format(2, ',', '.') }} €</div>
+                                {% if p.stock >= 5 %}
+                                    <span class="pr-stock pr-stock--ok">Disponible</span>
+                                {% else %}
+                                    <span class="pr-stock pr-stock--warn">Consultar</span>
+                                {% endif %}
+                                <span class="pr-cta">Ver detalle →</span>
+                            </div>
+                        </a>
+
                     {% else %}
-                        <div class="card">No hay resultados con esos filtros.</div>
+                        <div class="empty-state">
+                            <div class="empty-state__icon">🔍</div>
+                            <div class="empty-state__title">Sin resultados</div>
+                            <div class="empty-state__sub">Prueba con otros filtros o <a href="{{ path('app_catalog') }}" style="color:var(--brand);">limpia la búsqueda</a>.</div>
+                        </div>
                     {% endfor %}
                 </div>
 
+                {# Paginación #}
                 {% if totalPages > 1 %}
                     <div class="pagination">
                         {% set params = filters|merge({}) %}
                         {% if currentPage > 1 %}
                             <a href="{{ path('app_catalog', params|merge({page: currentPage - 1})) }}">← Anterior</a>
                         {% endif %}
-
                         <span class="pill">Página {{ currentPage }} / {{ totalPages }}</span>
-
                         {% if currentPage < totalPages %}
                             <a href="{{ path('app_catalog', params|merge({page: currentPage + 1})) }}">Siguiente →</a>
                         {% endif %}
                     </div>
                 {% endif %}
+
             </section>
         </div>
     </section>
+
+    <script>
+        (function () {
+
+            /* ── Toggle grid / lista ── */
+            var STORAGE_KEY = 'medielectro_view';
+            var grid = document.getElementById('productGrid');
+            var btns = document.querySelectorAll('#viewToggle .view-toggle__btn');
+
+            function applyView(view) {
+                grid.classList.toggle('is-list', view === 'list');
+                btns.forEach(function(b) { b.classList.toggle('active', b.dataset.view === view); });
+                try { localStorage.setItem(STORAGE_KEY, view); } catch(e) {}
+            }
+
+            var saved = 'grid';
+            try { saved = localStorage.getItem(STORAGE_KEY) || 'grid'; } catch(e) {}
+            applyView(saved);
+
+            btns.forEach(function(btn) {
+                btn.addEventListener('click', function() { applyView(btn.dataset.view); });
+            });
+
+            /* ── Slider de precio dual + inputs editables ── */
+            var sliderMin  = document.getElementById('sliderMin');
+            var sliderMax  = document.getElementById('sliderMax');
+            var inputMin   = document.getElementById('inputMin');
+            var inputMax   = document.getElementById('inputMax');
+            var fill       = document.getElementById('priceFill');
+
+            if (!sliderMin || !sliderMax) return;
+
+            var rangeMin = parseInt(sliderMin.min, 10);
+            var rangeMax = parseInt(sliderMax.max, 10);
+            var span     = rangeMax - rangeMin;
+
+            function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+            function updateFill() {
+                var lo = parseInt(sliderMin.value, 10);
+                var hi = parseInt(sliderMax.value, 10);
+                fill.style.left  = ((lo - rangeMin) / span * 100) + '%';
+                fill.style.width = ((hi - lo) / span * 100) + '%';
+            }
+
+            function syncInputsFromSliders() {
+                var lo = parseInt(sliderMin.value, 10);
+                var hi = parseInt(sliderMax.value, 10);
+                inputMin.value = (lo > rangeMin) ? lo : '';
+                inputMax.value = (hi < rangeMax) ? hi : '';
+            }
+
+            // Slider → Input (solo cuando el usuario mueve el slider)
+            sliderMin.addEventListener('input', function() {
+                var lo = parseInt(sliderMin.value, 10);
+                var hi = parseInt(sliderMax.value, 10);
+                if (lo >= hi) { sliderMin.value = hi - 1; lo = hi - 1; }
+                inputMin.value = lo;
+                updateFill();
+            });
+
+            sliderMax.addEventListener('input', function() {
+                var lo = parseInt(sliderMin.value, 10);
+                var hi = parseInt(sliderMax.value, 10);
+                if (hi <= lo) { sliderMax.value = lo + 1; hi = lo + 1; }
+                inputMax.value = hi;
+                updateFill();
+            });
+
+            // Input → Slider (al escribir — solo mueve el slider, no toca el input)
+            inputMin.addEventListener('input', function() {
+                var lo = clamp(parseInt(inputMin.value, 10) || rangeMin, rangeMin, rangeMax);
+                var hi = parseInt(sliderMax.value, 10);
+                if (lo >= hi) lo = hi - 1;
+                sliderMin.value = lo;
+                // Solo actualizar la barra, NO tocar inputMin.value
+                updateFill();
+            });
+
+            inputMax.addEventListener('input', function() {
+                var hi = clamp(parseInt(inputMax.value, 10) || rangeMax, rangeMin, rangeMax);
+                var lo = parseInt(sliderMin.value, 10);
+                if (hi <= lo) hi = lo + 1;
+                sliderMax.value = hi;
+                // Solo actualizar la barra, NO tocar inputMax.value
+                updateFill();
+            });
+
+            // Focus — vaciar el campo para escribir cómodamente
+            inputMin.addEventListener('focus', function() { inputMin.value = ''; });
+            inputMax.addEventListener('focus', function() { inputMax.value = ''; });
+
+            // Al salir del input (blur) — corregir y sincronizar
+            inputMin.addEventListener('blur', function() {
+                var lo = clamp(parseInt(inputMin.value, 10) || rangeMin, rangeMin, rangeMax - 1);
+                var hi = parseInt(sliderMax.value, 10);
+                if (lo >= hi) lo = hi - 1;
+                inputMin.value = lo;
+                sliderMin.value = lo;
+                updateFill();
+            });
+
+            inputMax.addEventListener('blur', function() {
+                var hi = clamp(parseInt(inputMax.value, 10) || rangeMax, rangeMin + 1, rangeMax);
+                var lo = parseInt(sliderMin.value, 10);
+                if (hi <= lo) hi = lo + 1;
+                inputMax.value = hi;
+                sliderMax.value = hi;
+                updateFill();
+            });
+
+            // Enter en los inputs envía el formulario
+            [inputMin, inputMax].forEach(function(inp) {
+                inp.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') { inp.blur(); document.getElementById('filterForm').submit(); }
+                });
+            });
+
+            updateFill();
+            syncInputsFromSliders();
+
+        })();
+    </script>
 {% endblock %}
