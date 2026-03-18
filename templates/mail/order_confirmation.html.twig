@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido {{ order.reference }} · Medielectro</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background: #f6f7f9; color: #111827; }
+        .wrapper { max-width: 600px; margin: 0 auto; padding: 32px 16px; }
+        .card { background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+        .header { background: #e30613; padding: 28px 32px; text-align: center; }
+        .header__logo { color: white; font-size: 22px; font-weight: 800; letter-spacing: -.5px; }
+        .header__sub { color: rgba(255,255,255,.8); font-size: 13px; margin-top: 4px; }
+        .body { padding: 32px; }
+        .title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+        .subtitle { color: #6b7280; font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+        .reference { display: inline-block; background: #fff1f2; border: 1px solid #fecdd3; color: #e30613; border-radius: 8px; padding: 8px 16px; font-size: 14px; font-weight: 700; margin-bottom: 24px; }
+        .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #6b7280; margin-bottom: 12px; }
+        .items { border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #f3f4f6; font-size: 13px; }
+        .item:last-child { border-bottom: none; }
+        .item__name { font-weight: 600; flex: 1; }
+        .item__qty { color: #6b7280; margin: 0 16px; }
+        .item__price { font-weight: 700; white-space: nowrap; }
+        .total { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; margin-bottom: 24px; }
+        .total__label { font-size: 14px; font-weight: 700; }
+        .total__amount { font-size: 20px; font-weight: 900; letter-spacing: -.5px; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .info-block { background: #f9fafb; border-radius: 8px; padding: 14px; }
+        .info-block__label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: #6b7280; margin-bottom: 6px; }
+        .info-block__value { font-size: 13px; line-height: 1.5; }
+        .cta { text-align: center; margin-bottom: 24px; }
+        .btn { display: inline-block; background: #e30613; color: white; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-size: 14px; font-weight: 700; }
+        .note { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #92400e; line-height: 1.5; margin-bottom: 24px; }
+        .footer { text-align: center; padding: 20px; color: #9ca3af; font-size: 12px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="card">
+
+        <div class="header">
+            <div class="header__logo">medielectro.es</div>
+            <div class="header__sub">Electrodomésticos, repuestos y servicio técnico · Valencia</div>
+        </div>
+
+        <div class="body">
+            <h1 class="title">Hola, {{ customer.name }}. ¡Pedido recibido!</h1>
+            <p class="subtitle">
+                Hemos recibido tu pedido correctamente. Nos pondremos en contacto contigo en breve
+                para confirmar la disponibilidad y gestionar el pago.
+            </p>
+
+            <div class="reference">Referencia: {{ order.reference }}</div>
+
+            <p class="section-title">Productos</p>
+            <div class="items">
+                {% for line in order.lines %}
+                    <div class="item">
+                        <div class="item__name">
+                            {{ line.productTitle }}
+                            {% if line.productBrand %}<span style="color:#6b7280;font-weight:400"> · {{ line.productBrand }}</span>{% endif %}
+                        </div>
+                        <div class="item__qty">×{{ line.quantity }}</div>
+                        <div class="item__price">{{ line.subtotal|number_format(2, ',', '.') }} €</div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="total">
+                <span class="total__label">Total del pedido</span>
+                <span class="total__amount">{{ order.total|number_format(2, ',', '.') }} €</span>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-block">
+                    <div class="info-block__label">Datos de contacto</div>
+                    <div class="info-block__value">
+                        {{ customer.name }}<br>
+                        {{ customer.email }}<br>
+                        {{ customer.phone }}
+                        {% if customer.company %}<br>{{ customer.company }}{% endif %}
+                    </div>
+                </div>
+                {% if order.shippingAddress %}
+                    <div class="info-block">
+                        <div class="info-block__label">Dirección de entrega</div>
+                        <div class="info-block__value">
+                            {{ order.shippingAddress }}<br>
+                            {% if order.shippingZip %}{{ order.shippingZip }} {% endif %}
+                            {% if order.shippingCity %}{{ order.shippingCity }}{% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if order.notes %}
+                <div class="info-block" style="margin-bottom:24px">
+                    <div class="info-block__label">Notas del pedido</div>
+                    <div class="info-block__value">{{ order.notes }}</div>
+                </div>
+            {% endif %}
+
+            <div class="note">
+                El pago se gestionará en el siguiente paso una vez confirmemos la disponibilidad
+                de todos los artículos de tu pedido.
+            </div>
+
+            <div class="cta">
+                <a class="btn" href="https://medielectro.es/catalogo">Seguir comprando</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <strong>Medielectro</strong> · Electricidad y reparación de electrodomésticos · Valencia<br>
+        96 350 16 75 · info@medielectro.es<br><br>
+        Este email se ha enviado porque realizaste un pedido en medielectro.es
+    </div>
+</div>
+</body>
+</html>

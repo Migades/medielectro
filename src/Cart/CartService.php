@@ -6,11 +6,9 @@ use App\Entity\Product;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Gestiona el carrito en la sesión Symfony.
- *
- * Clave de sesión: 'cart' → array<string, CartItem> indexado por article.
- *
- * TODO: mergeSessionCartToUser(User $user) cuando se implemente el login.
+ * Gestión del carrito en sesión Symfony.
+ * Clave sesión: 'cart' → array<string, CartItem> indexado por article.
+ * Preparado para migrar a BD cuando se implemente login.
  */
 class CartService
 {
@@ -18,10 +16,25 @@ class CartService
 
     public function __construct(private readonly RequestStack $requestStack) {}
 
-    /** @return array<string, CartItem> */
+    /** @return CartItem[] */
     public function getItems(): array
     {
-        return $this->getSession()->get(self::SESSION_KEY, []);
+        return $this->session()->get(self::SESSION_KEY, []);
+    }
+
+    public function getCount(): int
+    {
+        return array_sum(array_map(fn(CartItem $i) => $i->quantity, $this->getItems()));
+    }
+
+    public function getTotal(): float
+    {
+        return round(array_sum(array_map(fn(CartItem $i) => $i->getSubtotal(), $this->getItems())), 2);
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->getItems());
     }
 
     public function add(Product $product, int $quantity = 1): void
@@ -33,12 +46,12 @@ class CartService
             $items[$key]->quantity += $quantity;
         } else {
             $items[$key] = new CartItem(
-                article:  $product->getArticle(),
-                title:    $product->getTitle() ?? $product->getModel(),
-                brand:    $product->getBrand() ?? '',
-                price:    (float) $product->getPrice(),
+                article : $product->getArticle(),
+                title   : $product->getTitle() ?? $product->getModel(),
+                brand   : $product->getBrand() ?? '',
+                price   : (float) $product->getPrice(),
                 quantity: $quantity,
-                image:    $product->getImage(),
+                image   : $product->getImage(),
             );
         }
 
@@ -49,9 +62,7 @@ class CartService
     {
         $items = $this->getItems();
 
-        if (!isset($items[$article])) {
-            return;
-        }
+        if (!isset($items[$article])) return;
 
         if ($quantity <= 0) {
             $this->remove($article);
@@ -74,34 +85,13 @@ class CartService
         $this->save([]);
     }
 
-    public function count(): int
-    {
-        return array_sum(array_map(
-            fn(CartItem $item) => $item->quantity,
-            $this->getItems()
-        ));
-    }
-
-    public function getTotal(): float
-    {
-        return round(array_sum(array_map(
-            fn(CartItem $item) => $item->getSubtotal(),
-            $this->getItems()
-        )), 2);
-    }
-
-    public function isEmpty(): bool
-    {
-        return count($this->getItems()) === 0;
-    }
-
-    /** @param array<string, CartItem> $items */
+    /** @param CartItem[] $items */
     private function save(array $items): void
     {
-        $this->getSession()->set(self::SESSION_KEY, $items);
+        $this->session()->set(self::SESSION_KEY, $items);
     }
 
-    private function getSession(): \Symfony\Component\HttpFoundation\Session\SessionInterface
+    private function session(): \Symfony\Component\HttpFoundation\Session\SessionInterface
     {
         return $this->requestStack->getSession();
     }

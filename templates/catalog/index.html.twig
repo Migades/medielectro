@@ -588,14 +588,18 @@
                                         <span class="price-range__symbol">€</span>
                                         <input class="price-range__input" id="inputMin" type="number"
                                                min="{{ priceRange.globalMin }}" max="{{ priceRange.globalMax }}"
-                                               value="{{ filters.priceMin != priceRange.globalMin ? filters.priceMin : '' }}" placeholder="mín">
+                                               value="{{ filters.priceMin != priceRange.globalMin ? filters.priceMin : '' }}"
+                                               placeholder="{{ priceRange.globalMin }}"
+                                               data-default="{{ priceRange.globalMin }}">
                                     </div>
                                     <span class="price-range__sep">—</span>
                                     <div class="price-range__val">
                                         <span class="price-range__symbol">€</span>
                                         <input class="price-range__input" id="inputMax" type="number"
                                                min="{{ priceRange.globalMin }}" max="{{ priceRange.globalMax }}"
-                                               value="{{ filters.priceMax != priceRange.globalMax ? filters.priceMax : '' }}" placeholder="máx">
+                                               value="{{ filters.priceMax != priceRange.globalMax ? filters.priceMax : '' }}"
+                                               placeholder="{{ priceRange.globalMax }}"
+                                               data-default="{{ priceRange.globalMax }}">
                                     </div>
                                 </div>
                                 <div class="price-range__track">
@@ -732,32 +736,45 @@
                     {% for p in products %}
 
                         {# ── Tarjeta GRID ── #}
-                        <a class="product-card--grid" href="{{ path('app_product_show', {article: p.article}) }}">
-                            <div class="pc-image">
-                                {% if p.image %}
-                                    <img src="{{ p.image }}" alt="{{ p.title }}">
-                                {% else %}
-                                    <div class="pc-placeholder">
-                                        <div class="pc-placeholder__icon">📦</div>
-                                        {% if p.brand %}<div class="pc-placeholder__brand">{{ p.brand }}</div>{% endif %}
-                                    </div>
-                                {% endif %}
-                                {% if p.stock >= 5 %}
-                                    <span class="pc-stock-badge pc-stock-badge--ok">Disponible</span>
-                                {% else %}
-                                    <span class="pc-stock-badge pc-stock-badge--warn">Consultar</span>
-                                {% endif %}
-                            </div>
-                            <div class="pc-body">
-                                {% if p.brand %}<div class="pc-brand">{{ p.brand }}</div>{% endif %}
-                                <div class="pc-title">{{ p.title|striptags }}</div>
-                                <div class="pc-ref">Ref. {{ p.article }}</div>
-                                <div class="pc-footer">
-                                    <div class="pc-price">{{ p.price|number_format(2, ',', '.') }} €</div>
-                                    <div class="pc-cta">Ver detalle →</div>
+                        <div class="product-card--grid">
+                            <a href="{{ path('app_product_show', {article: p.article}) }}" class="pc-link">
+                                <div class="pc-image">
+                                    {% if p.image %}
+                                        <img src="{{ p.image }}" alt="{{ p.title }}">
+                                    {% else %}
+                                        <div class="pc-placeholder">
+                                            <div class="pc-placeholder__icon">📦</div>
+                                            {% if p.brand %}<div class="pc-placeholder__brand">{{ p.brand }}</div>{% endif %}
+                                        </div>
+                                    {% endif %}
+                                    {% if p.stock >= 5 %}
+                                        <span class="pc-stock-badge pc-stock-badge--ok">Disponible</span>
+                                    {% else %}
+                                        <span class="pc-stock-badge pc-stock-badge--warn">Consultar</span>
+                                    {% endif %}
                                 </div>
+                                <div class="pc-body">
+                                    {% if p.brand %}<div class="pc-brand">{{ p.brand }}</div>{% endif %}
+                                    <div class="pc-title">{{ p.title|striptags }}</div>
+                                    <div class="pc-ref">Ref. {{ p.article }}</div>
+                                    <div class="pc-footer">
+                                        <div class="pc-price">{{ p.price|number_format(2, ',', '.') }} €</div>
+                                        <div class="pc-cta">Ver detalle →</div>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="pc-cart">
+                                <button class="btn-add-cart-catalog"
+                                        data-url="{{ path('app_cart_add', {article: p.article}) }}"
+                                        data-title="{{ p.title|striptags|u.truncate(40,'…') }}"
+                                        type="button">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+                                    </svg>
+                                    Añadir al carrito
+                                </button>
                             </div>
-                        </a>
+                        </div>
 
                         {# ── Fila LISTA ── #}
                         <a class="product-row" href="{{ path('app_product_show', {article: p.article}) }}">
@@ -814,6 +831,41 @@
             </section>
         </div>
     </section>
+
+    <script>
+        /* ── Botones "Añadir al carrito" en tarjetas del catálogo ── */
+        document.querySelectorAll('.btn-add-cart-catalog').forEach(function(btn) {
+            btn.addEventListener('click', async function() {
+                const url = this.dataset.url;
+                const originalHTML = this.innerHTML;
+                this.disabled = true;
+                this.innerHTML = '…';
+                try {
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({ quantity: 1 })
+                    });
+                    const data = await res.json();
+                    document.querySelectorAll('[data-cart-count]').forEach(function(el) {
+                        el.textContent = data.count;
+                        el.style.display = 'flex';
+                    });
+                    this.classList.add('added');
+                    this.innerHTML = '✓ Añadido';
+                    const self = this;
+                    setTimeout(function() {
+                        self.innerHTML = originalHTML;
+                        self.classList.remove('added');
+                        self.disabled = false;
+                    }, 2000);
+                } catch(e) {
+                    this.innerHTML = originalHTML;
+                    this.disabled = false;
+                }
+            });
+        });
+    </script>
 
     <script>
         (function () {
@@ -902,9 +954,33 @@
                 updateFill();
             });
 
-            // Focus — vaciar el campo para escribir cómodamente
-            inputMin.addEventListener('focus', function() { inputMin.value = ''; });
-            inputMax.addEventListener('focus', function() { inputMax.value = ''; });
+            // Focus — seleccionar todo para reemplazar o editar con cursor
+            inputMin.addEventListener('focus', function() {
+                inputMin.select();
+            });
+
+            inputMax.addEventListener('focus', function() {
+                inputMax.select();
+            });
+
+            // Blur — si está vacío o en el valor global, limpiar y resetear slider
+            inputMin.addEventListener('blur', function() {
+                var lo = parseInt(inputMin.value, 10);
+                if (!inputMin.value || lo <= rangeMin) {
+                    inputMin.value = '';
+                    sliderMin.value = rangeMin;
+                    updateFill();
+                }
+            });
+
+            inputMax.addEventListener('blur', function() {
+                var hi = parseInt(inputMax.value, 10);
+                if (!inputMax.value || hi >= rangeMax) {
+                    inputMax.value = '';
+                    sliderMax.value = rangeMax;
+                    updateFill();
+                }
+            });
 
             // Al salir del input (blur) — corregir y sincronizar
             inputMin.addEventListener('blur', function() {

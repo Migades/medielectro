@@ -2,11 +2,6 @@
 
 namespace App\Cart;
 
-/**
- * DTO inmutable que representa una línea del carrito en sesión.
- * No es entidad Doctrine — vive serializado en $_SESSION.
- * Preparado para migrar a BD cuando llegue la entidad User.
- */
 class CartItem
 {
     public function __construct(
