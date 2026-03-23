@@ -31,6 +31,56 @@
             padding: 0 4px;
             border: 2px solid white;
         }
+
+        /* ── Dropdown Servicios ── */
+        .nav-dropdown { position: relative; display: flex; align-items: center; }
+
+        .nav-dropdown__trigger {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: none; border: none; cursor: pointer;
+            font-size: 14px; font-weight: 500; color: #111827;
+            padding: 8px 12px; border-radius: 999px;
+            font-family: inherit; line-height: 1;
+            transition: background .15s, color .15s;
+            white-space: nowrap;
+        }
+        .nav-dropdown__trigger:hover { background: #f3f4f6; }
+        .nav-dropdown.open .nav-dropdown__trigger { background: #f3f4f6; color: #e30613; }
+        .nav-dropdown__trigger svg { transition: transform .2s; }
+        .nav-dropdown.open .nav-dropdown__trigger svg { transform: rotate(180deg); }
+
+        .nav-dropdown__menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 50%; transform: translateX(-50%);
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            box-shadow: 0 16px 48px rgba(17,24,39,.14);
+            min-width: 270px; padding: 8px;
+            opacity: 0; visibility: hidden;
+            transform: translateX(-50%) translateY(-6px);
+            transition: opacity .18s, transform .18s, visibility .18s;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .nav-dropdown.open .nav-dropdown__menu {
+            opacity: 1; visibility: visible;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .nav-dropdown__item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 12px 14px; border-radius: 10px;
+            text-decoration: none; color: #111827;
+            transition: background .15s;
+        }
+        .nav-dropdown__item:hover { background: #f9fafb; }
+        .nav-dropdown__icon { font-size: 24px; flex-shrink: 0; }
+        .nav-dropdown__item-title { font-size: 13px; font-weight: 700; }
+        .nav-dropdown__item-sub { font-size: 11px; color: #6b7280; margin-top: 2px; }
     </style>
 </head>
 <body>
@@ -70,9 +120,40 @@
         <nav class="nav">
             <a href="{{ path('app_home') }}">Inicio</a>
             <a href="{{ path('app_catalog') }}">Catálogo</a>
-            <a href="#">Reparación</a>
-            <a href="#">Instalación</a>
-            <a href="#">Servicios</a>
+            <div class="nav-dropdown" id="servicesDropdown">
+                <button class="nav-dropdown__trigger" id="servicesBtn">
+                    Servicios
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+            </div>
+
+            {# Menú fuera del nav para evitar clipping #}
+            <div id="servicesMenu" style="
+                position:fixed;
+                display:none;
+                background:white;
+                border:1px solid #e5e7eb;
+                border-radius:14px;
+                box-shadow:0 16px 48px rgba(17,24,39,.18);
+                padding:8px;
+                min-width:270px;
+                z-index:99999;
+            ">
+                <a style="display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:10px;text-decoration:none;color:#111827;" href="{{ path('app_service_reparacion') }}" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
+                    <span style="font-size:24px">🔧</span>
+                    <div>
+                        <div style="font-size:13px;font-weight:700">Reparación</div>
+                        <div style="font-size:11px;color:#6b7280;margin-top:2px">Servicio técnico y diagnóstico</div>
+                    </div>
+                </a>
+                <a style="display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:10px;text-decoration:none;color:#111827;" href="{{ path('app_service_instalacion') }}" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
+                    <span style="font-size:24px">🔌</span>
+                    <div>
+                        <div style="font-size:13px;font-weight:700">Instalación</div>
+                        <div style="font-size:11px;color:#6b7280;margin-top:2px">Instalación profesional a domicilio</div>
+                    </div>
+                </a>
+            </div>
             <a href="#contacto">Contacto</a>
         </nav>
     </div>
@@ -99,5 +180,35 @@
         </div>
     </div>
 </footer>
+<script>
+    (function() {
+        var btn  = document.getElementById('servicesBtn');
+        var menu = document.getElementById('servicesMenu');
+        var wrap = document.getElementById('servicesDropdown');
+        if (!btn || !menu) return;
+
+        function openMenu() {
+            var rect = btn.getBoundingClientRect();
+            menu.style.top  = (rect.bottom + 8) + 'px';
+            menu.style.left = (rect.left + rect.width / 2 - 135) + 'px';
+            menu.style.display = 'block';
+            wrap.classList.add('open');
+        }
+
+        function closeMenu() {
+            menu.style.display = 'none';
+            wrap.classList.remove('open');
+        }
+
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            menu.style.display === 'block' ? closeMenu() : openMenu();
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!menu.contains(e.target)) closeMenu();
+        });
+    })();
+</script>
 </body>
 </html>

@@ -62,7 +62,7 @@
                     <img src="{{ product.image }}" alt="{{ product.title ?: product.model }}">
                 {% else %}
                     <div class="product-detail__placeholder">
-                        <div class="product-detail__placeholder-icon">📦</div>
+                        <div class="product-detail__placeholder-icon"></div>
                         {% if product.brand %}<span>{{ product.brand }}</span>{% endif %}
                     </div>
                 {% endif %}

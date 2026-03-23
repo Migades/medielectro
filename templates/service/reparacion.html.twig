@@ -1,0 +1,372 @@
+{% extends 'base.html.twig' %}
+{% block title %}Servicio técnico y reparación de electrodomésticos · Medielectro Valencia{% endblock %}
+
+{% block body %}
+    <style>
+        /* ── Hero de servicio ── */
+        .svc-hero {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 20px;
+            margin: 24px 0;
+            align-items: center;
+        }
+
+        .svc-hero__content { display: flex; flex-direction: column; gap: 16px; }
+
+        .svc-hero__eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            color: var(--brand);
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 5px 12px;
+            width: fit-content;
+        }
+
+        .svc-hero__title {
+            font-size: 36px;
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -.8px;
+            margin: 0;
+        }
+
+        .svc-hero__sub {
+            font-size: 16px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .svc-hero__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        /* Card visual del hero */
+        .svc-hero__card {
+            background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+            border-radius: 20px;
+            padding: 36px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .svc-hero__card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(227,6,19,.25), transparent 55%);
+        }
+
+        .svc-hero__card-icon {
+            font-size: 52px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .svc-hero__card-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .svc-hero__card-text h3 {
+            font-size: 22px;
+            font-weight: 900;
+            margin: 0 0 6px;
+            letter-spacing: -.4px;
+        }
+
+        .svc-hero__card-text p {
+            font-size: 13px;
+            color: rgba(255,255,255,.7);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* ── Propuesta de valor ── */
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin: 40px 0;
+        }
+
+        .value-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .value-card__icon {
+            width: 48px; height: 48px;
+            background: #fff1f2;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+        }
+
+        .value-card__title {
+            font-size: 15px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .value-card__text {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* ── Proceso ── */
+        .process-section {
+            margin: 40px 0;
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            position: relative;
+            margin-top: 24px;
+        }
+
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--brand), #fecdd3);
+            z-index: 0;
+        }
+
+        .process-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .process-step__num {
+            width: 56px; height: 56px;
+            background: var(--brand);
+            color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            border: 4px solid white;
+            box-shadow: 0 0 0 2px var(--brand);
+        }
+
+        .process-step__title {
+            font-size: 14px;
+            font-weight: 800;
+            margin: 0 0 6px;
+        }
+
+        .process-step__text {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* ── Tipos de reparación ── */
+        .repair-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .repair-item {
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .repair-item__icon { font-size: 24px; flex-shrink: 0; }
+
+        /* ── CTA final ── */
+        .svc-cta {
+            background: var(--brand);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            margin: 40px 0;
+        }
+
+        .svc-cta h2 {
+            font-size: 26px;
+            font-weight: 900;
+            margin: 0 0 10px;
+            letter-spacing: -.4px;
+        }
+
+        .svc-cta p {
+            font-size: 15px;
+            color: rgba(255,255,255,.8);
+            margin: 0 0 24px;
+        }
+
+        .btn-white {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            color: var(--brand);
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 15px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: opacity .15s;
+        }
+
+        .btn-white:hover { opacity: .9; }
+
+        @media (max-width: 900px) {
+            .svc-hero { grid-template-columns: 1fr; }
+            .svc-hero__card { min-height: 200px; }
+            .value-grid { grid-template-columns: 1fr; }
+            .process-steps { grid-template-columns: 1fr 1fr; gap: 20px; }
+            .process-steps::before { display: none; }
+            .repair-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+
+    {# ── Breadcrumb ── #}
+    <div style="margin:16px 0 24px;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+        <a href="{{ path('app_home') }}" style="color:var(--muted);text-decoration:none">Inicio</a>
+        <span>›</span>
+        <span>Reparación</span>
+    </div>
+
+    {# ── Hero ── #}
+    <div class="svc-hero">
+        <div class="svc-hero__content">
+            <span class="svc-hero__eyebrow">🔧 Servicio técnico oficial</span>
+            <h1 class="svc-hero__title">Reparamos tu electrodoméstico con garantía</h1>
+            <p class="svc-hero__sub">
+                Servicio técnico especializado en Valencia. Diagnóstico gratuito,
+                presupuesto sin compromiso y reparación con repuestos originales.
+            </p>
+            <div class="svc-hero__actions">
+                <a class="btn btn-primary" href="tel:963501675">📞 Llamar ahora</a>
+                <a class="btn" href="#contacto">Solicitar visita</a>
+            </div>
+        </div>
+
+        <div class="svc-hero__card">
+            <div class="svc-hero__card-icon">🛠️</div>
+            <div class="svc-hero__card-text">
+                <h3>Reparación en Valencia</h3>
+                <p>En taller o en tu domicilio. Atención personalizada y rápida para todos los electrodomésticos del hogar.</p>
+            </div>
+        </div>
+    </div>
+
+    {# ── Propuesta de valor ── #}
+    <div class="value-grid">
+        <div class="value-card">
+            <div class="value-card__icon">🔍</div>
+            <h3 class="value-card__title">Diagnóstico gratuito</h3>
+            <p class="value-card__text">Revisamos tu electrodoméstico sin coste. Te informamos del problema y el presupuesto antes de empezar.</p>
+        </div>
+        <div class="value-card">
+            <div class="value-card__icon">⚡</div>
+            <h3 class="value-card__title">Reparación rápida</h3>
+            <p class="value-card__text">La mayoría de reparaciones se resuelven en el mismo día o en 24-48 horas, dependiendo del repuesto.</p>
+        </div>
+        <div class="value-card">
+            <div class="value-card__icon">✅</div>
+            <h3 class="value-card__title">Garantía incluida</h3>
+            <p class="value-card__text">Todas nuestras reparaciones incluyen garantía. Usamos repuestos originales o equivalentes de calidad.</p>
+        </div>
+    </div>
+
+    {# ── Cómo funciona ── #}
+    <div class="process-section">
+        <h2 style="font-size:22px;font-weight:900;margin:0 0 6px;letter-spacing:-.3px">¿Cómo funciona?</h2>
+        <p style="color:var(--muted);font-size:14px;margin:0">Proceso sencillo en 4 pasos</p>
+
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="process-step__num">1</div>
+                <h4 class="process-step__title">Contacto</h4>
+                <p class="process-step__text">Llámanos o escríbenos. Cuéntanos qué le pasa al electrodoméstico.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step__num">2</div>
+                <h4 class="process-step__title">Diagnóstico</h4>
+                <p class="process-step__text">Lo revisamos en taller o en tu domicilio. Gratis y sin compromiso.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step__num">3</div>
+                <h4 class="process-step__title">Presupuesto</h4>
+                <p class="process-step__text">Te enviamos el presupuesto detallado. Solo reparamos con tu aprobación.</p>
+            </div>
+            <div class="process-step">
+                <div class="process-step__num">4</div>
+                <h4 class="process-step__title">Reparación</h4>
+                <p class="process-step__text">Reparamos con repuestos de calidad y te entregamos con garantía.</p>
+            </div>
+        </div>
+    </div>
+
+    {# ── Tipos de electrodomésticos ── #}
+    <div style="margin:40px 0">
+        <h2 style="font-size:22px;font-weight:900;margin:0 0 6px;letter-spacing:-.3px">Electrodomésticos que reparamos</h2>
+        <p style="color:var(--muted);font-size:14px;margin:0 0 4px">Todas las marcas y modelos</p>
+
+        <div class="repair-grid">
+            <div class="repair-item"><span class="repair-item__icon">🫧</span> Lavadoras</div>
+            <div class="repair-item"><span class="repair-item__icon">🍽️</span> Lavavajillas</div>
+            <div class="repair-item"><span class="repair-item__icon">❄️</span> Frigoríficos</div>
+            <div class="repair-item"><span class="repair-item__icon">🌀</span> Secadoras</div>
+            <div class="repair-item"><span class="repair-item__icon">📺</span> Hornos y cocinas</div>
+            <div class="repair-item"><span class="repair-item__icon">💨</span> Aire acondicionado</div>
+            <div class="repair-item"><span class="repair-item__icon">🔵</span> Microondas</div>
+            <div class="repair-item"><span class="repair-item__icon">🌡️</span> Calentadores</div>
+            <div class="repair-item"><span class="repair-item__icon">🧊</span> Congeladores</div>
+        </div>
+    </div>
+
+    {# ── CTA ── #}
+    <div class="svc-cta">
+        <h2>¿Tu electrodoméstico tiene una avería?</h2>
+        <p>Llámanos y te orientamos sin compromiso. Atención personalizada en Valencia.</p>
+        <a class="btn-white" href="tel:963501675">
+            📞 96 350 16 75 · Llámanos ahora
+        </a>
+    </div>
+{% endblock %}

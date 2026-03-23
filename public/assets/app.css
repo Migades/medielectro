@@ -16,7 +16,7 @@ a{ color:inherit; text-decoration:none; }
 .container{ max-width:1200px; margin:0 auto; padding:0 16px; }
 
 .header{
-    position:sticky; top:0; z-index:50;
+    position:sticky; top:0; z-index:500;
     background:var(--card);
     border-bottom:1px solid var(--border);
 }
@@ -32,9 +32,10 @@ a{ color:inherit; text-decoration:none; }
 
 .nav{
     display:flex;
-    gap:18px;
+    gap:4px;
     padding:12px 0 14px 0;
-    overflow:auto;
+    align-items:center;
+    overflow:visible;
 }
 
 .nav a{
