@@ -52,7 +52,7 @@
         <div class="family-grid">
             {% for family in families %}
                 <a class="family-card" href="{{ path('app_catalog', {family: family.id}) }}">
-                    <div class="family-card__icon"></div>
+                    <div class="family-card__icon">⚡</div>
                     <div class="family-card__name">{{ family.name }}</div>
                     <div class="family-card__link">Explorar categoría →</div>
                 </a>
@@ -76,7 +76,7 @@
                         {% if p.image %}
                             <img src="{{ p.image }}" alt="{{ p.model }}">
                         {% else %}
-                            <div class="retail-card__placeholder"></div>
+                            <div class="retail-card__placeholder">💶</div>
                         {% endif %}
                     </div>
 
@@ -109,12 +109,39 @@
         </div>
 
         <div class="services-grid-v2">
-            <div class="svc-card svc-card--repair">
-                <h3>Reparación</h3>
-            </div>
-            <div class="svc-card svc-card--install">
-                <h3>Instalación</h3>
-            </div>
+            <a class="svc-card svc-card--repair" href="{{ path('app_service_reparacion') }}">
+                <div class="svc-card__body">
+                    <div class="svc-card__label">Servicio técnico</div>
+                    <h3 class="svc-card__title">Reparación de electrodomésticos</h3>
+                    <p class="svc-card__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <ul class="svc-card__list">
+                        <li>Lorem ipsum dolor sit amet</li>
+                        <li>Consectetur adipiscing elit</li>
+                        <li>Sed do eiusmod tempor</li>
+                    </ul>
+                </div>
+                <div class="svc-card__footer">
+                    Solicitar reparación
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </div>
+            </a>
+
+            <a class="svc-card svc-card--install" href="{{ path('app_service_instalacion') }}">
+                <div class="svc-card__body">
+                    <div class="svc-card__label">Instalación profesional</div>
+                    <h3 class="svc-card__title">Instalación en tu domicilio</h3>
+                    <p class="svc-card__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <ul class="svc-card__list">
+                        <li>Lorem ipsum dolor sit amet</li>
+                        <li>Consectetur adipiscing elit</li>
+                        <li>Sed do eiusmod tempor</li>
+                    </ul>
+                </div>
+                <div class="svc-card__footer">
+                    Solicitar instalación
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </div>
+            </a>
         </div>
     </section>
 
@@ -148,23 +175,6 @@
         </div>
     </section>
 
-    <section class="section">
-        <div class="section-title">
-            <div>
-                <h2>Últimos productos añadidos</h2>
-                <p>Una muestra rápida de lo más reciente en catálogo</p>
-            </div>
-        </div>
 
-        <div class="mini-grid">
-            {% for p in latestProducts %}
-                <a class="mini-card" href="{{ path('app_product_show', {article: p.article}) }}">
-                    <div class="mini-card__title">{{ p.model }}</div>
-                    <div class="mini-card__meta">{{ p.brand ?: 'Marca' }}</div>
-                    <div class="mini-card__price">{{ p.price|number_format(2, ',', '.') }} €</div>
-                </a>
-            {% endfor %}
-        </div>
-    </section>
 
 {% endblock %}

@@ -163,21 +163,77 @@
     {% block body %}{% endblock %}
 </main>
 
-<footer class="footer" id="contacto">
-    <div class="container" style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-        <div>
-            <strong style="color:var(--text)">Medielectro</strong><br>
-            Electricidad y reparación de electrodomésticos · Valencia
+<footer class="footer-v2" id="contacto">
+    <div class="container">
+
+        <div class="footer-v2__top">
+
+            {# Columna 1 — Marca y contacto #}
+            <div class="footer-col footer-col__brand">
+                <div class="footer-col__logo">medielectro.es</div>
+                <p class="footer-col__desc">
+                    Especialistas en electrodomésticos, repuestos y servicio técnico en Valencia.
+                    Venta, reparación e instalación con atención personalizada.
+                </p>
+                <div class="footer-col__contact">
+                    <a href="tel:963501675">96 350 16 75</a>
+                    <a href="mailto:info@medielectro.es">info@medielectro.es</a>
+                    <a href="#">C/ Lorem Ipsum, 12 · Valencia</a>
+                </div>
+                <div class="footer-col__hours">
+                    Lunes a viernes: 9:00 – 14:00 y 16:00 – 19:30<br>
+                    Sábados: 9:00 – 13:30
+                </div>
+            </div>
+
+            {# Columna 2 — Tienda #}
+            <div class="footer-col">
+                <h4>Tienda</h4>
+                <ul>
+                    <li><a href="{{ path('app_catalog') }}">Catálogo de productos</a></li>
+                    <li><a href="{{ path('app_catalog', {inStock: 1}) }}">Productos disponibles</a></li>
+                    <li><a href="{{ path('app_catalog', {brand: 'BOSCH'}) }}">Bosch</a></li>
+                    <li><a href="{{ path('app_catalog', {brand: 'BALAY'}) }}">Balay</a></li>
+                    <li><a href="{{ path('app_catalog', {brand: 'SAMSUNG'}) }}">Samsung</a></li>
+                    <li><a href="{{ path('app_cart_index') }}">Mi carrito</a></li>
+                </ul>
+            </div>
+
+            {# Columna 3 — Servicios #}
+            <div class="footer-col">
+                <h4>Servicios</h4>
+                <ul>
+                    <li><a href="{{ path('app_service_reparacion') }}">Reparación de electrodomésticos</a></li>
+                    <li><a href="{{ path('app_service_instalacion') }}">Instalación a domicilio</a></li>
+                    <li><a href="#">Presupuesto sin compromiso</a></li>
+                    <li><a href="#">Servicio técnico oficial</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </div>
+
+            {# Columna 4 — Información #}
+            <div class="footer-col">
+                <h4>Información</h4>
+                <ul>
+                    <li><a href="#">Aviso legal</a></li>
+                    <li><a href="#">Política de privacidad</a></li>
+                    <li><a href="#">Política de cookies</a></li>
+                    <li><a href="#">Condiciones de venta</a></li>
+                    <li><a href="#">Política de devoluciones</a></li>
+                </ul>
+            </div>
+
         </div>
-        <div>
-            <div> info@medielectro.es</div>
-            <div> 96 350 16 75</div>
+
+        <div class="footer-v2__bottom">
+            <span>© {{ "now"|date("Y") }} Medielectro · Todos los derechos reservados</span>
+            <div class="footer-v2__legal">
+                <a href="#">Aviso legal</a>
+                <a href="#">Privacidad</a>
+                <a href="#">Cookies</a>
+            </div>
         </div>
-        <div>
-            <a href="#" style="margin-right:10px;">Aviso legal</a>
-            <a href="#" style="margin-right:10px;">Privacidad</a>
-            <a href="#">Cookies</a>
-        </div>
+
     </div>
 </footer>
 <script>
