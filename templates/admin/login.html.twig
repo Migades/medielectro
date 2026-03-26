@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+{% block title %}Acceso al panel · Medielectro{% endblock %}
+
+{% block body %}
+    <style>
+        .login-wrap {
+            max-width: 400px;
+            margin: 64px auto;
+        }
+
+        .login-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .login-card__header {
+            background: #111827;
+            padding: 24px 28px;
+            color: white;
+        }
+
+        .login-card__header h1 {
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0 0 4px;
+            letter-spacing: -.3px;
+        }
+
+        .login-card__header p {
+            font-size: 13px;
+            color: rgba(255,255,255,.6);
+            margin: 0;
+        }
+
+        .login-card__body {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .form-input {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-size: 14px;
+            color: var(--text);
+            background: #f9fafb;
+            outline: none;
+            transition: border-color .15s, background .15s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            border-color: var(--brand);
+            background: white;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 13px;
+            background: var(--brand);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: opacity .15s;
+            margin-top: 4px;
+        }
+
+        .btn-login:hover { opacity: .88; }
+
+        .login-error {
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            color: var(--brand);
+            padding: 11px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+    </style>
+
+    <div class="login-wrap">
+        <div class="login-card">
+            <div class="login-card__header">
+                <h1>Panel de administración</h1>
+                <p>Acceso restringido · Medielectro</p>
+            </div>
+
+            <div class="login-card__body">
+                {% if error %}
+                    <div class="login-error">Usuario o contraseña incorrectos.</div>
+                {% endif %}
+
+                <form method="post">
+                    <div style="display:flex;flex-direction:column;gap:16px">
+                        <div class="form-group">
+                            <label class="form-label" for="username">Usuario</label>
+                            <input class="form-input" type="text" id="username" name="_username"
+                                   value="{{ last_username }}" autocomplete="username" autofocus>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="password">Contraseña</label>
+                            <input class="form-input" type="password" id="password" name="_password"
+                                   autocomplete="current-password">
+                        </div>
+
+                        <button class="btn-login" type="submit">Entrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

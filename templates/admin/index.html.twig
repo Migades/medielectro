@@ -1,0 +1,334 @@
+{% extends 'base.html.twig' %}
+{% block title %}Panel de administración · Medielectro{% endblock %}
+
+{% block body %}
+    <style>
+        /* ── Layout admin ── */
+        .admin-wrap { margin: 24px 0; }
+
+        .admin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .admin-header h1 {
+            font-size: 22px;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: -.3px;
+        }
+
+        /* ── Stats ── */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-card__label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: var(--muted);
+        }
+
+        .stat-card__value {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -.6px;
+            line-height: 1;
+        }
+
+        .stat-card--pending .stat-card__value   { color: #92400e; }
+        .stat-card--confirmed .stat-card__value { color: #1d4ed8; }
+        .stat-card--shipped .stat-card__value   { color: #15803d; }
+
+        /* ── Filtros ── */
+        .admin-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 12px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-search input {
+            border: none;
+            outline: none;
+            background: none;
+            font-size: 13px;
+            width: 100%;
+            color: var(--text);
+        }
+
+        .status-filters {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .status-filter {
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            background: var(--card);
+            transition: all .15s;
+            white-space: nowrap;
+        }
+
+        .status-filter:hover { border-color: var(--brand); color: var(--brand); }
+        .status-filter.active { background: var(--brand); border-color: var(--brand); color: white; }
+
+        /* ── Tabla de pedidos ── */
+        .orders-table {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .orders-table__header {
+            display: grid;
+            grid-template-columns: 140px 1fr 120px 100px 90px 80px;
+            gap: 12px;
+            padding: 11px 16px;
+            background: #f9fafb;
+            border-bottom: 1px solid var(--border);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: var(--muted);
+        }
+
+        .order-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 120px 100px 90px 80px;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid #f3f4f6;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text);
+            transition: background .15s;
+        }
+
+        .order-row:last-child { border-bottom: none; }
+        .order-row:hover { background: #f9fafb; }
+
+        .order-ref {
+            font-size: 13px;
+            font-weight: 800;
+            font-family: monospace;
+            color: var(--brand);
+        }
+
+        .order-customer { font-size: 13px; }
+        .order-customer__name { font-weight: 700; }
+        .order-customer__email { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+        .order-date { font-size: 12px; color: var(--muted); }
+
+        .order-total {
+            font-size: 15px;
+            font-weight: 900;
+            letter-spacing: -.3px;
+        }
+
+        /* Badges de estado */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-badge--pending   { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+        .status-badge--confirmed { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+        .status-badge--shipped   { background: #effbf3; color: #15803d; border: 1px solid #b7ebc6; }
+        .status-badge--delivered { background: #f0fdf4; color: #166534; border: 1px solid #86efac; }
+        .status-badge--cancelled { background: #f9fafb; color: #6b7280; border: 1px solid #e5e7eb; }
+
+        .order-actions a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px; height: 30px;
+            border-radius: 8px;
+            background: #f3f4f6;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: background .15s, color .15s;
+        }
+
+        .order-actions a:hover { background: var(--brand); color: white; }
+
+        .empty-state {
+            text-align: center;
+            padding: 56px 24px;
+            color: var(--muted);
+        }
+
+        .empty-state__icon { font-size: 40px; margin-bottom: 12px; }
+        .empty-state__title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+
+        /* Flash messages */
+        .flash-admin-success {
+            background: #effbf3; border: 1px solid #b7ebc6; color: #15803d;
+            padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .admin-stats { grid-template-columns: repeat(2, 1fr); }
+            .orders-table__header { display: none; }
+            .order-row { grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 6px; }
+        }
+    </style>
+
+    <div class="admin-wrap">
+
+        {% for msg in app.flashes('admin_success') %}
+            <div class="flash-admin-success">{{ msg }}</div>
+        {% endfor %}
+
+        <div class="admin-header">
+            <div>
+                <h1>Panel de pedidos</h1>
+                <p style="margin:2px 0 0;color:var(--muted);font-size:13px">{{ stats.total }} pedidos en total</p>
+            </div>
+            <a href="{{ path('app_admin_logout') }}" class="btn" style="font-size:13px">Cerrar sesión</a>
+        </div>
+
+        {# ── Stats ── #}
+        <div class="admin-stats">
+            <div class="stat-card">
+                <span class="stat-card__label">Total pedidos</span>
+                <span class="stat-card__value">{{ stats.total }}</span>
+            </div>
+            <div class="stat-card stat-card--pending">
+                <span class="stat-card__label">Pendientes</span>
+                <span class="stat-card__value">{{ stats.pending }}</span>
+            </div>
+            <div class="stat-card stat-card--confirmed">
+                <span class="stat-card__label">Confirmados</span>
+                <span class="stat-card__value">{{ stats.confirmed }}</span>
+            </div>
+            <div class="stat-card stat-card--shipped">
+                <span class="stat-card__label">Enviados</span>
+                <span class="stat-card__value">{{ stats.shipped }}</span>
+            </div>
+        </div>
+
+        {# ── Filtros ── #}
+        <div class="admin-filters">
+            <form class="filter-search" method="get">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--muted);flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input type="text" name="q" value="{{ filterQ }}" placeholder="Buscar por referencia, cliente o email…">
+                {% if filterStatus %}<input type="hidden" name="status" value="{{ filterStatus }}">{% endif %}
+            </form>
+
+            <div class="status-filters">
+                <a class="status-filter {{ filterStatus == '' ? 'active' : '' }}" href="{{ path('app_admin_index') }}{{ filterQ ? '?q=' ~ filterQ : '' }}">Todos</a>
+                <a class="status-filter {{ filterStatus == 'pending' ? 'active' : '' }}" href="{{ path('app_admin_index', {status: 'pending'}) }}{{ filterQ ? '&q=' ~ filterQ : '' }}">Pendientes</a>
+                <a class="status-filter {{ filterStatus == 'confirmed' ? 'active' : '' }}" href="{{ path('app_admin_index', {status: 'confirmed'}) }}{{ filterQ ? '&q=' ~ filterQ : '' }}">Confirmados</a>
+                <a class="status-filter {{ filterStatus == 'shipped' ? 'active' : '' }}" href="{{ path('app_admin_index', {status: 'shipped'}) }}{{ filterQ ? '&q=' ~ filterQ : '' }}">Enviados</a>
+                <a class="status-filter {{ filterStatus == 'delivered' ? 'active' : '' }}" href="{{ path('app_admin_index', {status: 'delivered'}) }}{{ filterQ ? '&q=' ~ filterQ : '' }}">Entregados</a>
+                <a class="status-filter {{ filterStatus == 'cancelled' ? 'active' : '' }}" href="{{ path('app_admin_index', {status: 'cancelled'}) }}{{ filterQ ? '&q=' ~ filterQ : '' }}">Cancelados</a>
+            </div>
+        </div>
+
+        {# ── Tabla ── #}
+        <div class="orders-table">
+            {% if orders is empty %}
+                <div class="empty-state">
+                    <div class="empty-state__icon">📭</div>
+                    <div class="empty-state__title">No hay pedidos</div>
+                    <p>No se encontraron pedidos con los filtros aplicados.</p>
+                </div>
+            {% else %}
+                <div class="orders-table__header">
+                    <span>Referencia</span>
+                    <span>Cliente</span>
+                    <span>Fecha</span>
+                    <span>Total</span>
+                    <span>Estado</span>
+                    <span></span>
+                </div>
+
+                {% for order in orders %}
+                    <a class="order-row" href="{{ path('app_admin_order_show', {id: order.id}) }}">
+                        <div class="order-ref">{{ order.reference }}</div>
+
+                        <div class="order-customer">
+                            <div class="order-customer__name">{{ order.customer.name }}</div>
+                            <div class="order-customer__email">{{ order.customer.email }} · {{ order.customer.phone }}</div>
+                        </div>
+
+                        <div class="order-date">
+                            {{ order.createdAt|date('d/m/Y') }}<br>
+                            <span style="font-size:11px">{{ order.createdAt|date('H:i') }}</span>
+                        </div>
+
+                        <div class="order-total">{{ order.total|number_format(2, ',', '.') }} €</div>
+
+                        <div>
+                            {% set statusLabels = {
+                                pending:   '⏳ Pendiente',
+                                confirmed: '✅ Confirmado',
+                                shipped:   '🚚 Enviado',
+                                delivered: '📦 Entregado',
+                                cancelled: '❌ Cancelado'
+                            } %}
+                            <span class="status-badge status-badge--{{ order.status }}">
+                            {{ statusLabels[order.status] ?? order.status }}
+                        </span>
+                        </div>
+
+                        <div class="order-actions">
+                            <span title="Ver detalle">→</span>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+    </div>
+{% endblock %}

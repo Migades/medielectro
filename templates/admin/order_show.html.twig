@@ -1,0 +1,321 @@
+{% extends 'base.html.twig' %}
+{% block title %}Pedido {{ order.reference }} · Admin · Medielectro{% endblock %}
+
+{% block body %}
+    <style>
+        .order-detail { margin: 24px 0; }
+
+        .order-detail__header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .order-detail__title {
+            font-size: 22px; font-weight: 900; margin: 0 0 4px;
+            letter-spacing: -.3px;
+        }
+
+        .order-detail__meta { font-size: 13px; color: var(--muted); }
+
+        .order-detail__layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* ── Cards genéricas ── */
+        .detail-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .detail-card:last-child { margin-bottom: 0; }
+
+        .detail-card__header {
+            padding: 13px 18px;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: var(--muted);
+            background: #f9fafb;
+        }
+
+        .detail-card__body { padding: 16px 18px; }
+
+        /* ── Líneas del pedido ── */
+        .order-lines { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .order-lines th {
+            text-align: left; padding: 8px 12px;
+            background: #f9fafb; color: var(--muted);
+            font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .4px;
+            border-bottom: 1px solid var(--border);
+        }
+        .order-lines td { padding: 12px; border-bottom: 1px solid #f3f4f6; }
+        .order-lines tr:last-child td { border-bottom: none; }
+        .order-lines__article { font-size: 11px; color: var(--muted); }
+        .order-lines__title { font-weight: 700; }
+        .order-lines__brand { font-size: 11px; color: var(--muted); }
+        .order-lines__price { text-align: right; white-space: nowrap; }
+        .order-lines__subtotal { text-align: right; font-weight: 800; white-space: nowrap; }
+        .order-lines__total-row td {
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 900;
+            border-top: 2px solid var(--border);
+            background: #f9fafb;
+        }
+
+        /* ── Info cliente ── */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 9px 0;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 13px;
+            gap: 12px;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-row__label { color: var(--muted); font-size: 12px; flex-shrink: 0; }
+        .info-row__value { font-weight: 600; text-align: right; }
+
+        /* ── Cambio de estado ── */
+        .status-changer { display: flex; flex-direction: column; gap: 8px; }
+
+        .status-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            transition: all .15s;
+            text-align: left;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .status-btn:hover { border-color: var(--brand); color: var(--brand); background: #fff1f2; }
+        .status-btn.current { border-color: var(--brand); background: var(--brand); color: white; pointer-events: none; }
+        .status-btn.current:hover { background: var(--brand); }
+
+        /* Badges */
+        .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+        .status-badge--pending   { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+        .status-badge--confirmed { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+        .status-badge--shipped   { background: #effbf3; color: #15803d; border: 1px solid #b7ebc6; }
+        .status-badge--delivered { background: #f0fdf4; color: #166534; border: 1px solid #86efac; }
+        .status-badge--cancelled { background: #f9fafb; color: #6b7280; border: 1px solid #e5e7eb; }
+
+        .flash-admin-success {
+            background: #effbf3; border: 1px solid #b7ebc6; color: #15803d;
+            padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .order-detail__layout { grid-template-columns: 1fr; }
+        }
+    </style>
+
+    <div class="order-detail">
+
+        {% for msg in app.flashes('admin_success') %}
+            <div class="flash-admin-success">{{ msg }}</div>
+        {% endfor %}
+
+        <div style="margin-bottom:16px">
+            <a href="{{ path('app_admin_index') }}" style="color:var(--muted);font-size:13px;text-decoration:none">← Volver a pedidos</a>
+        </div>
+
+        <div class="order-detail__header">
+            <div>
+                <h1 class="order-detail__title">{{ order.reference }}</h1>
+                <div class="order-detail__meta">
+                    Recibido el {{ order.createdAt|date('d/m/Y') }} a las {{ order.createdAt|date('H:i') }}
+                    {% if order.updatedAt %} · Actualizado {{ order.updatedAt|date('d/m/Y H:i') }}{% endif %}
+                </div>
+            </div>
+            {% set statusLabels = {
+                pending:   '⏳ Pendiente',
+                confirmed: '✅ Confirmado',
+                shipped:   '🚚 Enviado',
+                delivered: '📦 Entregado',
+                cancelled: '❌ Cancelado'
+            } %}
+            <span class="status-badge status-badge--{{ order.status }}">
+            {{ statusLabels[order.status] ?? order.status }}
+        </span>
+        </div>
+
+        <div class="order-detail__layout">
+
+            {# ── Columna principal ── #}
+            <div>
+                {# Líneas del pedido #}
+                <div class="detail-card">
+                    <div class="detail-card__header">Productos</div>
+                    <table class="order-lines">
+                        <thead>
+                        <tr>
+                            <th>Artículo</th>
+                            <th>Producto</th>
+                            <th style="text-align:right">Uds.</th>
+                            <th style="text-align:right">Precio ud.</th>
+                            <th style="text-align:right">Subtotal</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for line in order.lines %}
+                            <tr>
+                                <td class="order-lines__article">{{ line.productArticle }}</td>
+                                <td>
+                                    <div class="order-lines__title">{{ line.productTitle }}</div>
+                                    {% if line.productBrand %}<div class="order-lines__brand">{{ line.productBrand }}</div>{% endif %}
+                                </td>
+                                <td style="text-align:right">{{ line.quantity }}</td>
+                                <td class="order-lines__price">{{ line.unitPrice|number_format(2, ',', '.') }} €</td>
+                                <td class="order-lines__subtotal">{{ line.subtotal|number_format(2, ',', '.') }} €</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        <tfoot>
+                        <tr class="order-lines__total-row">
+                            <td colspan="4" style="text-align:right">Total</td>
+                            <td style="text-align:right">{{ order.total|number_format(2, ',', '.') }} €</td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                {# Datos de entrega #}
+                {% if order.shippingAddress %}
+                    <div class="detail-card">
+                        <div class="detail-card__header">Dirección de entrega</div>
+                        <div class="detail-card__body">
+                            <div style="font-size:14px;line-height:1.7">
+                                {{ order.shippingAddress }}<br>
+                                {% if order.shippingZip %}{{ order.shippingZip }} {% endif %}
+                                {% if order.shippingCity %}{{ order.shippingCity }}{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {# Notas #}
+                {% if order.notes %}
+                    <div class="detail-card">
+                        <div class="detail-card__header">Notas del cliente</div>
+                        <div class="detail-card__body">
+                            <p style="margin:0;font-size:13px;color:var(--muted);line-height:1.6">{{ order.notes }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            {# ── Columna lateral ── #}
+            <div>
+                {# Datos del cliente #}
+                <div class="detail-card">
+                    <div class="detail-card__header">Cliente</div>
+                    <div class="detail-card__body">
+                        <div class="info-row">
+                            <span class="info-row__label">Nombre</span>
+                            <span class="info-row__value">{{ order.customer.name }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-row__label">Email</span>
+                            <span class="info-row__value">
+                            <a href="mailto:{{ order.customer.email }}" style="color:var(--brand)">{{ order.customer.email }}</a>
+                        </span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-row__label">Teléfono</span>
+                            <span class="info-row__value">
+                            <a href="tel:{{ order.customer.phone }}" style="color:var(--brand)">{{ order.customer.phone }}</a>
+                        </span>
+                        </div>
+                        {% if order.customer.company %}
+                            <div class="info-row">
+                                <span class="info-row__label">Empresa</span>
+                                <span class="info-row__value">{{ order.customer.company }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {# Cambiar estado #}
+                <div class="detail-card">
+                    <div class="detail-card__header">Cambiar estado</div>
+                    <div class="detail-card__body">
+                        <div class="status-changer">
+                            {% set allStatuses = {
+                                pending:   '⏳ Pendiente',
+                                confirmed: '✅ Confirmado',
+                                shipped:   '🚚 Enviado',
+                                delivered: '📦 Entregado',
+                                cancelled: '❌ Cancelado'
+                            } %}
+                            {% for value, label in allStatuses %}
+                                <form method="post" action="{{ path('app_admin_order_status', {id: order.id}) }}">
+                                    <input type="hidden" name="status" value="{{ value }}">
+                                    <button type="submit" class="status-btn {{ order.status == value ? 'current' : '' }}">
+                                        {{ label }}
+                                    </button>
+                                </form>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                {# ERP Status #}
+                <div class="detail-card">
+                    <div class="detail-card__header">Integración ERP</div>
+                    <div class="detail-card__body">
+                        <div class="info-row">
+                            <span class="info-row__label">Estado ERP</span>
+                            <span class="info-row__value">{{ order.erpStatus }}</span>
+                        </div>
+                        {% if order.erpSentAt %}
+                            <div class="info-row">
+                                <span class="info-row__label">Enviado</span>
+                                <span class="info-row__value">{{ order.erpSentAt|date('d/m/Y H:i') }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Confirmación antes de cancelar
+        document.querySelectorAll('.status-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                var val = this.closest('form').querySelector('[name="status"]').value;
+                if (val === 'cancelled') {
+                    if (!confirm('¿Seguro que quieres cancelar este pedido?')) {
+                        e.preventDefault();
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
