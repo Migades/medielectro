@@ -563,16 +563,6 @@
                 <form method="get" action="{{ path('app_catalog') }}" id="filterForm">
                     <div class="sidebar__body">
 
-                        {# Disponibilidad — primero porque es el más usado #}
-                        <div>
-                            <span class="filter-group__label">Disponibilidad</span>
-                            <label class="stock-toggle">
-                                <input type="checkbox" name="inStock" value="1" {% if filters.inStock == 1 %}checked{% endif %} onchange="this.form.submit()">
-                                <span class="stock-toggle__track"><span class="stock-toggle__thumb"></span></span>
-                                <span class="stock-toggle__text">Solo disponibles (stock ≥ 5)</span>
-                            </label>
-                        </div>
-
                         {# Búsqueda #}
                         <div>
                             <span class="filter-group__label">Buscar</span>

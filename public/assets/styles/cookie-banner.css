@@ -1,0 +1,88 @@
+/* ── Cookie Banner – Medielectro ────────────────────────────────── */
+#cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    justify-content: space-between;
+
+    padding: 14px 24px;
+    background: #111827;          /* mismo que el footer */
+    color: rgba(255, 255, 255, .75);
+    font-size: 13px;
+    line-height: 1.5;
+    border-top: 1px solid rgba(255, 255, 255, .08);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, .2);
+
+    animation: cookieSlideUp .3s ease-out both;
+    transition: opacity .25s ease, transform .25s ease;
+}
+
+#cookie-banner.cookie-banner--hiding {
+    opacity: 0;
+    transform: translateY(100%);
+}
+
+@keyframes cookieSlideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+.cookie-banner__text {
+    margin: 0;
+    flex: 1 1 60%;
+}
+
+.cookie-banner__text strong {
+    color: white;
+}
+
+.cookie-banner__link {
+    color: #e30613; /* --brand */
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
+.cookie-banner__link:hover {
+    color: #ff2b38;
+}
+
+.cookie-banner__btn {
+    flex-shrink: 0;
+    padding: 9px 20px;
+    background: #e30613;           /* --brand */
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    transition: background .15s;
+    white-space: nowrap;
+}
+
+.cookie-banner__btn:hover,
+.cookie-banner__btn:focus-visible {
+    background: #c2000f;
+    outline: 2px solid #e30613;
+    outline-offset: 2px;
+}
+
+@media (max-width: 580px) {
+    #cookie-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px;
+    }
+    .cookie-banner__btn {
+        width: 100%;
+        text-align: center;
+    }
+}

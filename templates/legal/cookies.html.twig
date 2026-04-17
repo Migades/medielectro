@@ -1,0 +1,307 @@
+{% extends 'base.html.twig' %}
+{% block title %}Política de Cookies · Medielectro Valencia{% endblock %}
+
+{% block body %}
+    <style>
+        .legal-hero {
+            margin: 24px 0 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .legal-hero__eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            color: var(--brand);
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 5px 12px;
+            width: fit-content;
+        }
+        .legal-hero__title {
+            font-size: 32px;
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -.7px;
+            margin: 0;
+        }
+        .legal-hero__meta {
+            font-size: 13px;
+            color: var(--muted);
+            margin: 0;
+        }
+        .legal-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin: 16px 0 0;
+            font-size: 13px;
+        }
+        .legal-table th,
+        .legal-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+        .legal-table tr:last-child th,
+        .legal-table tr:last-child td { border-bottom: none; }
+        .legal-table thead th {
+            background: #fafafa;
+            font-weight: 700;
+            color: var(--muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
+        .legal-table code {
+            background: #f3f4f6;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+        .legal-section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 14px;
+        }
+        .legal-section h2 {
+            font-size: 16px;
+            font-weight: 800;
+            margin: 0 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legal-section p,
+        .legal-section ul {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.7;
+            margin: 0 0 10px;
+        }
+        .legal-section ul { padding-left: 20px; }
+        .legal-section p:last-child,
+        .legal-section ul:last-child { margin-bottom: 0; }
+
+        /* Badge técnica */
+        .badge-tecnica {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+        }
+
+        /* Navegadores grid */
+        .browsers-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .browser-card {
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text);
+            transition: background .15s, border-color .15s;
+        }
+        .browser-card:hover {
+            background: var(--card);
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+        .browser-card__icon { font-size: 24px; display: block; margin-bottom: 6px; }
+
+        /* Alerta info */
+        .legal-info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 13px;
+            color: #1d4ed8;
+            line-height: 1.6;
+            margin-top: 14px;
+        }
+        .legal-cta {
+            background: var(--brand);
+            border-radius: 20px;
+            padding: 36px 40px;
+            text-align: center;
+            color: white;
+            margin: 32px 0 0;
+        }
+        .legal-cta h2 {
+            font-size: 22px;
+            font-weight: 900;
+            margin: 0 0 8px;
+            letter-spacing: -.3px;
+        }
+        .legal-cta p {
+            font-size: 14px;
+            color: rgba(255,255,255,.8);
+            margin: 0 0 20px;
+        }
+        .btn-white {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            color: var(--brand);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: opacity .15s;
+        }
+        .btn-white:hover { opacity: .9; }
+
+        @media (max-width: 700px) {
+            .browsers-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+
+    {# ── Breadcrumb ── #}
+    <div style="margin:16px 0 0;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+        <a href="{{ path('app_home') }}" style="color:var(--muted);text-decoration:none">Inicio</a>
+        <span>›</span>
+        <span>Política de Cookies</span>
+    </div>
+
+    {# ── Hero ── #}
+    <div class="legal-hero">
+        <span class="legal-hero__eyebrow">🍪 LSSI-CE art. 22.2</span>
+        <h1 class="legal-hero__title">Política de Cookies</h1>
+        <p class="legal-hero__meta">Última actualización: <strong>PENDIENTE_FECHA_VIGENCIA</strong></p>
+    </div>
+
+    {# ── 1. Qué son ── #}
+    <div class="legal-section">
+        <h2>🍪 1. ¿Qué son las cookies?</h2>
+        <p>
+            Las cookies son pequeños archivos de texto que los sitios web almacenan en su navegador cuando
+            los visita. Permiten que el sitio recuerde información sobre su visita, como el contenido de su
+            carrito de compra o sus preferencias de navegación, mejorando así su experiencia de usuario.
+        </p>
+    </div>
+
+    {# ── 2. Cookies utilizadas ── #}
+    <div class="legal-section">
+        <h2>📋 2. Cookies que utiliza este sitio</h2>
+        <p>
+            Este sitio web utiliza <strong>exclusivamente cookies técnicas necesarias</strong> para su
+            correcto funcionamiento. No se utilizan cookies de análisis, publicidad ni seguimiento de terceros.
+        </p>
+
+        <table class="legal-table">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Finalidad</th>
+                <th>Tipo</th>
+                <th>Duración</th>
+                <th>Titular</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><code>PHPSESSID</code></td>
+                <td>
+                    Mantiene la sesión activa del usuario (carrito de compra y autenticación).
+                    Sin esta cookie el sitio no puede funcionar.
+                </td>
+                <td><span class="badge-tecnica">✅ Técnica</span></td>
+                <td>Sesión · se elimina al cerrar el navegador</td>
+                <td>PENDIENTE_RAZON_SOCIAL</td>
+            </tr>
+            <tr>
+                <td><code>cookie_notice</code></td>
+                <td>
+                    Registra que el usuario ha leído el aviso de cookies
+                    para no volver a mostrarlo.
+                </td>
+                <td><span class="badge-tecnica">✅ Técnica</span></td>
+                <td>1 año</td>
+                <td>PENDIENTE_RAZON_SOCIAL</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="legal-info">
+            <strong>Sin necesidad de consentimiento:</strong> al ser todas las cookies de carácter técnico
+            y necesario, su uso no requiere consentimiento previo conforme al artículo 22.2 de la LSSI-CE.
+            Le informamos de su existencia en aras de la máxima transparencia.
+        </div>
+    </div>
+
+    {# ── 3. Cómo gestionar ── #}
+    <div class="legal-section">
+        <h2>⚙️ 3. Cómo gestionar o eliminar las cookies</h2>
+        <p>
+            Puede configurar su navegador para bloquear o eliminar cookies. Tenga en cuenta que deshabilitar
+            las cookies técnicas puede afectar al funcionamiento del carrito y otras funcionalidades del sitio.
+        </p>
+        <div class="browsers-grid">
+            <a class="browser-card" href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer">
+                <span class="browser-card__icon">🌐</span>
+                Chrome
+            </a>
+            <a class="browser-card" href="https://support.mozilla.org/es/kb/habilitar-y-deshabilitar-cookies-sitios-web-rastrear-preferencias" target="_blank" rel="noopener noreferrer">
+                <span class="browser-card__icon">🦊</span>
+                Firefox
+            </a>
+            <a class="browser-card" href="https://support.apple.com/es-es/guide/safari/sfri11471/mac" target="_blank" rel="noopener noreferrer">
+                <span class="browser-card__icon">🧭</span>
+                Safari
+            </a>
+            <a class="browser-card" href="https://support.microsoft.com/es-es/windows/eliminar-y-administrar-cookies-168dab11-0753-043d-7c16-ede5947fc64d" target="_blank" rel="noopener noreferrer">
+                <span class="browser-card__icon">🪟</span>
+                Edge
+            </a>
+        </div>
+    </div>
+
+    {# ── 4. Actualizaciones ── #}
+    <div class="legal-section">
+        <h2>🔄 4. Actualizaciones de esta política</h2>
+        <p>
+            Podemos actualizar esta política cuando añadamos nuevas funcionalidades al sitio que impliquen
+            el uso de cookies adicionales. Le recomendamos revisarla periódicamente. En caso de cambios
+            relevantes, le informaremos mediante un aviso visible en el Sitio.
+        </p>
+    </div>
+
+    {# ── CTA ── #}
+    <div class="legal-cta">
+        <h2>¿Tienes dudas sobre las cookies?</h2>
+        <p>Escríbenos y te aclaramos cualquier cuestión sobre el uso de datos en nuestra web.</p>
+        <a class="btn-white" href="mailto:PENDIENTE_EMAIL_LEGAL">
+            ✉️ Contactar
+        </a>
+    </div>
+
+{% endblock %}
