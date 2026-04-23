@@ -2,336 +2,155 @@
 {% block title %}Política de Privacidad · Medielectro Valencia{% endblock %}
 
 {% block body %}
-    <style>
-        .legal-hero {
-            margin: 24px 0 32px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .legal-hero__eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #fff1f2;
-            border: 1px solid #fecdd3;
-            color: var(--brand);
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-            padding: 5px 12px;
-            width: fit-content;
-        }
-        .legal-hero__title {
-            font-size: 32px;
-            font-weight: 900;
-            line-height: 1.1;
-            letter-spacing: -.7px;
-            margin: 0;
-        }
-        .legal-hero__meta {
-            font-size: 13px;
-            color: var(--muted);
-            margin: 0;
-        }
-        .legal-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-            margin: 16px 0 0;
-            font-size: 13px;
-        }
-        .legal-table th,
-        .legal-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
-            text-align: left;
-        }
-        .legal-table tr:last-child th,
-        .legal-table tr:last-child td { border-bottom: none; }
-        .legal-table thead th {
-            background: #fafafa;
-            font-weight: 700;
-            color: var(--muted);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: .4px;
-        }
-        .legal-table tbody th {
-            width: 36%;
-            background: #fafafa;
-            font-weight: 700;
-            color: var(--muted);
-        }
-        .legal-table a { color: var(--brand); }
-        .legal-section {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 14px;
-        }
-        .legal-section h2 {
-            font-size: 16px;
-            font-weight: 800;
-            margin: 0 0 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .legal-section p,
-        .legal-section ul {
-            font-size: 14px;
-            color: var(--muted);
-            line-height: 1.7;
-            margin: 0 0 10px;
-        }
-        .legal-section ul { padding-left: 20px; }
-        .legal-section p:last-child,
-        .legal-section ul:last-child { margin-bottom: 0; }
+<style>
+    .legal-hero { margin: 24px 0 32px; display: flex; flex-direction: column; gap: 12px; }
+    .legal-hero__eyebrow {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: #fff1f2; border: 1px solid #fecdd3; color: var(--brand);
+        border-radius: 999px; font-size: 11px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: .5px; padding: 5px 12px; width: fit-content;
+    }
+    .legal-hero__title { font-size: 32px; font-weight: 900; line-height: 1.1; letter-spacing: -.7px; margin: 0; }
+    .legal-hero__meta { font-size: 13px; color: var(--muted); margin: 0; }
 
-        /* Derechos grid */
-        .rights-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 14px;
-        }
-        .right-card {
-            background: #f9fafb;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-        }
-        .right-card__title {
-            font-size: 13px;
-            font-weight: 800;
-            margin: 0 0 4px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .right-card__text {
-            font-size: 12px;
-            color: var(--muted);
-            line-height: 1.5;
-            margin: 0;
-        }
-        .legal-cta {
-            background: var(--brand);
-            border-radius: 20px;
-            padding: 36px 40px;
-            text-align: center;
-            color: white;
-            margin: 32px 0 0;
-        }
-        .legal-cta h2 {
-            font-size: 22px;
-            font-weight: 900;
-            margin: 0 0 8px;
-            letter-spacing: -.3px;
-        }
-        .legal-cta p {
-            font-size: 14px;
-            color: rgba(255,255,255,.8);
-            margin: 0 0 20px;
-        }
-        .btn-white {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: white;
-            color: var(--brand);
-            border: none;
-            border-radius: 12px;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 800;
-            text-decoration: none;
-            transition: opacity .15s;
-        }
-        .btn-white:hover { opacity: .9; }
+    .legal-table {
+        width: 100%; border-collapse: collapse; background: var(--card);
+        border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin: 16px 0 0; font-size: 13px;
+    }
+    .legal-table th, .legal-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); text-align: left; }
+    .legal-table tr:last-child th, .legal-table tr:last-child td { border-bottom: none; }
+    .legal-table thead th { background: #fafafa; font-weight: 700; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .4px; }
+    .legal-table tbody th { width: 36%; background: #fafafa; font-weight: 700; color: var(--muted); }
+    .legal-table a { color: var(--brand); }
 
-        @media (max-width: 700px) {
-            .rights-grid { grid-template-columns: 1fr 1fr; }
-        }
-        @media (max-width: 480px) {
-            .rights-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+    .legal-section {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: 24px; margin-bottom: 14px;
+    }
+    .legal-section h2 { font-size: 16px; font-weight: 800; margin: 0 0 12px; }
+    .legal-section p, .legal-section ul { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 0 0 10px; }
+    .legal-section ul { padding-left: 20px; }
+    .legal-section p:last-child, .legal-section ul:last-child { margin-bottom: 0; }
 
-    {# ── Breadcrumb ── #}
-    <div style="margin:16px 0 0;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
-        <a href="{{ path('app_home') }}" style="color:var(--muted);text-decoration:none">Inicio</a>
-        <span>›</span>
-        <span>Política de Privacidad</span>
-    </div>
+    .rights-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+    .right-card { background: #f9fafb; border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .right-card__title { font-size: 13px; font-weight: 800; margin: 0 0 4px; }
+    .right-card__text { font-size: 12px; color: var(--muted); line-height: 1.5; margin: 0; }
 
-    {# ── Hero ── #}
-    <div class="legal-hero">
-        <span class="legal-hero__eyebrow">🔐 RGPD · LOPDGDD</span>
-        <h1 class="legal-hero__title">Política de Privacidad</h1>
-        <p class="legal-hero__meta">Última actualización: <strong>PENDIENTE_FECHA_VIGENCIA</strong></p>
-    </div>
+    .legal-cta {
+        background: var(--brand); border-radius: 20px; padding: 36px 40px;
+        text-align: center; color: white; margin: 32px 0 0;
+    }
+    .legal-cta h2 { font-size: 22px; font-weight: 900; margin: 0 0 8px; letter-spacing: -.3px; }
+    .legal-cta p { font-size: 14px; color: rgba(255,255,255,.8); margin: 0 0 20px; }
+    .btn-white {
+        display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--brand);
+        border: none; border-radius: 12px; padding: 12px 24px; font-size: 14px; font-weight: 800;
+        text-decoration: none; transition: opacity .15s;
+    }
+    .btn-white:hover { opacity: .9; }
+    @media (max-width: 700px) { .rights-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .rights-grid { grid-template-columns: 1fr; } }
+</style>
 
-    {# ── 1. Responsable ── #}
-    <div class="legal-section">
-        <h2>👤 1. Responsable del tratamiento</h2>
-        <table class="legal-table">
-            <tbody>
-            <tr>
-                <th>Identidad</th>
-                <td>PENDIENTE_RAZON_SOCIAL</td>
-            </tr>
-            <tr>
-                <th>CIF</th>
-                <td>PENDIENTE_CIF</td>
-            </tr>
-            <tr>
-                <th>Dirección</th>
-                <td>PENDIENTE_DOMICILIO</td>
-            </tr>
-            <tr>
-                <th>Contacto</th>
-                <td><a href="mailto:PENDIENTE_EMAIL_LEGAL">PENDIENTE_EMAIL_LEGAL</a></td>
-            </tr>
+<div style="margin:16px 0 0;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+    <a href="{{ path('app_home') }}" style="color:var(--muted);text-decoration:none">Inicio</a>
+    <span>›</span>
+    <span>Política de Privacidad</span>
+</div>
+
+<div class="legal-hero">
+    <span class="legal-hero__eyebrow">RGPD · LOPDGDD</span>
+    <h1 class="legal-hero__title">Política de Privacidad</h1>
+    <p class="legal-hero__meta">Última actualización: <strong>PENDIENTE_FECHA_VIGENCIA</strong></p>
+</div>
+
+<div class="legal-section">
+    <h2>1. Responsable del tratamiento</h2>
+    <table class="legal-table">
+        <tbody>
+            <tr><th>Identidad</th><td>PENDIENTE_RAZON_SOCIAL</td></tr>
+            <tr><th>CIF</th><td>PENDIENTE_CIF</td></tr>
+            <tr><th>Dirección</th><td>PENDIENTE_DOMICILIO</td></tr>
+            <tr><th>Contacto</th><td><a href="mailto:PENDIENTE_EMAIL_LEGAL">PENDIENTE_EMAIL_LEGAL</a></td></tr>
             {#
-            <tr>
-                <th>DPD / DPO</th>
-                <td><a href="mailto:PENDIENTE_EMAIL_DPD">PENDIENTE_EMAIL_DPD</a></td>
-            </tr>
+            <tr><th>DPD / DPO</th><td><a href="mailto:PENDIENTE_EMAIL_DPD">PENDIENTE_EMAIL_DPD</a></td></tr>
             Descomentar si se designa Delegado de Protección de Datos
             #}
-            </tbody>
-        </table>
-    </div>
+        </tbody>
+    </table>
+</div>
 
-    {# ── 2. Finalidades ── #}
-    <div class="legal-section">
-        <h2>🎯 2. Finalidades del tratamiento</h2>
-        <p>Tratamos los datos personales que nos facilita con las siguientes finalidades:</p>
-        <ul>
-            <li><strong>Gestión de pedidos:</strong> tramitar, facturar y enviar los pedidos realizados en la tienda.</li>
-            <li><strong>Comunicaciones transaccionales:</strong> confirmaciones de pedido, actualizaciones de estado y avisos relacionados con su compra.</li>
-            <li><strong>Atención al cliente:</strong> gestionar consultas, reclamaciones y ejercicio de derechos.</li>
-            <li><strong>Obligaciones legales:</strong> cumplir con la normativa fiscal, contable y mercantil aplicable.</li>
-        </ul>
-    </div>
+<div class="legal-section">
+    <h2>2. Finalidades del tratamiento</h2>
+    <p>Tratamos los datos personales que nos facilita con las siguientes finalidades:</p>
+    <ul>
+        <li><strong>Gestión de pedidos:</strong> tramitar, facturar y enviar los pedidos realizados en la tienda.</li>
+        <li><strong>Comunicaciones transaccionales:</strong> confirmaciones de pedido, actualizaciones de estado y avisos de compra.</li>
+        <li><strong>Atención al cliente:</strong> gestionar consultas, reclamaciones y ejercicio de derechos.</li>
+        <li><strong>Obligaciones legales:</strong> cumplir con la normativa fiscal, contable y mercantil aplicable.</li>
+    </ul>
+</div>
 
-    {# ── 3. Base jurídica ── #}
-    <div class="legal-section">
-        <h2>⚖️ 3. Base jurídica del tratamiento</h2>
-        <table class="legal-table">
-            <thead>
-            <tr>
-                <th>Finalidad</th>
-                <th>Base jurídica (RGPD art. 6)</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>Gestión de pedidos y facturación</td>
-                <td>Art. 6.1.b – ejecución de un contrato</td>
-            </tr>
-            <tr>
-                <td>Comunicaciones transaccionales</td>
-                <td>Art. 6.1.b – ejecución de un contrato</td>
-            </tr>
-            <tr>
-                <td>Obligaciones fiscales y contables</td>
-                <td>Art. 6.1.c – obligación legal</td>
-            </tr>
-            <tr>
-                <td>Atención al cliente</td>
-                <td>Art. 6.1.f – interés legítimo del responsable</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<div class="legal-section">
+    <h2>3. Base jurídica del tratamiento</h2>
+    <table class="legal-table">
+        <thead><tr><th>Finalidad</th><th>Base jurídica (RGPD art. 6)</th></tr></thead>
+        <tbody>
+            <tr><td>Gestión de pedidos y facturación</td><td>Art. 6.1.b – ejecución de un contrato</td></tr>
+            <tr><td>Comunicaciones transaccionales</td><td>Art. 6.1.b – ejecución de un contrato</td></tr>
+            <tr><td>Obligaciones fiscales y contables</td><td>Art. 6.1.c – obligación legal</td></tr>
+            <tr><td>Atención al cliente</td><td>Art. 6.1.f – interés legítimo del responsable</td></tr>
+        </tbody>
+    </table>
+</div>
 
-    {# ── 4. Conservación ── #}
-    <div class="legal-section">
-        <h2>🗓️ 4. Plazos de conservación</h2>
-        <p>Los datos se conservarán durante el tiempo necesario para cada finalidad:</p>
-        <ul>
-            <li><strong>Datos de pedidos y facturación:</strong> 5 años (prescripción de acciones civiles, Código Civil art. 1964).</li>
-            <li><strong>Datos fiscales:</strong> 4 años (prescripción tributaria, Ley General Tributaria art. 66).</li>
-            <li><strong>Comunicaciones con clientes:</strong> 3 años desde el último contacto.</li>
-        </ul>
-        <p>
-            Una vez cumplida la finalidad, los datos se bloquearán y conservarán únicamente a disposición
-            de Administraciones Públicas, Jueces y Tribunales durante los plazos de prescripción aplicables.
-        </p>
-    </div>
+<div class="legal-section">
+    <h2>4. Plazos de conservación</h2>
+    <ul>
+        <li><strong>Datos de pedidos y facturación:</strong> 5 años (C.Civil art. 1964).</li>
+        <li><strong>Datos fiscales:</strong> 4 años (LGT art. 66).</li>
+        <li><strong>Comunicaciones con clientes:</strong> 3 años desde el último contacto.</li>
+    </ul>
+    <p>Una vez cumplida la finalidad, los datos se bloquearán a disposición exclusiva de Administraciones Públicas, Jueces y Tribunales durante los plazos de prescripción.</p>
+</div>
 
-    {# ── 5. Destinatarios ── #}
-    <div class="legal-section">
-        <h2>📤 5. Destinatarios y transferencias</h2>
-        <p>
-            No cedemos datos a terceros, salvo obligación legal o cuando sea estrictamente necesario para
-            la prestación del servicio. Los encargados del tratamiento suscriben el correspondiente acuerdo
-            de confidencialidad. Entre dichos encargados se encuentran:
-        </p>
-        <ul>
-            <li>Proveedores de servicios de correo electrónico transaccional.</li>
-            <li>Empresas de transporte y logística para la entrega de pedidos (solo nombre, dirección y teléfono de entrega).</li>
-            <li>Asesoría fiscal y contable del responsable.</li>
-        </ul>
-        <p>No realizamos transferencias internacionales de datos fuera del Espacio Económico Europeo.</p>
-    </div>
+<div class="legal-section">
+    <h2>5. Destinatarios y transferencias</h2>
+    <p>No cedemos datos a terceros, salvo obligación legal o necesidad para la prestación del servicio. Entre los encargados del tratamiento:</p>
+    <ul>
+        <li>Proveedores de servicios de correo electrónico transaccional.</li>
+        <li>Empresas de transporte y logística (solo nombre, dirección y teléfono de entrega).</li>
+        <li>Asesoría fiscal y contable del responsable.</li>
+    </ul>
+    <p>No realizamos transferencias internacionales de datos fuera del Espacio Económico Europeo.</p>
+</div>
 
-    {# ── 6. Derechos ── #}
-    <div class="legal-section">
-        <h2>✅ 6. Sus derechos</h2>
-        <p>
-            En virtud del RGPD y la LOPDGDD, puede ejercer los siguientes derechos dirigiendo un escrito a
-            <a href="mailto:PENDIENTE_EMAIL_LEGAL" style="color:var(--brand)">PENDIENTE_EMAIL_LEGAL</a>
-            acompañando copia de su DNI:
-        </p>
-        <div class="rights-grid">
-            <div class="right-card">
-                <p class="right-card__title">🔍 Acceso</p>
-                <p class="right-card__text">Conocer qué datos tratamos sobre usted.</p>
-            </div>
-            <div class="right-card">
-                <p class="right-card__title">✏️ Rectificación</p>
-                <p class="right-card__text">Corregir datos inexactos o incompletos.</p>
-            </div>
-            <div class="right-card">
-                <p class="right-card__title">🗑️ Supresión</p>
-                <p class="right-card__text">Solicitar la eliminación de sus datos.</p>
-            </div>
-            <div class="right-card">
-                <p class="right-card__title">⏸️ Limitación</p>
-                <p class="right-card__text">Restringir el tratamiento en determinadas circunstancias.</p>
-            </div>
-            <div class="right-card">
-                <p class="right-card__title">📦 Portabilidad</p>
-                <p class="right-card__text">Recibir sus datos en formato estructurado y legible por máquina.</p>
-            </div>
-            <div class="right-card">
-                <p class="right-card__title">🚫 Oposición</p>
-                <p class="right-card__text">Oponerse al tratamiento basado en interés legítimo.</p>
-            </div>
-        </div>
-        <p style="margin-top:16px">
-            Si considera que el tratamiento no se ajusta a la normativa, puede presentar una reclamación
-            ante la <a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer" style="color:var(--brand)">Agencia Española de Protección de Datos (AEPD)</a>.
-        </p>
+<div class="legal-section">
+    <h2>6. Sus derechos</h2>
+    <p>
+        En virtud del RGPD y la LOPDGDD, puede ejercer los siguientes derechos dirigiendo un escrito a
+        <a href="mailto:PENDIENTE_EMAIL_LEGAL" style="color:var(--brand)">PENDIENTE_EMAIL_LEGAL</a>
+        acompañando copia de su DNI:
+    </p>
+    <div class="rights-grid">
+        <div class="right-card"><p class="right-card__title">Acceso</p><p class="right-card__text">Conocer qué datos tratamos sobre usted.</p></div>
+        <div class="right-card"><p class="right-card__title">Rectificación</p><p class="right-card__text">Corregir datos inexactos o incompletos.</p></div>
+        <div class="right-card"><p class="right-card__title">Supresión</p><p class="right-card__text">Solicitar la eliminación de sus datos.</p></div>
+        <div class="right-card"><p class="right-card__title">Limitación</p><p class="right-card__text">Restringir el tratamiento en determinadas circunstancias.</p></div>
+        <div class="right-card"><p class="right-card__title">Portabilidad</p><p class="right-card__text">Recibir sus datos en formato legible por máquina.</p></div>
+        <div class="right-card"><p class="right-card__title">Oposición</p><p class="right-card__text">Oponerse al tratamiento basado en interés legítimo.</p></div>
     </div>
+    <p style="margin-top:16px">
+        Si considera que el tratamiento no es conforme a la normativa, puede reclamar ante la
+        <a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer" style="color:var(--brand)">Agencia Española de Protección de Datos (AEPD)</a>.
+    </p>
+</div>
 
-    {# ── CTA ── #}
-    <div class="legal-cta">
-        <h2>¿Quieres ejercer tus derechos?</h2>
-        <p>Contáctanos y gestionamos tu solicitud en el plazo legal de un mes.</p>
-        <a class="btn-white" href="mailto:PENDIENTE_EMAIL_LEGAL">
-            ✉️ Ejercer mis derechos
-        </a>
-    </div>
+<div class="legal-cta">
+    <h2>¿Quieres ejercer tus derechos?</h2>
+    <p>Contáctanos y gestionamos tu solicitud en el plazo legal de un mes.</p>
+    <a class="btn-white" href="mailto:PENDIENTE_EMAIL_LEGAL">Ejercer mis derechos</a>
+</div>
 
 {% endblock %}

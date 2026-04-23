@@ -2,48 +2,22 @@
 
 namespace App\Controller;
 
-use App\Entity\Family;
 use App\Entity\Product;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\FamilyRepository;
+use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-    // Familias internas que nunca deben mostrarse al cliente
-    private const BLOCKED_FAMILIES = [
-        'CARGO PUBLICIDAD CLIENTES',
-        'MERCHANDISING',
-        'MATERIAL PROTECCION',
-    ];
-
     #[Route('/', name: 'app_home')]
-    public function index(EntityManagerInterface $em): Response
-    {
-        $familyRepo  = $em->getRepository(Family::class);
-        $productRepo = $em->getRepository(Product::class);
-
-        // Familias visibles, sin duplicados, máx 8
-        $allFamilies = $familyRepo->createQueryBuilder('f')
-            ->andWhere('f.isActive = true')
-            ->orderBy('f.name', 'ASC')
-            ->getQuery()
-            ->getResult();
-
-        $blocked = array_map('mb_strtoupper', self::BLOCKED_FAMILIES);
-        $seen    = [];
-        $families = [];
-
-        foreach ($allFamilies as $f) {
-            $name = mb_strtoupper(trim((string) $f->getName()));
-            if ($name === '' || in_array($name, $blocked, true) || in_array($name, $seen, true)) {
-                continue;
-            }
-            $seen[]   = $name;
-            $families[] = $f;
-            if (count($families) >= 8) break;
-        }
+    public function index(
+        FamilyRepository  $familyRepo,
+        ProductRepository $productRepo,
+    ): Response {
+        // Familias visibles, máx. 8 (lógica de bloqueo centralizada en el repositorio)
+        $families = array_slice($familyRepo->findVisible(), 0, 8);
 
         // Productos destacados: activos, con stock, ordenados por stock DESC
         $featuredProducts = $productRepo->createQueryBuilder('p')
@@ -80,10 +54,10 @@ class HomeController extends AbstractController
         ];
 
         return $this->render('home/index.html.twig', [
-            'families'        => $families,
-            'featuredProducts'=> $featuredProducts,
-            'latestProducts'  => $latestProducts,
-            'stats'           => $stats,
+            'families'         => $families,
+            'featuredProducts' => $featuredProducts,
+            'latestProducts'   => $latestProducts,
+            'stats'            => $stats,
         ]);
     }
 }

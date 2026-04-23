@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Family;
 use App\Entity\Product;
 use App\Entity\Subfamily;
+use App\Repository\FamilyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,11 +21,12 @@ class CatalogController extends AbstractController
         $limit = 24;
         $offset = ($page - 1) * $limit;
 
-        $q          = trim((string) $request->query->get('q', ''));
-        $familyId   = $request->query->getInt('family', 0);
-        $subfamilyId = $request->query->getInt('subfamily', 0);
-        $inStock    = $request->query->getInt('inStock', 0);
-        $brand      = trim((string) $request->query->get('brand', ''));
+        $q             = trim((string) $request->query->get('q', ''));
+        $familyId      = $request->query->getInt('family', 0);
+        $subfamilyId   = $request->query->getInt('subfamily', 0);
+        $subfamilyCode = trim((string) $request->query->get('code', ''));
+        $inStock       = $request->query->getInt('inStock', 0);
+        $brand         = trim((string) $request->query->get('brand', ''));
         $sort       = trim((string) $request->query->get('sort', 'recent'));
 
         $productRepo = $em->getRepository(Product::class);
@@ -75,6 +77,10 @@ class CatalogController extends AbstractController
             $qb->andWhere('s.id = :sid')->setParameter('sid', $subfamilyId);
         }
 
+        if ($subfamilyCode !== '') {
+            $qb->andWhere('s.code = :code')->setParameter('code', $subfamilyCode);
+        }
+
         // Regla: "Solo disponibles" = stock >= 5
         if ($inStock === 1) {
             $qb->andWhere('p.stock >= :minStock')->setParameter('minStock', 5);
@@ -110,17 +116,8 @@ class CatalogController extends AbstractController
 
         $totalPages = (int) max(1, ceil($total / $limit));
 
-        // ── Familias ──
-        $families = $em->getRepository(Family::class)->createQueryBuilder('f')
-            ->orderBy('f.name', 'ASC')
-            ->getQuery()
-            ->getResult();
-
-        $blockedFamilies = ['CARGO PUBLICIDAD CLIENTES', 'MERCHANDISING', 'MATERIAL PROTECCION'];
-        $families = array_values(array_filter($families, static function ($f) use ($blockedFamilies) {
-            $name = mb_strtoupper(trim((string) $f->getName()));
-            return $name !== '' && !in_array($name, $blockedFamilies, true);
-        }));
+        // ── Familias (lógica de bloqueo centralizada en FamilyRepository) ──
+        $families = $em->getRepository(Family::class)->findVisible();
 
         // ── Subfamilias ──
         $subQb = $em->getRepository(Subfamily::class)->createQueryBuilder('s')
@@ -151,14 +148,15 @@ class CatalogController extends AbstractController
             'subfamilies' => $subfamilies,
             'brands'      => $brands,
             'filters'     => [
-                'q'          => $q,
-                'family'     => $familyId,
-                'subfamily'  => $subfamilyId,
-                'inStock'    => $inStock,
-                'brand'      => $brand,
-                'sort'       => $sort,
-                'priceMin'   => $priceMin,
-                'priceMax'   => $priceMax,
+                'q'             => $q,
+                'family'        => $familyId,
+                'subfamily'     => $subfamilyId,
+                'subfamilyCode' => $subfamilyCode,
+                'inStock'       => $inStock,
+                'brand'         => $brand,
+                'sort'          => $sort,
+                'priceMin'      => $priceMin,
+                'priceMax'      => $priceMax,
             ],
             'priceRange' => [
                 'globalMin' => $globalPriceMin,

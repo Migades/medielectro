@@ -2,259 +2,114 @@
 {% block title %}Aviso Legal · Medielectro Valencia{% endblock %}
 
 {% block body %}
-    <style>
-        /* ── Legal hero ── */
-        .legal-hero {
-            margin: 24px 0 32px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .legal-hero__eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #fff1f2;
-            border: 1px solid #fecdd3;
-            color: var(--brand);
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-            padding: 5px 12px;
-            width: fit-content;
-        }
-        .legal-hero__title {
-            font-size: 32px;
-            font-weight: 900;
-            line-height: 1.1;
-            letter-spacing: -.7px;
-            margin: 0;
-        }
-        .legal-hero__meta {
-            font-size: 13px;
-            color: var(--muted);
-            margin: 0;
-        }
+<style>
+    .legal-hero { margin: 24px 0 32px; display: flex; flex-direction: column; gap: 12px; }
+    .legal-hero__eyebrow {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: #fff1f2; border: 1px solid #fecdd3; color: var(--brand);
+        border-radius: 999px; font-size: 11px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: .5px; padding: 5px 12px; width: fit-content;
+    }
+    .legal-hero__title { font-size: 32px; font-weight: 900; line-height: 1.1; letter-spacing: -.7px; margin: 0; }
+    .legal-hero__meta { font-size: 13px; color: var(--muted); margin: 0; }
 
-        /* ── Tabla de datos mercantiles ── */
-        .legal-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-            margin: 16px 0 0;
-        }
-        .legal-table th,
-        .legal-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
-            font-size: 13px;
-            text-align: left;
-        }
-        .legal-table tr:last-child th,
-        .legal-table tr:last-child td { border-bottom: none; }
-        .legal-table th {
-            width: 36%;
-            background: #fafafa;
-            font-weight: 700;
-            color: var(--muted);
-        }
-        .legal-table a { color: var(--brand); }
+    .legal-table {
+        width: 100%; border-collapse: collapse; background: var(--card);
+        border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin: 16px 0 0;
+    }
+    .legal-table th, .legal-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13px; text-align: left; }
+    .legal-table tr:last-child th, .legal-table tr:last-child td { border-bottom: none; }
+    .legal-table th { width: 36%; background: #fafafa; font-weight: 700; color: var(--muted); }
+    .legal-table a { color: var(--brand); }
 
-        /* ── Secciones de contenido ── */
-        .legal-section {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 14px;
-        }
-        .legal-section h2 {
-            font-size: 16px;
-            font-weight: 800;
-            margin: 0 0 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .legal-section p,
-        .legal-section ul {
-            font-size: 14px;
-            color: var(--muted);
-            line-height: 1.7;
-            margin: 0 0 10px;
-        }
-        .legal-section ul { padding-left: 20px; }
-        .legal-section p:last-child,
-        .legal-section ul:last-child { margin-bottom: 0; }
+    .legal-section {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: 24px; margin-bottom: 14px;
+    }
+    .legal-section h2 { font-size: 16px; font-weight: 800; margin: 0 0 12px; }
+    .legal-section p, .legal-section ul { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 0 0 10px; }
+    .legal-section ul { padding-left: 20px; }
+    .legal-section p:last-child, .legal-section ul:last-child { margin-bottom: 0; }
 
-        /* ── CTA ── */
-        .legal-cta {
-            background: var(--brand);
-            border-radius: 20px;
-            padding: 36px 40px;
-            text-align: center;
-            color: white;
-            margin: 32px 0 0;
-        }
-        .legal-cta h2 {
-            font-size: 22px;
-            font-weight: 900;
-            margin: 0 0 8px;
-            letter-spacing: -.3px;
-        }
-        .legal-cta p {
-            font-size: 14px;
-            color: rgba(255,255,255,.8);
-            margin: 0 0 20px;
-        }
-        .btn-white {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: white;
-            color: var(--brand);
-            border: none;
-            border-radius: 12px;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 800;
-            text-decoration: none;
-            transition: opacity .15s;
-        }
-        .btn-white:hover { opacity: .9; }
-    </style>
+    .legal-cta {
+        background: var(--brand); border-radius: 20px; padding: 36px 40px;
+        text-align: center; color: white; margin: 32px 0 0;
+    }
+    .legal-cta h2 { font-size: 22px; font-weight: 900; margin: 0 0 8px; letter-spacing: -.3px; }
+    .legal-cta p { font-size: 14px; color: rgba(255,255,255,.8); margin: 0 0 20px; }
+    .btn-white {
+        display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--brand);
+        border: none; border-radius: 12px; padding: 12px 24px; font-size: 14px; font-weight: 800;
+        text-decoration: none; transition: opacity .15s;
+    }
+    .btn-white:hover { opacity: .9; }
+</style>
 
-    {# ── Breadcrumb ── #}
-    <div style="margin:16px 0 0;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
-        <a href="{{ path('app_home') }}" style="color:var(--muted);text-decoration:none">Inicio</a>
-        <span>›</span>
-        <span>Aviso Legal</span>
-    </div>
+<div style="margin:16px 0 0;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+    <a href="{{ path('app_home') }}" style="color:var(--muted);text-decoration:none">Inicio</a>
+    <span>›</span>
+    <span>Aviso Legal</span>
+</div>
 
-    {# ── Hero ── #}
-    <div class="legal-hero">
-        <span class="legal-hero__eyebrow">⚖️ Información legal</span>
-        <h1 class="legal-hero__title">Aviso Legal</h1>
-        <p class="legal-hero__meta">Última actualización: <strong>PENDIENTE_FECHA_VIGENCIA</strong></p>
-    </div>
+<div class="legal-hero">
+    <span class="legal-hero__eyebrow">Información legal</span>
+    <h1 class="legal-hero__title">Aviso Legal</h1>
+    <p class="legal-hero__meta">Última actualización: <strong>PENDIENTE_FECHA_VIGENCIA</strong></p>
+</div>
 
-    {# ── 1. Datos identificativos ── #}
-    <div class="legal-section">
-        <h2>📋 1. Datos identificativos del titular</h2>
-        <p>
-            En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad
-            de la Información y Comercio Electrónico (LSSI-CE), se informa de los datos del titular de este sitio:
-        </p>
-        <table class="legal-table">
-            <tbody>
-            <tr>
-                <th>Razón social</th>
-                <td><strong>PENDIENTE_RAZON_SOCIAL</strong></td>
-            </tr>
-            <tr>
-                <th>CIF</th>
-                <td>PENDIENTE_CIF</td>
-            </tr>
-            <tr>
-                <th>Domicilio social</th>
-                <td>PENDIENTE_DOMICILIO</td>
-            </tr>
-            <tr>
-                <th>Registro Mercantil</th>
-                <td>
-                    Inscrita en el Registro Mercantil de Valencia,
-                    Tomo PENDIENTE_TOMO, Folio PENDIENTE_FOLIO, Hoja V-PENDIENTE_HOJA
-                </td>
-            </tr>
-            <tr>
-                <th>Correo electrónico</th>
-                <td><a href="mailto:PENDIENTE_EMAIL_LEGAL">PENDIENTE_EMAIL_LEGAL</a></td>
-            </tr>
-            <tr>
-                <th>Teléfono</th>
-                <td>PENDIENTE_TELEFONO</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<div class="legal-section">
+    <h2>1. Datos identificativos del titular</h2>
+    <p>En cumplimiento del artículo 10 de la Ley 34/2002 (LSSI-CE), se informa de los datos del titular:</p>
+    <table class="legal-table">
+        <tbody>
+            <tr><th>Razón social</th><td><strong>PENDIENTE_RAZON_SOCIAL</strong></td></tr>
+            <tr><th>CIF</th><td>PENDIENTE_CIF</td></tr>
+            <tr><th>Domicilio social</th><td>PENDIENTE_DOMICILIO</td></tr>
+            <tr><th>Registro Mercantil</th><td>Inscrita en el Registro Mercantil de Valencia, Tomo PENDIENTE_TOMO, Folio PENDIENTE_FOLIO, Hoja V-PENDIENTE_HOJA</td></tr>
+            <tr><th>Correo electrónico</th><td><a href="mailto:PENDIENTE_EMAIL_LEGAL">PENDIENTE_EMAIL_LEGAL</a></td></tr>
+            <tr><th>Teléfono</th><td>PENDIENTE_TELEFONO</td></tr>
+        </tbody>
+    </table>
+</div>
 
-    {# ── 2. Objeto ── #}
-    <div class="legal-section">
-        <h2>🎯 2. Objeto y ámbito de aplicación</h2>
-        <p>
-            El presente Aviso Legal regula el acceso y uso del sitio web <strong>medielectro.es</strong>
-            (en adelante, «el Sitio»), titularidad de <strong>PENDIENTE_RAZON_SOCIAL</strong>,
-            dedicada a la venta de material eléctrico y electrónico a través de comercio electrónico.
-        </p>
-        <p>
-            El acceso al Sitio implica la aceptación plena y sin reservas de las presentes condiciones.
-            Si no está de acuerdo, le rogamos que abandone el Sitio.
-        </p>
-    </div>
+<div class="legal-section">
+    <h2>2. Objeto y ámbito de aplicación</h2>
+    <p>El presente Aviso Legal regula el acceso y uso del sitio web <strong>medielectro.es</strong>, titularidad de <strong>PENDIENTE_RAZON_SOCIAL</strong>, dedicada a la venta de material eléctrico y electrónico a través de comercio electrónico.</p>
+    <p>El acceso al Sitio implica la aceptación plena y sin reservas de las presentes condiciones.</p>
+</div>
 
-    {# ── 3. Condiciones de uso ── #}
-    <div class="legal-section">
-        <h2>📌 3. Condiciones de uso</h2>
-        <p>El usuario se compromete a utilizar el Sitio de conformidad con la ley, absteniéndose de:</p>
-        <ul>
-            <li>Introducir contenidos ilícitos, difamatorios o contrarios a derechos de terceros.</li>
-            <li>Realizar acciones que puedan dañar, inutilizar o sobrecargar el Sitio.</li>
-            <li>Utilizar robots, spiders u otros medios automatizados de acceso o extracción de datos.</li>
-            <li>Intentar acceder a áreas restringidas del sistema informático.</li>
-        </ul>
-    </div>
+<div class="legal-section">
+    <h2>3. Condiciones de uso</h2>
+    <p>El usuario se compromete a utilizar el Sitio de conformidad con la ley, absteniéndose de:</p>
+    <ul>
+        <li>Introducir contenidos ilícitos, difamatorios o contrarios a derechos de terceros.</li>
+        <li>Realizar acciones que puedan dañar, inutilizar o sobrecargar el Sitio.</li>
+        <li>Utilizar robots, spiders u otros medios automatizados de acceso o extracción de datos.</li>
+        <li>Intentar acceder a áreas restringidas del sistema informático.</li>
+    </ul>
+</div>
 
-    {# ── 4. Propiedad intelectual ── #}
-    <div class="legal-section">
-        <h2>🔒 4. Propiedad intelectual e industrial</h2>
-        <p>
-            Todos los contenidos del Sitio —textos, imágenes, logotipos, diseño, código fuente y
-            cualquier otro elemento— son propiedad de <strong>PENDIENTE_RAZON_SOCIAL</strong> o de
-            terceros que han autorizado su uso, y están protegidos por la normativa vigente.
-        </p>
-        <p>
-            Queda prohibida su reproducción, distribución, comunicación pública o transformación
-            sin autorización expresa y escrita del titular.
-        </p>
-    </div>
+<div class="legal-section">
+    <h2>4. Propiedad intelectual e industrial</h2>
+    <p>Todos los contenidos del Sitio son propiedad de <strong>PENDIENTE_RAZON_SOCIAL</strong> o de terceros que han autorizado su uso, y están protegidos por la normativa vigente en materia de propiedad intelectual e industrial.</p>
+    <p>Queda prohibida su reproducción, distribución, comunicación pública o transformación sin autorización expresa y escrita del titular.</p>
+</div>
 
-    {# ── 5. Responsabilidad ── #}
-    <div class="legal-section">
-        <h2>⚠️ 5. Exclusión de responsabilidad</h2>
-        <p>
-            <strong>PENDIENTE_RAZON_SOCIAL</strong> no garantiza la disponibilidad continua del Sitio
-            ni se responsabiliza de los daños que puedan derivarse de interrupciones o errores técnicos
-            ajenos a su voluntad.
-        </p>
-        <p>
-            Los enlaces a sitios web de terceros se ofrecen únicamente como referencia. La empresa no
-            controla ni avala dichos sitios y declina cualquier responsabilidad sobre su contenido.
-        </p>
-    </div>
+<div class="legal-section">
+    <h2>5. Exclusión de responsabilidad</h2>
+    <p><strong>PENDIENTE_RAZON_SOCIAL</strong> no garantiza la disponibilidad continua del Sitio ni se responsabiliza de los daños derivados de interrupciones o errores técnicos ajenos a su voluntad.</p>
+    <p>Los enlaces a sitios web de terceros se ofrecen únicamente como referencia. La empresa declina cualquier responsabilidad sobre su contenido.</p>
+</div>
 
-    {# ── 6. Legislación ── #}
-    <div class="legal-section">
-        <h2>🏛️ 6. Legislación aplicable y jurisdicción</h2>
-        <p>
-            Las presentes condiciones se rigen por la legislación española. Para la resolución de
-            cualquier controversia, las partes se someten, con renuncia a cualquier otro fuero,
-            a los Juzgados y Tribunales de <strong>Valencia</strong>, salvo que la normativa de
-            consumidores aplicable establezca un fuero imperativo distinto.
-        </p>
-    </div>
+<div class="legal-section">
+    <h2>6. Legislación aplicable y jurisdicción</h2>
+    <p>Las presentes condiciones se rigen por la legislación española. Las partes se someten, con renuncia a cualquier otro fuero, a los Juzgados y Tribunales de <strong>Valencia</strong>, salvo que la normativa de consumidores establezca un fuero imperativo distinto.</p>
+</div>
 
-    {# ── CTA ── #}
-    <div class="legal-cta">
-        <h2>¿Tienes alguna consulta legal?</h2>
-        <p>Contacta con nosotros y te atenderemos lo antes posible.</p>
-        <a class="btn-white" href="mailto:PENDIENTE_EMAIL_LEGAL">
-            ✉️ Contactar
-        </a>
-    </div>
+<div class="legal-cta">
+    <h2>¿Tienes alguna consulta legal?</h2>
+    <p>Contacta con nosotros y te atenderemos lo antes posible.</p>
+    <a class="btn-white" href="mailto:PENDIENTE_EMAIL_LEGAL">Contactar</a>
+</div>
 
 {% endblock %}
