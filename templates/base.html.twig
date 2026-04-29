@@ -93,14 +93,17 @@
 
         .catalog-mega__inner {
             display: grid;
-            grid-template-columns: 220px 1fr;
-            max-height: 500px;
+            grid-template-columns: 200px 1fr;
+            height: 70vh;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
         }
 
         .catalog-mega__sidebar {
             border-right: 1px solid var(--border);
             overflow-y: auto;
-            padding: 14px 0;
+            padding: 12px 0;
             background: #fafafa;
         }
         .catalog-mega__sidebar-title {
@@ -109,14 +112,14 @@
             text-transform: uppercase;
             letter-spacing: .6px;
             color: var(--muted);
-            padding: 0 16px 10px;
+            padding: 0 12px 10px 14px;
         }
         .catalog-mega__family {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 8px;
-            padding: 10px 16px;
+            padding: 9px 12px 9px 12px;
             font-size: 13px;
             font-weight: 500;
             color: var(--text);
@@ -136,7 +139,7 @@
 
         .catalog-mega__main {
             overflow-y: auto;
-            padding: 20px 28px;
+            padding: 20px 28px 20px;
         }
         .catalog-mega__panel { display: none; }
         .catalog-mega__panel.active { display: block; }
@@ -178,8 +181,8 @@
             color: var(--muted);
         }
         .catalog-mega__see-all {
-            display: inline-block;
-            margin-top: 16px;
+            display: block;
+            margin-top: 20px;
             padding-top: 14px;
             border-top: 1px solid var(--border);
             width: 100%;
@@ -251,7 +254,7 @@
 {# ── Overlay y Mega-menú Catálogo (estructura basada en catalog.json) ── #}
 <div class="catalog-mega-overlay" id="catalogOverlay"></div>
 <div class="catalog-mega" id="catalogMega">
-    <div class="catalog-mega__inner container">
+    <div class="catalog-mega__inner">
 
         {# ── Rail izquierdo — categorías principales ── #}
         <div class="catalog-mega__sidebar">
