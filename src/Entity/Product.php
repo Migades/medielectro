@@ -64,6 +64,12 @@ class Product
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    private ?string $priceWithoutVat = null;
+
+    #[ORM\Column(length: 5, nullable: true, options: ['default' => '21'])]
+    private ?string $vatCode = '21';
+
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
@@ -260,6 +266,30 @@ class Product
     public function setImage(?string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getPriceWithoutVat(): ?string
+    {
+        return $this->priceWithoutVat;
+    }
+
+    public function setPriceWithoutVat(?string $priceWithoutVat): static
+    {
+        $this->priceWithoutVat = $priceWithoutVat;
+
+        return $this;
+    }
+
+    public function getVatCode(): ?string
+    {
+        return $this->vatCode;
+    }
+
+    public function setVatCode(?string $vatCode): static
+    {
+        $this->vatCode = $vatCode;
 
         return $this;
     }

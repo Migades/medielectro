@@ -1,179 +1,186 @@
 {% extends 'base.html.twig' %}
-{% block title %}Medielectro{% endblock %}
+{% block title %}Medielectro · Electrodomésticos en Valencia{% endblock %}
 
 {% block body %}
+<style>
+    .hero-quicklinks { background: #2d2d2d; }
+    .hero-quicklinks__inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; }
+    .hero-quicklinks__item { flex: 1; display: flex; align-items: center; justify-content: center; padding: 14px 16px; font-size: 13px; font-weight: 700; color: rgba(255,255,255,.85); text-decoration: none; border-right: 1px solid rgba(255,255,255,.12); transition: color .15s, background .15s; text-align: center; }
+    .hero-quicklinks__item:last-child { border-right: none; }
+    .hero-quicklinks__item:hover { color: white; background: rgba(255,255,255,.06); }
 
-    <section class="hero-banner">
-        <div class="hero-banner__main">
-            <div class="hero-banner__overlay"></div>
+    .hero-banner-v2 { background: var(--brand); position: relative; overflow: hidden; min-height: 320px; display: flex; align-items: center; border-radius: 20px; margin: 12px 32px; }
+    .hero-banner-v2::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(255,255,255,.15) 0%, transparent 60%), radial-gradient(ellipse at 90% 10%, rgba(0,0,0,.2) 0%, transparent 50%); }
+    .hero-banner-v2::after { content: ''; position: absolute; right: -60px; top: -60px; width: 400px; height: 400px; background: rgba(255,255,255,.06); border-radius: 50%; pointer-events: none; }
+    .hero-banner-v2__inner { max-width: 100%; margin: 0; padding: 48px 56px; display: flex; align-items: center; width: 100%; position: relative; z-index: 1; gap: 40px; }
+    .hero-banner-v2__left { display: flex; flex-direction: column; gap: 16px; }
+    .hero-banner-v2__tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.2); border-radius: 999px; padding: 5px 14px; font-size: 12px; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: .5px; width: fit-content; }
+    .hero-banner-v2__title { font-size: 52px; font-weight: 900; color: white; line-height: 1; letter-spacing: -1.5px; margin: 0; text-shadow: 0 2px 20px rgba(0,0,0,.15); }
+    .hero-banner-v2__title small { display: block; font-size: 22px; font-weight: 700; letter-spacing: -.3px; opacity: .9; margin-bottom: 4px; }
+    .hero-banner-v2__sub { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.15); border-radius: 8px; padding: 8px 16px; font-size: 14px; font-weight: 700; color: white; width: fit-content; }
+    .hero-banner-v2__btn { display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--brand); border-radius: 12px; padding: 14px 28px; font-size: 15px; font-weight: 900; text-decoration: none; transition: opacity .15s; width: fit-content; margin-top: 4px; }
+    .hero-banner-v2__btn:hover { opacity: .9; }
+    .hero-banner-v2__right { display: flex; align-items: center; justify-content: center; position: relative; height: 260px; }
+    .hero-product { position: absolute; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; transition: transform .2s, background .2s; }
+    .hero-product:hover { transform: translateY(-4px); background: rgba(255,255,255,.2); }
+    .hero-product--1 { width: 140px; top: 10px; left: 20px; }
+    .hero-product--2 { width: 160px; top: 40px; left: 180px; }
+    .hero-product--3 { width: 130px; bottom: 10px; left: 60px; }
+    .hero-product__icon { font-size: 48px; }
+    .hero-product__name { font-size: 11px; font-weight: 700; color: white; text-align: center; line-height: 1.3; }
 
-            <div class="hero-banner__content">
-                <span class="hero-banner__tag">Catálogo actualizado a diario</span>
+    .home-section { margin: 48px 0; }
+    .home-section__header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 20px; gap: 12px; }
+    .home-section__title { font-size: 22px; font-weight: 900; margin: 0 0 4px; letter-spacing: -.3px; }
+    .home-section__sub { font-size: 13px; color: var(--muted); margin: 0; }
 
-                <h1>Electrodomésticos, repuestos y servicio técnico en un solo lugar</h1>
+    .featured-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .featured-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; text-decoration: none; color: inherit; transition: box-shadow .18s, transform .18s; display: flex; flex-direction: column; }
+    .featured-card:hover { box-shadow: 0 8px 28px rgba(17,24,39,.1); transform: translateY(-2px); }
+    .featured-card__img { aspect-ratio: 1/1; background: #f8fafc; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid var(--border); }
+    .featured-card__img img { width: 100%; height: 100%; object-fit: cover; }
+    .featured-card__body { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .featured-card__brand { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+    .featured-card__title { font-size: 13px; font-weight: 700; line-height: 1.3; }
+    .featured-card__footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 10px; }
+    .featured-card__price { font-size: 17px; font-weight: 900; letter-spacing: -.4px; }
+    .featured-card__stock { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
+    .featured-card__stock--ok { background: #effbf3; color: #15803d; }
+    .featured-card__stock--warn { background: #fff7ea; color: #92400e; }
 
-                <p>
-                    Encuentra productos por marca, modelo o categoría.
-                    Compra con más claridad y consulta instalación o reparación cuando lo necesites.
-                </p>
+    .services-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .svc-banner { border-radius: 16px; padding: 32px; text-decoration: none; color: white; display: flex; flex-direction: column; gap: 12px; transition: opacity .15s; position: relative; overflow: hidden; min-height: 180px; }
+    .svc-banner:hover { opacity: .92; }
+    .svc-banner--repair { background: linear-gradient(135deg, #111827 0%, #1f2937 100%); }
+    .svc-banner--repair::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top right, rgba(227,6,19,.25), transparent 55%); }
+    .svc-banner--install { background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); }
+    .svc-banner--install::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top right, rgba(255,255,255,.08), transparent 55%); }
+    .svc-banner__eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: rgba(255,255,255,.6); position: relative; z-index: 1; }
+    .svc-banner__title { font-size: 20px; font-weight: 900; margin: 0; letter-spacing: -.3px; position: relative; z-index: 1; }
+    .svc-banner__cta { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: rgba(255,255,255,.8); margin-top: auto; position: relative; z-index: 1; }
 
-                <div class="hero-banner__actions">
-                    <a class="btn btn-primary" href="{{ path('app_catalog') }}">Ver catálogo</a>
-                    <a class="btn" href="#servicios">Ver servicios</a>
-                </div>
+    .brands-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+    .brand-pill { display: inline-flex; align-items: center; padding: 8px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 999px; font-size: 13px; font-weight: 700; color: var(--text); text-decoration: none; transition: border-color .15s, color .15s; }
+    .brand-pill:hover { border-color: var(--brand); color: var(--brand); }
 
-                <div class="hero-banner__badges">
-                    <span class="hero-badge"> Reparación</span>
-                    <span class="hero-badge"> Instalación</span>
-                </div>
-            </div>
+    .home-cta { background: var(--brand); border-radius: 20px; padding: 40px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .home-cta h2 { font-size: 24px; font-weight: 900; color: white; margin: 0 0 6px; letter-spacing: -.3px; }
+    .home-cta p { font-size: 14px; color: rgba(255,255,255,.8); margin: 0; }
+    .home-cta__btn { display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--brand); border-radius: 12px; padding: 14px 28px; font-size: 15px; font-weight: 800; text-decoration: none; white-space: nowrap; transition: opacity .15s; flex-shrink: 0; }
+    .home-cta__btn:hover { opacity: .9; }
+
+    @media (max-width: 900px) {
+        .hero-banner-v2__inner { grid-template-columns: 1fr; }
+        .hero-banner-v2__right { display: none; }
+        .hero-banner-v2__title { font-size: 36px; }
+        .featured-grid { grid-template-columns: repeat(2, 1fr); }
+        .services-duo { grid-template-columns: 1fr; }
+        .hero-quicklinks__item { flex: none; width: 50%; border-right: none; border-bottom: 1px solid rgba(255,255,255,.1); }
+    }
+</style>
+
+{# ── HERO BANNER ── #}
+<div class="hero-banner-v2">
+    <div class="hero-banner-v2__inner">
+        <div class="hero-banner-v2__left">
+            <span class="hero-banner-v2__tag">Catálogo actualizado a diario</span>
+            <h1 class="hero-banner-v2__title">
+                <small>Electrodomésticos en Valencia</small>
+                +600 productos<br>disponibles
+            </h1>
+            <span class="hero-banner-v2__sub">Instalación y servicio técnico</span>
+            <a class="hero-banner-v2__btn" href="{{ path('app_catalog') }}">Ver catálogo →</a>
         </div>
+    </div>
+</div>
 
-        <div class="hero-side-card hero-side-card--accent">
-            <span class="hero-side-card__eyebrow">Servicio e instalación</span>
-            <h3>Instalamos y reparamos tus electrodomésticos</h3>
-            <p>
-                Te asesoramos, instalamos y reparamos. Si necesitas ayuda con la compra o una avería,
-                contacta y te orientamos.
-            </p>
-            <a class="btn btn-primary" href="#servicios">Ver servicios</a>
-        </div>
-    </section>
-
-    <section class="section">
-        <div class="section-title">
+<div class="container">
+    {# ── PRODUCTOS DESTACADOS ── #}
+    <section class="home-section">
+        <div class="home-section__header">
             <div>
-                <h2>Categorías destacadas</h2>
-                <p>Accesos rápidos a las familias principales del catálogo</p>
-            </div>
-            <a class="btn" href="{{ path('app_catalog') }}">Ver todo</a>
-        </div>
-
-        <div class="family-grid">
-            {% for family in families %}
-                <a class="family-card" href="{{ path('app_catalog', {family: family.id}) }}">
-                    <div class="family-card__icon"></div>
-                    <div class="family-card__name">{{ family.name }}</div>
-                    <div class="family-card__link">Explorar categoría →</div>
-                </a>
-            {% endfor %}
-        </div>
-    </section>
-
-    <section class="section">
-        <div class="section-title">
-            <div>
-                <h2>Productos destacados</h2>
-                <p>Selección rápida con disponibilidad</p>
+                <h2 class="home-section__title">Productos destacados</h2>
+                <p class="home-section__sub">Selección con disponibilidad inmediata</p>
             </div>
             <a class="btn" href="{{ path('app_catalog', {inStock: 1}) }}">Ver más</a>
         </div>
-
-        <div class="retail-grid">
+        <div class="featured-grid">
             {% for p in featuredProducts %}
-                <a class="retail-card" href="{{ path('app_product_show', {article: p.article}) }}">
-                    <div class="retail-card__image">
+                <a class="featured-card" href="{{ path('app_product_show', {article: p.article}) }}">
+                    <div class="featured-card__img">
                         {% if p.image %}
-                            <img src="{{ p.image }}" alt="{{ p.model }}">
+                            <img src="{{ p.image }}" alt="{{ p.title }}">
                         {% else %}
-                            <div class="retail-card__placeholder"></div>
+                            <div style="font-size:40px;opacity:.2">📦</div>
                         {% endif %}
                     </div>
-
-                    <div class="retail-card__brand">{{ p.brand ?: 'Marca' }}</div>
-                    <div class="retail-card__title">{{ p.model }}</div>
-                    <div class="retail-card__meta">{{ p.family ? p.family.name : '' }}</div>
-
-                    <div class="retail-card__bottom">
-                        <strong class="retail-card__price">{{ p.price|number_format(2, ',', '.') }} €</strong>
-
-                        {% if p.stock > 0 %}
-                            <span class="stock-chip stock-chip--ok">Disponible</span>
-                        {% else %}
-                            <span class="stock-chip stock-chip--warn">Consultar</span>
-                        {% endif %}
+                    <div class="featured-card__body">
+                        {% if p.brand %}<div class="featured-card__brand">{{ p.brand }}</div>{% endif %}
+                        <div class="featured-card__title">{{ p.title|striptags }}</div>
+                        <div class="featured-card__footer">
+                            <span class="featured-card__price">{{ p.price|number_format(2,',','.') }} €</span>
+                            {% if p.stock >= 5 %}
+                                <span class="featured-card__stock featured-card__stock--ok">Disponible</span>
+                            {% else %}
+                                <span class="featured-card__stock featured-card__stock--warn">Consultar</span>
+                            {% endif %}
+                        </div>
                     </div>
                 </a>
             {% else %}
-                <div class="card">No hay productos destacados para mostrar.</div>
+                <p style="color:var(--muted)">No hay productos destacados.</p>
             {% endfor %}
         </div>
     </section>
 
-    <section class="section" id="servicios">
-        <div class="section-title">
+    {# ── SERVICIOS ── #}
+    <section class="home-section" id="servicios">
+        <div class="home-section__header">
             <div>
-                <h2>Nuestros servicios</h2>
-                <p>Más allá del catálogo</p>
+                <h2 class="home-section__title">Nuestros servicios</h2>
+                <p class="home-section__sub">Más allá del catálogo</p>
             </div>
         </div>
-
-        <div class="services-grid-v2">
-            <a class="svc-card svc-card--repair" href="{{ path('app_service_reparacion') }}">
-                <div class="svc-card__body">
-                    <div class="svc-card__label">Servicio técnico</div>
-                    <h3 class="svc-card__title">Reparación de electrodomésticos</h3>
-                    <p class="svc-card__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    <ul class="svc-card__list">
-                        <li>Lorem ipsum dolor sit amet</li>
-                        <li>Consectetur adipiscing elit</li>
-                        <li>Sed do eiusmod tempor</li>
-                    </ul>
-                </div>
-                <div class="svc-card__footer">
-                    Solicitar reparación
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </div>
+        <div class="services-duo">
+            <a class="svc-banner svc-banner--repair" href="{{ path('app_service_reparacion') }}">
+                <span class="svc-banner__eyebrow">Servicio técnico</span>
+                <h3 class="svc-banner__title">Reparación de electrodomésticos</h3>
+                <span class="svc-banner__cta">Solicitar reparación <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
             </a>
-
-            <a class="svc-card svc-card--install" href="{{ path('app_service_instalacion') }}">
-                <div class="svc-card__body">
-                    <div class="svc-card__label">Instalación profesional</div>
-                    <h3 class="svc-card__title">Instalación en tu domicilio</h3>
-                    <p class="svc-card__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    <ul class="svc-card__list">
-                        <li>Lorem ipsum dolor sit amet</li>
-                        <li>Consectetur adipiscing elit</li>
-                        <li>Sed do eiusmod tempor</li>
-                    </ul>
-                </div>
-                <div class="svc-card__footer">
-                    Solicitar instalación
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </div>
+            <a class="svc-banner svc-banner--install" href="{{ path('app_service_instalacion') }}">
+                <span class="svc-banner__eyebrow">Instalación profesional</span>
+                <h3 class="svc-banner__title">Instalación en tu domicilio</h3>
+                <span class="svc-banner__cta">Solicitar instalación <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
             </a>
         </div>
     </section>
 
-    <section class="section">
-        <div class="section-title">
+    {# ── MARCAS ── #}
+    <section class="home-section">
+        <div class="home-section__header">
             <div>
-                <h2>Marcas</h2>
-                <p>Trabajamos con los principales fabricantes</p>
+                <h2 class="home-section__title">Marcas</h2>
+                <p class="home-section__sub">Trabajamos con los principales fabricantes</p>
             </div>
         </div>
-        <div class="brands-strip">
-            {% set topBrands = ['BOSCH', 'BALAY', 'SIEMENS', 'LG', 'SAMSUNG', 'WHIRLPOOL', 'CECOTEC', 'PHILIPS'] %}
+        <div class="brands-grid">
+            {% set topBrands = ['BOSCH', 'BALAY', 'SIEMENS', 'LG', 'SAMSUNG', 'WHIRLPOOL', 'AEG', 'BEKO', 'TEKA', 'CECOTEC', 'PHILIPS', 'ROWENTA'] %}
             {% for brand in topBrands %}
-                <a class="brand-item" href="{{ path('app_catalog', {brand: brand}) }}">{{ brand }}</a>
+                <a class="brand-pill" href="{{ path('app_catalog', {brand: brand}) }}">{{ brand|title }}</a>
             {% endfor %}
         </div>
     </section>
 
-    <section class="section">
-        <div class="trust-banner">
+    {# ── CTA FINAL ── #}
+    <section class="home-section">
+        <div class="home-cta">
             <div>
-                <span class="home-tag">¿Necesitas ayuda?</span>
-                <h2>Te ayudamos a encontrar el producto adecuado o a resolver una avería</h2>
-                <p>Si no sabes exactamente qué buscar, contacta y te orientamos.</p>
+                <h2>¿Necesitas ayuda para elegir?</h2>
+                <p>Te orientamos sin compromiso. Llámanos o visita nuestro catálogo.</p>
             </div>
-
-            <div class="trust-banner__actions">
-                <a class="btn btn-primary" href="{{ path('app_catalog') }}">Ir al catálogo</a>
-            </div>
+            <a class="home-cta__btn" href="{{ path('app_catalog') }}">Ver catálogo completo</a>
         </div>
     </section>
-
-
+</div>
 
 {% endblock %}

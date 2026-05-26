@@ -17,8 +17,8 @@ class CatalogController extends AbstractController
     #[Route('/catalogo', name: 'app_catalog')]
     public function index(Request $request, EntityManagerInterface $em): Response
     {
-        $page = max(1, $request->query->getInt('page', 1));
-        $limit = 24;
+        $page   = max(1, $request->query->getInt('page', 1));
+        $limit  = 24;
         $offset = ($page - 1) * $limit;
 
         $q             = trim((string) $request->query->get('q', ''));
@@ -27,7 +27,7 @@ class CatalogController extends AbstractController
         $subfamilyCode = trim((string) $request->query->get('code', ''));
         $inStock       = $request->query->getInt('inStock', 0);
         $brand         = trim((string) $request->query->get('brand', ''));
-        $sort       = trim((string) $request->query->get('sort', 'recent'));
+        $sort          = trim((string) $request->query->get('sort', 'recent'));
 
         $productRepo = $em->getRepository(Product::class);
 
@@ -59,14 +59,15 @@ class CatalogController extends AbstractController
             ->leftJoin('p.subfamily', 's')->addSelect('s')
             ->andWhere('p.isActive = true');
 
+        // MariaDB con utf8mb4_unicode_ci: LIKE ya es case-insensitive, no hace falta LOWER()
         if ($q !== '') {
             $qb->andWhere('(
-                LOWER(p.article) LIKE :q
-                OR LOWER(p.model) LIKE :q
-                OR LOWER(p.brand) LIKE :q
-                OR LOWER(p.description) LIKE :q
+                p.article LIKE :q
+                OR p.model LIKE :q
+                OR p.brand LIKE :q
+                OR p.description LIKE :q
             )')
-                ->setParameter('q', '%' . mb_strtolower($q) . '%');
+                ->setParameter('q', '%' . $q . '%');
         }
 
         if ($familyId > 0) {
@@ -106,7 +107,7 @@ class CatalogController extends AbstractController
         }
 
         $countQb = clone $qb;
-        $total = (int) $countQb->select('COUNT(p.id)')->resetDQLPart('orderBy')->getQuery()->getSingleScalarResult();
+        $total   = (int) $countQb->select('COUNT(p.id)')->resetDQLPart('orderBy')->getQuery()->getSingleScalarResult();
 
         $products = $qb
             ->setFirstResult($offset)
@@ -172,10 +173,10 @@ class CatalogController extends AbstractController
     /** Redondea hacia arriba a un número "limpio" para el slider */
     private function roundUpNice(int $value): int
     {
-        if ($value <= 100)   return 100;
-        if ($value <= 500)   return (int) ceil($value / 50)  * 50;
-        if ($value <= 1000)  return (int) ceil($value / 100) * 100;
-        if ($value <= 5000)  return (int) ceil($value / 500) * 500;
+        if ($value <= 100)  return 100;
+        if ($value <= 500)  return (int) ceil($value / 50)  * 50;
+        if ($value <= 1000) return (int) ceil($value / 100) * 100;
+        if ($value <= 5000) return (int) ceil($value / 500) * 500;
         return (int) ceil($value / 1000) * 1000;
     }
 }

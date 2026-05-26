@@ -377,10 +377,32 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 10px;
             width: 100%;
             height: 100%;
-            color: #c8d0da;
+            background: #f8fafc;
+            padding: 16px;
+        }
+
+        .pc-placeholder__logo {
+            max-width: 80%;
+            max-height: 60%;
+            object-fit: contain;
+            opacity: .55;
+            filter: grayscale(1);
+            transition: opacity .2s, filter .2s;
+        }
+        .pc-placeholder:hover .pc-placeholder__logo {
+            opacity: .75;
+            filter: grayscale(.3);
+        }
+
+        .pc-placeholder__logo-fallback {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            color: #b0b8c4;
         }
 
         .pc-placeholder__icon {
@@ -733,8 +755,63 @@
                                         <img src="{{ p.image }}" alt="{{ p.title }}">
                                     {% else %}
                                         <div class="pc-placeholder">
-                                            <div class="pc-placeholder__icon"></div>
-                                            {% if p.brand %}<div class="pc-placeholder__brand">{{ p.brand }}</div>{% endif %}
+                                            {% set brandDomains = {
+                                                'BOSCH':      'bosch.com',
+                                                'SIEMENS':    'siemens-home.bsh-group.com',
+                                                'BALAY':      'balay.es',
+                                                'LG':         'lg.com',
+                                                'SAMSUNG':    'samsung.com',
+                                                'PHILIPS':    'philips.com',
+                                                'WHIRLPOOL':  'whirlpool.com',
+                                                'ELECTROLUX': 'electrolux.es',
+                                                'TEKA':       'teka.com',
+                                                'BEKO':       'beko.com',
+                                                'CANDY':      'candy.com',
+                                                'HOTPOINT':   'hotpoint.eu',
+                                                'LIEBHERR':   'liebherr.com',
+                                                'AEG':        'aeg.com',
+                                                'MIELE':      'miele.es',
+                                                'HAIER':      'haier.com',
+                                                'HISENSE':    'hisense.com',
+                                                'GRUNDIG':    'grundig.com',
+                                                'EDESA':      'edesa.com',
+                                                'FAGOR':      'fagor.com',
+                                                'NODOR':      'nodor.es',
+                                                'INDESIT':    'indesit.com',
+                                                'ARISTON':    'ariston.com',
+                                                'ZANUSSI':    'zanussi.com',
+                                                'CECOTEC':    'cecotec.es',
+                                                'ROWENTA':    'rowenta.es',
+                                                'TEFAL':      'tefal.es',
+                                                'MOULINEX':   'moulinex.es',
+                                                'BRAUN':      'braun.com',
+                                                'DYSON':      'dyson.es',
+                                                'KARCHER':    'kaercher.com',
+                                                'CORBERO':    'corbero.com',
+                                                'TAURUS':     'taurus.eu',
+                                                'SVAN':       'svan.es',
+                                                'BALAY':      'balay.es',
+                                                'BUTSIR':     'butsir.com',
+                                                'NEFF':       'neff-home.com',
+                                                'GAGGENAU':   'gaggenau.com',
+                                                'SMEG':       'smeg.com',
+                                                'GORENJE':    'gorenje.com',
+                                                'VESTEL':     'vestel.com.tr',
+                                                'SHARP':      'sharp.eu'
+                                            } %}
+                                            {% set brandKey = p.brand|upper %}
+                                            {% if brandKey in brandDomains|keys %}
+                                                <img
+                                                    class="pc-placeholder__logo"
+                                                    src="https://logo.clearbit.com/{{ brandDomains[brandKey] }}"
+                                                    alt="{{ p.brand }}"
+                                                    onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
+                                                >
+                                                <span class="pc-placeholder__logo-fallback" style="display:none">{{ p.brand }}</span>
+                                            {% else %}
+                                                <div class="pc-placeholder__icon"></div>
+                                                {% if p.brand %}<div class="pc-placeholder__brand">{{ p.brand }}</div>{% endif %}
+                                            {% endif %}
                                         </div>
                                     {% endif %}
                                     {% if p.stock >= 5 %}
