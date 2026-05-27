@@ -49,7 +49,7 @@
 
 {% if items is empty %}
     <div class="cart-empty">
-        <div class="cart-empty__icon">🛒</div>
+        
         <div class="cart-empty__title">El carrito está vacío</div>
         <p>Añade productos desde el catálogo para continuar.</p>
         <a class="btn btn-primary" href="{{ path('app_catalog') }}">Ver catálogo</a>
@@ -67,7 +67,7 @@
                 <div class="cart-item" data-article="{{ item.article }}">
                     <div class="cart-item__product">
                         <div class="cart-item__image">
-                            {% if item.image %}<img src="{{ item.image }}" alt="{{ item.title }}">{% else %}📦{% endif %}
+                            {% if item.image %}<img src="{{ item.image }}" alt="{{ item.title }}">{% endif %}
                         </div>
                         <div>
                             {% if item.brand %}<div class="cart-item__brand">{{ item.brand }}</div>{% endif %}

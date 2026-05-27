@@ -34,10 +34,11 @@
         .tech-table__row:last-child{border-bottom:none}
         .tech-table__key{padding:10px 14px;font-weight:700;color:var(--muted);background:#f9fafb;border-right:1px solid #f3f4f6}
         .tech-table__val{padding:10px 14px;color:var(--text)}
-        .breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-bottom:16px}
-        .breadcrumb a{color:var(--muted);text-decoration:none}
-        .breadcrumb a:hover{color:var(--text)}
-        .breadcrumb__sep{color:#d1d5db}
+        .breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
+        .breadcrumb a{color:var(--muted);text-decoration:none;transition:color .15s}
+        .breadcrumb a:hover{color:var(--brand)}
+        .breadcrumb span:last-child{color:var(--brand);font-weight:700}
+        .breadcrumb__sep{color:#d1d5db;font-weight:400}
         @media(max-width:900px){.product-detail{grid-template-columns:1fr}.product-detail__image{position:static;aspect-ratio:4/3}.product-price{font-size:26px}.add-to-cart{flex-wrap:wrap}.btn-add-cart{width:100%}}
     </style>
 
@@ -50,6 +51,10 @@
             {% if product.family %}
                 <span class="breadcrumb__sep">›</span>
                 <a href="{{ path('app_catalog', {family: product.family.id}) }}">{{ product.family.name }}</a>
+            {% endif %}
+            {% if product.subfamily %}
+                <span class="breadcrumb__sep">›</span>
+                <a href="{{ path('app_catalog', {code: product.subfamily.code}) }}">{{ product.subfamily.name }}</a>
             {% endif %}
             <span class="breadcrumb__sep">›</span>
             <span>{{ (product.title ?: product.model)|u.truncate(40,'…') }}</span>

@@ -185,7 +185,7 @@ class ImportCsvCommand extends Command
                     $product->setEan($ean);
                     $product->setDescription($description);
 
-                    // ✅ TITLE (cara al usuario): description -> (brand + family + model)
+                    // TITLE (cara al usuario): description -> (brand + family + model)
                     $product->setTitle($this->buildTitleFromValues($description, $brand, $model, $familyName));
 
                     $product->setBrand($brand);

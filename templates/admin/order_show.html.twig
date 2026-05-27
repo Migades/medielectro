@@ -154,10 +154,10 @@
             </div>
             {% set statusLabels = {
                 pending:   '⏳ Pendiente',
-                confirmed: '✅ Confirmado',
-                shipped:   '🚚 Enviado',
-                delivered: '📦 Entregado',
-                cancelled: '❌ Cancelado'
+                confirmed: 'Confirmado',
+                shipped:   'Enviado',
+                delivered: 'Entregado',
+                cancelled: 'Cancelado'
             } %}
             <span class="status-badge status-badge--{{ order.status }}">
             {{ statusLabels[order.status] ?? order.status }}
@@ -267,10 +267,10 @@
                         <div class="status-changer">
                             {% set allStatuses = {
                                 pending:   '⏳ Pendiente',
-                                confirmed: '✅ Confirmado',
-                                shipped:   '🚚 Enviado',
-                                delivered: '📦 Entregado',
-                                cancelled: '❌ Cancelado'
+                                confirmed: 'Confirmado',
+                                shipped:   'Enviado',
+                                delivered: 'Entregado',
+                                cancelled: 'Cancelado'
                             } %}
                             {% for value, label in allStatuses %}
                                 <form method="post" action="{{ path('app_admin_order_status', {id: order.id}) }}">

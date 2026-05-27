@@ -17,9 +17,8 @@ class CatalogController extends AbstractController
     #[Route('/catalogo', name: 'app_catalog')]
     public function index(Request $request, EntityManagerInterface $em): Response
     {
-        $page   = max(1, $request->query->getInt('page', 1));
-        $limit  = 24;
-        $offset = ($page - 1) * $limit;
+        $limit  = 12;
+        $offset = max(0, $request->query->getInt('offset', 0));
 
         $q             = trim((string) $request->query->get('q', ''));
         $familyId      = $request->query->getInt('family', 0);
@@ -41,10 +40,8 @@ class CatalogController extends AbstractController
         $globalPriceMin = (int) floor((float) ($priceStats['priceMin'] ?? 0));
         $globalPriceMax = (int) ceil((float)  ($priceStats['priceMax'] ?? 9999));
 
-        // Redondear el máximo a un número "limpio" para el slider
         $sliderMax = $this->roundUpNice($globalPriceMax);
 
-        // Filtro de precio aplicado
         $priceMin = $request->query->has('priceMin')
             ? max($globalPriceMin, (int) $request->query->get('priceMin'))
             : $globalPriceMin;
@@ -59,7 +56,6 @@ class CatalogController extends AbstractController
             ->leftJoin('p.subfamily', 's')->addSelect('s')
             ->andWhere('p.isActive = true');
 
-        // MariaDB con utf8mb4_unicode_ci: LIKE ya es case-insensitive, no hace falta LOWER()
         if ($q !== '') {
             $qb->andWhere('(
                 p.article LIKE :q
@@ -82,7 +78,6 @@ class CatalogController extends AbstractController
             $qb->andWhere('s.code = :code')->setParameter('code', $subfamilyCode);
         }
 
-        // Regla: "Solo disponibles" = stock >= 5
         if ($inStock === 1) {
             $qb->andWhere('p.stock >= :minStock')->setParameter('minStock', 5);
         }
@@ -91,7 +86,6 @@ class CatalogController extends AbstractController
             $qb->andWhere('p.brand = :brand')->setParameter('brand', $brand);
         }
 
-        // Filtro precio — solo aplicar si el usuario ha estrechado el rango real
         $priceFilterActive = $priceMin > $globalPriceMin || $priceMax < $sliderMax;
         if ($priceFilterActive) {
             $qb->andWhere('p.price >= :pMin')->setParameter('pMin', $priceMin);
@@ -115,12 +109,26 @@ class CatalogController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        $totalPages = (int) max(1, ceil($total / $limit));
+        $loaded  = $offset + count($products);
+        $hasMore = $loaded < $total;
 
-        // ── Familias (lógica de bloqueo centralizada en FamilyRepository) ──
+        // ── Respuesta AJAX (load more) ──
+        if ($request->isXmlHttpRequest()) {
+            $html = $this->renderView('catalog/_products.html.twig', [
+                'products' => $products,
+            ]);
+
+            return $this->json([
+                'html'    => $html,
+                'hasMore' => $hasMore,
+                'loaded'  => $loaded,
+                'total'   => $total,
+            ]);
+        }
+
+        // ── Respuesta normal ──
         $families = $em->getRepository(Family::class)->findVisible();
 
-        // ── Subfamilias ──
         $subQb = $em->getRepository(Subfamily::class)->createQueryBuilder('s')
             ->leftJoin('s.family', 'f')->addSelect('f')
             ->orderBy('s.name', 'ASC');
@@ -131,7 +139,6 @@ class CatalogController extends AbstractController
 
         $subfamilies = $subQb->getQuery()->getResult();
 
-        // ── Marcas ──
         $brands = $productRepo->createQueryBuilder('p')
             ->select('DISTINCT p.brand AS brand')
             ->andWhere('p.brand IS NOT NULL')
@@ -164,13 +171,12 @@ class CatalogController extends AbstractController
                 'globalMax' => $sliderMax,
                 'active'    => $priceFilterActive,
             ],
-            'currentPage'   => $page,
-            'totalPages'    => $totalPages,
             'totalProducts' => $total,
+            'loaded'        => $loaded,
+            'hasMore'       => $hasMore,
         ]);
     }
 
-    /** Redondea hacia arriba a un número "limpio" para el slider */
     private function roundUpNice(int $value): int
     {
         if ($value <= 100)  return 100;

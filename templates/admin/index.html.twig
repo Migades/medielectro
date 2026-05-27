@@ -279,7 +279,7 @@
         <div class="orders-table">
             {% if orders is empty %}
                 <div class="empty-state">
-                    <div class="empty-state__icon">📭</div>
+                    
                     <div class="empty-state__title">No hay pedidos</div>
                     <p>No se encontraron pedidos con los filtros aplicados.</p>
                 </div>
@@ -312,10 +312,10 @@
                         <div>
                             {% set statusLabels = {
                                 pending:   '⏳ Pendiente',
-                                confirmed: '✅ Confirmado',
-                                shipped:   '🚚 Enviado',
-                                delivered: '📦 Entregado',
-                                cancelled: '❌ Cancelado'
+                                confirmed: 'Confirmado',
+                                shipped:   'Enviado',
+                                delivered: 'Entregado',
+                                cancelled: 'Cancelado'
                             } %}
                             <span class="status-badge status-badge--{{ order.status }}">
                             {{ statusLabels[order.status] ?? order.status }}
