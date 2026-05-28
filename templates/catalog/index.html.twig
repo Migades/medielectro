@@ -25,8 +25,12 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            overflow: hidden;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
         }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
         .sidebar__header {
             display: flex;
@@ -56,14 +60,7 @@
             display: flex;
             flex-direction: column;
             gap: 18px;
-            overflow-y: auto;
-            flex: 1;
-            min-height: 0;
-            scrollbar-width: thin;
-            scrollbar-color: var(--border) transparent;
         }
-        .sidebar__body::-webkit-scrollbar { width: 4px; }
-        .sidebar__body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
         /* ── Grupos de filtro ── */
         .filter-group__label {
@@ -346,7 +343,6 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 14px;
-            overflow: hidden;
             transition: box-shadow .18s, transform .18s;
             text-decoration: none;
             color: inherit;
@@ -365,7 +361,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
             border-bottom: 1px solid var(--border);
             position: relative;
         }
@@ -449,7 +444,6 @@
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            overflow: hidden;
         }
 
         .pc-ref {
@@ -458,84 +452,31 @@
             margin-top: 2px;
         }
 
-        /* ── Precios ── */
-        .pc-prices {
+        .pc-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
             margin-top: auto;
-            padding-top: 8px;
-        }
-
-        .pc-pvpr {
-            font-size: 12px;
-            color: var(--muted);
-            text-decoration: line-through;
-            line-height: 1.4;
+            padding-top: 10px;
+            border-top: 1px solid #f3f4f6;
         }
 
         .pc-price {
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 900;
             letter-spacing: -.5px;
-            color: var(--brand);
-            line-height: 1.1;
+            color: var(--text);
         }
 
-        /* ── Botón carrito ── */
-        .pc-cart {
-            padding: 0 12px 12px;
-        }
-
-        .btn-add-cart-catalog {
-            width: 100%;
-            background: var(--brand);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            padding: 11px 14px;
-            font-size: 14px;
+        .pc-cta {
+            font-size: 12px;
             font-weight: 700;
-            cursor: pointer;
+            color: var(--brand);
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 7px;
-            transition: background .15s, transform .1s;
+            gap: 3px;
             white-space: nowrap;
-        }
-
-        .btn-add-cart-catalog:hover  { background: #c0040f; }
-        .btn-add-cart-catalog.added  { background: #c0040f; }
-        .btn-add-cart-catalog:disabled { opacity: .7; cursor: not-allowed; transform: none; }
-
-        /* ── Botón Ver más ── */
-        .load-more-wrap {
-            grid-column: 1 / -1;
-            display: flex;
-            justify-content: center;
-            padding: 24px 0 8px;
-        }
-
-        .btn-load-more {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #fff;
-            color: var(--brand);
-            border: 2px solid var(--brand);
-            border-radius: 10px;
-            padding: 13px 32px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background .15s, color .15s;
-        }
-
-        .btn-load-more:hover { background: var(--brand); color: #fff; }
-        .btn-load-more:disabled { opacity: .6; cursor: not-allowed; }
-
-        .load-more__remaining {
-            font-size: 13px;
-            font-weight: 400;
-            opacity: .75;
         }
 
         /* ── Vista LISTA ── */
@@ -616,6 +557,65 @@
             .pr-right .pr-cta { display: none; }
             .pr-image { flex: 0 0 56px; width: 56px; height: 56px; }
         }
+        /* ── Categoría details ── */
+        .cat-details summary { list-style: none; }
+        .cat-details summary::-webkit-details-marker { display: none; }
+        .cat-details__summary {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 10px;
+            background: #fff; cursor: pointer; font-size: 13px; color: var(--text);
+            user-select: none;
+        }
+        .cat-details__summary::after {
+            content: ''; display: block; width: 10px; height: 10px; flex-shrink: 0;
+            border-right: 2px solid #9ca3af; border-bottom: 2px solid #9ca3af;
+            transform: rotate(45deg); margin-top: -4px; transition: transform .2s;
+        }
+        .cat-details[open] .cat-details__summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-color: var(--brand); }
+        .cat-details[open] .cat-details__summary::after { transform: rotate(-135deg); margin-top: 4px; }
+        .cat-details__list {
+            border: 1.5px solid var(--brand); border-top: none;
+            border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;
+            background: #fff; padding: 4px;
+            }
+        .cat-details__list::-webkit-scrollbar { width: 3px; }
+        .cat-details__list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+        .cat-details__item {
+            display: block; padding: 7px 10px; border-radius: 7px;
+            font-size: 13px; color: var(--text); text-decoration: none;
+            transition: background .12s;
+        }
+        .cat-details__item:hover { background: #f3f4f6; }
+        .cat-details__item.active { background: #fff1f2; color: var(--brand); font-weight: 700; }
+
+        /* ── Botón añadir al carrito (cards catálogo) ── */
+        .pc-cart { padding: 0 12px 12px; }
+        .btn-add-cart-catalog {
+            width: 100%; background: var(--brand); color: #fff; border: none;
+            border-radius: 10px; padding: 11px 14px; font-size: 14px; font-weight: 700;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            gap: 7px; transition: background .15s;
+        }
+        .btn-add-cart-catalog:hover  { background: #c0040f; }
+        .btn-add-cart-catalog.added  { background: #c0040f; }
+        .btn-add-cart-catalog:disabled { opacity: .7; cursor: not-allowed; }
+
+        .brand-search {
+            width: 100%; box-sizing: border-box; border: 1.5px solid var(--border);
+            border-radius: 8px; padding: 7px 10px; font-size: 12px; outline: none;
+            margin-bottom: 4px; transition: border-color .15s; font-family: inherit; display: block;
+        }
+        .brand-search:focus { border-color: var(--brand); }
+        /* ── Botón Ver más ── */
+        .btn-load-more {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #fff; color: var(--brand); border: 2px solid var(--brand);
+            border-radius: 10px; padding: 13px 32px; font-size: 15px; font-weight: 700;
+            cursor: pointer; transition: background .15s, color .15s; font-family: inherit;
+        }
+        .btn-load-more:hover { background: var(--brand); color: #fff; }
+        .btn-load-more:disabled { opacity: .6; cursor: not-allowed; }
+
     </style>
 
     <section class="section">
@@ -687,30 +687,59 @@
                         {# Categoría #}
                         <div>
                             <span class="filter-group__label">Categoría</span>
-                            <select class="filter-input" name="family">
-                                <option value="0">Todas las categorías</option>
-                                {% set seenFamilies = [] %}
-                                {% for f in families %}
-                                    {% set key = (f.name ?? '')|lower|trim %}
-                                    {% if key and (key not in seenFamilies) %}
-                                        {% set seenFamilies = seenFamilies|merge([key]) %}
-                                        <option value="{{ f.id }}" {% if filters.family == f.id %}selected{% endif %}>{{ f.name }}</option>
+                            <details class="cat-details" {% if filters.family > 0 %}open{% endif %}>
+                                <summary class="cat-details__summary">
+                                    {% if filters.family > 0 %}
+                                        {% for f in families %}{% if f.id == filters.family %}{{ f.name|lower|capitalize }}{% endif %}{% endfor %}
+                                    {% else %}
+                                        Todas las categorías
                                     {% endif %}
-                                {% endfor %}
-                            </select>
+                                </summary>
+                                <div class="cat-details__list">
+                                    <a class="cat-details__item {% if filters.family == 0 %}active{% endif %}"
+                                       href="{{ path('app_catalog', filters|merge({family: 0, page: 1})) }}">
+                                        Todas las categorías
+                                    </a>
+                                    {% set seenFamilies = [] %}
+                                    {% for f in families %}
+                                        {% set key = (f.name ?? '')|lower|trim %}
+                                        {% if key and (key not in seenFamilies) %}
+                                            {% set seenFamilies = seenFamilies|merge([key]) %}
+                                            <a class="cat-details__item {% if filters.family == f.id %}active{% endif %}"
+                                               href="{{ path('app_catalog', filters|merge({family: f.id, page: 1})) }}">
+                                                {{ f.name|lower|capitalize }}
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </details>
                         </div>
 
                         {# Marca #}
                         <div>
                             <span class="filter-group__label">Marca</span>
-                            <select class="filter-input" name="brand">
-                                <option value="">Todas las marcas</option>
-                                {% for item in brands %}
-                                    <option value="{{ item }}" {% if filters.brand == item %}selected{% endif %}>{{ item }}</option>
-                                {% endfor %}
-                            </select>
+                            <details class="cat-details">
+                                <summary class="cat-details__summary">
+                                    {% if filters.brand %}{{ filters.brand }}{% else %}Todas las marcas{% endif %}
+                                </summary>
+                                <div class="cat-details__list">
+                                    <input class="brand-search" type="text" placeholder="Buscar marca…" id="brandSearch" autocomplete="off">
+                                    <a class="cat-details__item {% if not filters.brand %}active{% endif %}"
+                                       href="{{ path('app_catalog', {brand: '', offset: 0}) }}">
+                                        Todas las marcas
+                                    </a>
+                                    {% for item in brands %}
+                                        <a class="cat-details__item {% if filters.brand == item %}active{% endif %}"
+                                           href="{{ path('app_catalog', {brand: item, offset: 0}) }}"
+                                           data-brand="{{ item|lower }}">
+                                            {{ item }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </details>
                         </div>
-                        <button class="sidebar__apply" type="submit">Aplicar filtros</button>
+
+                                                <button class="sidebar__apply" type="submit">Aplicar filtros</button>
 
                     </div>
                 </form>
@@ -774,8 +803,8 @@
                         <option value="price_asc"  {% if filters.sort == 'price_asc'  %}selected{% endif %}>Precio: menor a mayor</option>
                         <option value="price_desc" {% if filters.sort == 'price_desc' %}selected{% endif %}>Precio: mayor a menor</option>
                     </select>
-                    <span class="catalog-toolbar__count" id="catalogCount">
-                        Mostrando <strong>{{ loaded }}</strong> de <strong>{{ totalProducts }}</strong> productos
+                    <span class="catalog-toolbar__count">
+                        Mostrando <strong id="catalogCount">{{ loaded }}</strong> de <strong>{{ totalProducts }}</strong> productos
                     </span>
                     <div class="view-toggle" id="viewToggle">
                         <button class="view-toggle__btn active" data-view="grid" title="Vista cuadrícula" type="button">
@@ -801,14 +830,14 @@
                     {% include 'catalog/_products.html.twig' %}
                 </div>
 
-                {# Botón Ver más #}
+                {# Carga progresiva #}
                 {% if hasMore %}
-                <div class="load-more-wrap" id="loadMoreWrap">
+                <div style="display:flex;justify-content:center;padding:24px 0 8px">
                     <button class="btn-load-more" id="btnLoadMore" type="button"
                             data-offset="{{ loaded }}"
                             data-total="{{ totalProducts }}">
                         Ver más productos
-                        <span class="load-more__remaining">({{ totalProducts - loaded }} restantes)</span>
+                        <span style="font-size:13px;font-weight:400;opacity:.75">({{ totalProducts - loaded }} restantes)</span>
                     </button>
                 </div>
                 {% endif %}
@@ -818,105 +847,38 @@
     </section>
 
     <script>
-        /* ── Ver más productos ── */
-        (function () {
-            var btn     = document.getElementById('btnLoadMore');
-            var wrap    = document.getElementById('loadMoreWrap');
-            var grid    = document.getElementById('productGrid');
-            var counter = document.getElementById('catalogCount');
-
-            if (!btn) return;
-
-            var currentOffset = parseInt(btn.dataset.offset, 10);
-            var total         = parseInt(btn.dataset.total, 10);
-
-            btn.addEventListener('click', async function () {
-                btn.disabled = true;
-                btn.innerHTML = 'Cargando…';
-
-                var url = new URL(window.location.href);
-                url.searchParams.set('offset', currentOffset);
-
+        /* ── Botones "Añadir al carrito" en tarjetas del catálogo ── */
+        document.querySelectorAll('.btn-add-cart-catalog').forEach(function(btn) {
+            btn.addEventListener('click', async function() {
+                const url = this.dataset.url;
+                const originalHTML = this.innerHTML;
+                this.disabled = true;
+                this.innerHTML = '…';
                 try {
-                    var res  = await fetch(url.toString(), {
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({ quantity: 1 })
                     });
-                    var data = await res.json();
-
-                    var tmp = document.createElement('div');
-                    tmp.innerHTML = data.html;
-                    while (tmp.firstChild) {
-                        grid.appendChild(tmp.firstChild);
-                    }
-
-                    /* Activar carrito en las nuevas cards */
-                    bindCartButtons(grid.querySelectorAll('.btn-add-cart-catalog:not([data-bound])'));
-
-                    /* Aplicar vista lista si estaba activa */
-                    if (grid.classList.contains('is-list')) {
-                        /* ya hereda el CSS, no hace falta nada */
-                    }
-
-                    currentOffset = data.loaded;
-
-                    /* Actualizar contador */
-                    if (counter) {
-                        counter.innerHTML = 'Mostrando <strong>' + currentOffset + '</strong> de <strong>' + total + '</strong> productos';
-                    }
-
-                    if (data.hasMore) {
-                        var remaining = total - currentOffset;
-                        btn.innerHTML = 'Ver más productos <span class="load-more__remaining">(' + remaining + ' restantes)</span>';
-                        btn.disabled  = false;
-                    } else {
-                        wrap.remove();
-                    }
-                } catch (e) {
-                    btn.innerHTML = 'Ver más productos';
-                    btn.disabled  = false;
+                    const data = await res.json();
+                    document.querySelectorAll('[data-cart-count]').forEach(function(el) {
+                        el.textContent = data.count;
+                        el.style.display = 'flex';
+                    });
+                    this.classList.add('added');
+                    this.innerHTML = '✓ Añadido';
+                    const self = this;
+                    setTimeout(function() {
+                        self.innerHTML = originalHTML;
+                        self.classList.remove('added');
+                        self.disabled = false;
+                    }, 2000);
+                } catch(e) {
+                    this.innerHTML = originalHTML;
+                    this.disabled = false;
                 }
             });
-        })();
-    </script>
-
-    <script>
-        /* ── Botones "Añadir al carrito" en tarjetas del catálogo ── */
-        function bindCartButtons(buttons) {
-            buttons.forEach(function(btn) {
-                btn.dataset.bound = '1';
-                btn.addEventListener('click', async function() {
-                    var url          = this.dataset.url;
-                    var originalHTML = this.innerHTML;
-                    this.disabled = true;
-                    this.innerHTML = '…';
-                    try {
-                        var res = await fetch(url, {
-                            method: 'POST',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: new URLSearchParams({ quantity: 1 })
-                        });
-                        var data = await res.json();
-                        document.querySelectorAll('[data-cart-count]').forEach(function(el) {
-                            el.textContent = data.count;
-                            el.style.display = 'flex';
-                        });
-                        this.classList.add('added');
-                        this.innerHTML = 'Añadido';
-                        var self = this;
-                        setTimeout(function() {
-                            self.innerHTML = originalHTML;
-                            self.classList.remove('added');
-                            self.disabled = false;
-                        }, 2000);
-                    } catch(e) {
-                        this.innerHTML = originalHTML;
-                        this.disabled = false;
-                    }
-                });
-            });
-        }
-
-        bindCartButtons(document.querySelectorAll('.btn-add-cart-catalog'));
+        });
     </script>
 
     <script>
@@ -1065,4 +1027,51 @@
 
         })();
     </script>
+    <script>
+        /* ── Ver más productos ── */
+        (function () {
+            var btn = document.getElementById('btnLoadMore');
+            var grid = document.getElementById('productGrid');
+            if (!btn || !grid) return;
+
+            btn.addEventListener('click', async function () {
+                var offset = parseInt(btn.dataset.offset, 10);
+                var total  = parseInt(btn.dataset.total, 10);
+
+                btn.disabled = true;
+                btn.textContent = 'Cargando…';
+
+                var url = new URL(window.location.href);
+                url.searchParams.set('offset', offset);
+
+                try {
+                    var res  = await fetch(url.toString(), { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                    var data = await res.json();
+
+                    var tmp = document.createElement('div');
+                    tmp.innerHTML = data.html;
+                    while (tmp.firstChild) grid.appendChild(tmp.firstChild);
+
+                    /* Actualizar contador */
+                    var count = document.getElementById('catalogCount');
+                    if (count) count.textContent = data.loaded;
+
+                    /* Actualizar offset en el botón */
+                    btn.dataset.offset = data.loaded;
+
+                    if (data.hasMore) {
+                        var remaining = data.total - data.loaded;
+                        btn.innerHTML = 'Ver más productos <span style="font-size:13px;font-weight:400;opacity:.75">(' + remaining + ' restantes)</span>';
+                        btn.disabled = false;
+                    } else {
+                        btn.parentElement.remove();
+                    }
+                } catch (e) {
+                    btn.textContent = 'Ver más productos';
+                    btn.disabled = false;
+                }
+            });
+        })();
+    </script>
+
 {% endblock %}

@@ -34,7 +34,7 @@ class FamilyRepository extends ServiceEntityRepository
         /** @var Family[] $all */
         $all = $this->createQueryBuilder('f')
             ->andWhere('f.isActive = true')
-            ->orderBy('f.name', 'ASC')
+            ->orderBy('f.id', 'ASC')
             ->getQuery()
             ->getResult();
 
@@ -66,7 +66,7 @@ class FamilyRepository extends ServiceEntityRepository
             ->leftJoin('f.subfamilies', 's')
             ->addSelect('s')
             ->andWhere('f.isActive = true')
-            ->orderBy('f.name', 'ASC')
+            ->orderBy('f.id', 'ASC')
             ->addOrderBy('s.name', 'ASC')
             ->getQuery()
             ->getResult();

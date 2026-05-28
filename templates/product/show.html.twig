@@ -2,185 +2,363 @@
 {% block title %}{{ product.title ?: product.model }} · Medielectro{% endblock %}
 
 {% block body %}
-    <style>
-        .product-detail{display:grid;grid-template-columns:420px 1fr;gap:24px;margin:24px 0;align-items:start}
-        .product-detail__image{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;position:sticky;top:168px}
-        .product-detail__image img{width:100%;height:100%;object-fit:cover}
-        .product-detail__placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:#c8d0da;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}
-        .product-detail__placeholder-icon{font-size:52px;opacity:.4}
-        .product-detail__info{display:flex;flex-direction:column;gap:16px}
-        .product-brand-badge{display:inline-flex;align-items:center;gap:6px;background:#fff1f2;border:1px solid #fecdd3;color:var(--brand);border-radius:999px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:4px 10px}
-        .product-detail h1{margin:8px 0 6px;font-size:24px;font-weight:900;line-height:1.2;letter-spacing:-.4px}
-        .product-ref{font-size:12px;color:var(--muted)}
-        .product-price-block{background:#f9fafb;border:1px solid var(--border);border-radius:14px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-        .product-price{font-size:32px;font-weight:900;letter-spacing:-1px;color:var(--text)}
-        .product-price__pvpr{font-size:12px;color:var(--muted);margin-top:2px}
-        .stock-pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px}
-        .stock-pill--ok{background:#effbf3;color:#15803d;border:1px solid #b7ebc6}
-        .stock-pill--warn{background:#fff7ea;color:#92400e;border:1px solid #ffe2b5}
-        .add-to-cart{display:flex;gap:10px;align-items:center}
-        .qty-select{display:flex;align-items:center;border:1px solid var(--border);border-radius:10px;overflow:hidden}
-        .qty-select__btn{width:38px;height:46px;border:none;background:#f3f4f6;cursor:pointer;font-size:18px;font-weight:700;color:var(--text);transition:background .15s}
-        .qty-select__btn:hover{background:#e5e7eb}
-        .qty-select__input{width:48px;height:46px;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);text-align:center;font-size:15px;font-weight:700;color:var(--text);background:white;outline:none;-moz-appearance:textfield}
-        .qty-select__input::-webkit-outer-spin-button,.qty-select__input::-webkit-inner-spin-button{-webkit-appearance:none}
-        .btn-add-cart{flex:1;height:46px;background:var(--brand);color:white;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;transition:opacity .15s;display:flex;align-items:center;justify-content:center;gap:8px}
-        .btn-add-cart:hover{opacity:.88}
-        .btn-add-cart:disabled{opacity:.5;cursor:not-allowed}
-        .flash-added{background:#effbf3;border:1px solid #b7ebc6;color:#15803d;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;display:none;align-items:center;gap:8px}
-        .flash-added.show{display:flex}
-        .tech-table{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-        .tech-table__row{display:grid;grid-template-columns:160px 1fr;border-bottom:1px solid #f3f4f6;font-size:13px}
-        .tech-table__row:last-child{border-bottom:none}
-        .tech-table__key{padding:10px 14px;font-weight:700;color:var(--muted);background:#f9fafb;border-right:1px solid #f3f4f6}
-        .tech-table__val{padding:10px 14px;color:var(--text)}
-        .breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
-        .breadcrumb a{color:var(--muted);text-decoration:none;transition:color .15s}
-        .breadcrumb a:hover{color:var(--brand)}
-        .breadcrumb span:last-child{color:var(--brand);font-weight:700}
-        .breadcrumb__sep{color:#d1d5db;font-weight:400}
-        @media(max-width:900px){.product-detail{grid-template-columns:1fr}.product-detail__image{position:static;aspect-ratio:4/3}.product-price{font-size:26px}.add-to-cart{flex-wrap:wrap}.btn-add-cart{width:100%}}
-    </style>
+<style>
+    /* ── Layout general ── */
+    .pd-wrap          { margin: 20px 0 56px }
+    .pd-grid          { display: grid; grid-template-columns: 520px 1fr; gap: 40px; align-items: start }
+    .pd-col-right     { display: flex; flex-direction: column; gap: 20px }
 
-    <section style="margin:16px 0 32px">
+    /* ── Breadcrumb ── */
+    .breadcrumb       { display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius) }
+    .breadcrumb a     { color:var(--muted);text-decoration:none;transition:color .15s }
+    .breadcrumb a:hover { color:var(--brand) }
+    .breadcrumb span:last-child { color:var(--brand);font-weight:700 }
+    .breadcrumb__sep  { color:#d1d5db;font-weight:400 }
 
-        <div class="breadcrumb">
-            <a href="{{ path('app_home') }}">Inicio</a>
+    /* ── Galería ── */
+    .gallery          { display: grid; grid-template-columns: 76px 1fr; gap: 10px }
+    .gallery__thumbs  { display: flex; flex-direction: column; gap: 8px }
+    .gallery__thumb   { width: 76px; height: 76px; border: 2px solid var(--border); border-radius: 10px; overflow: hidden; cursor: pointer; background: #fff; transition: border-color .15s; flex-shrink: 0 }
+    .gallery__thumb img { width: 100%; height: 100%; object-fit: contain; padding: 4px }
+    .gallery__thumb.active { border-color: var(--brand) }
+    .gallery__thumb:hover  { border-color: #f87171 }
+
+    .gallery__main    { background: #fff; border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; position: sticky; top: 96px }
+    .gallery__main img { width: 100%; height: 100%; object-fit: contain; padding: 24px; transition: opacity .2s }
+    .gallery__main img.fade { opacity: 0 }
+
+    .pd-placeholder   { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; height: 100%; padding: 32px }
+    .pd-placeholder__logo { max-width: 150px; max-height: 70px; object-fit: contain; opacity: .35 }
+    .pd-placeholder__text { font-size: 13px; font-weight: 700; color: #c8d0da; text-transform: uppercase; letter-spacing: .4px }
+
+    /* ── Cabecera info ── */
+    .pd-brand-badge   { display:inline-flex;align-items:center;gap:6px;background:#fff1f2;border:1px solid #fecdd3;color:var(--brand);border-radius:999px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:4px 10px;width:fit-content }
+    .pd-title         { margin:6px 0 4px;font-size:26px;font-weight:900;line-height:1.2;letter-spacing:-.4px }
+    .pd-meta          { font-size:12px;color:var(--muted) }
+    .pd-meta a        { color:var(--muted);text-decoration:none }
+    .pd-meta a:hover  { color:var(--brand) }
+
+    /* ── Precio ── */
+    .pd-price-block   { background:#f9fafb;border:1px solid var(--border);border-radius:16px;padding:20px }
+    .pd-price-row     { display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap }
+    .pd-pvpr          { font-size:13px;color:var(--muted);text-decoration:line-through;margin-bottom:2px }
+    .pd-price         { font-size:36px;font-weight:900;letter-spacing:-1.5px;color:var(--brand);line-height:1 }
+    .pd-saving        { display:inline-block;background:#effbf3;border:1px solid #b7ebc6;color:#15803d;border-radius:999px;font-size:11px;font-weight:800;padding:3px 10px;margin-top:6px }
+    .pd-stock         { display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:6px 14px;border-radius:999px;align-self:flex-start }
+    .pd-stock--ok     { background:#effbf3;color:#15803d;border:1px solid #b7ebc6 }
+    .pd-stock--warn   { background:#fff7ea;color:#92400e;border:1px solid #ffe2b5 }
+    .pd-vat           { font-size:11px;color:var(--muted);margin-top:5px }
+
+    /* ── Cart ── */
+    .pd-cart          { display:flex;gap:10px;align-items:center }
+    .qty-wrap         { display:flex;align-items:center;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:#fff }
+    .qty-btn          { width:40px;height:48px;border:none;background:transparent;cursor:pointer;font-size:20px;font-weight:700;color:var(--text);transition:background .15s }
+    .qty-btn:hover    { background:#f3f4f6 }
+    .qty-input        { width:52px;height:48px;border:none;border-left:1.5px solid var(--border);border-right:1.5px solid var(--border);text-align:center;font-size:16px;font-weight:700;color:var(--text);background:#fff;outline:none;-moz-appearance:textfield }
+    .qty-input::-webkit-outer-spin-button,.qty-input::-webkit-inner-spin-button { -webkit-appearance:none }
+    .btn-add-cart     { flex:1;height:48px;background:var(--brand);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s }
+    .btn-add-cart:hover   { background:#c0040f }
+    .btn-add-cart:disabled { opacity:.5;cursor:not-allowed }
+
+    /* ── Flash ── */
+    .flash-ok         { background:#effbf3;border:1px solid #b7ebc6;color:#15803d;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;display:none;align-items:center;gap:8px }
+    .flash-ok.show    { display:flex }
+
+    /* ── Trust ── */
+    .pd-trust         { display:grid;grid-template-columns:repeat(3,1fr);gap:10px }
+    .pd-trust-item    { background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px }
+    .pd-trust-item svg { flex-shrink:0;color:var(--brand) }
+    .pd-trust-label   { font-size:11px;font-weight:700;color:var(--text);line-height:1.3 }
+    .pd-trust-sub     { font-size:10px;color:var(--muted) }
+
+    /* ── Volver ── */
+    .btn-back         { display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;padding:4px 0;transition:color .15s }
+    .btn-back:hover   { color:var(--brand) }
+
+    /* ── Sección inferior ── */
+    .pd-bottom        { margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start }
+    .pd-section-title { font-size:15px;font-weight:800;margin:0 0 14px;letter-spacing:-.2px }
+    .pd-description   { font-size:14px;color:var(--muted);line-height:1.8;margin:0 }
+
+    /* ── Specs ── */
+    .pd-specs         { background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden }
+    .pd-specs-row     { display:grid;grid-template-columns:155px 1fr;border-bottom:1px solid #f3f4f6;font-size:13px }
+    .pd-specs-row:last-child { border-bottom:none }
+    .pd-specs-key     { padding:11px 14px;font-weight:700;color:var(--muted);background:#f9fafb;border-right:1px solid #f3f4f6 }
+    .pd-specs-val     { padding:11px 14px;color:var(--text) }
+
+    /* ── Responsive ── */
+    @media(max-width:1024px) {
+        .pd-grid      { grid-template-columns: 1fr }
+        .gallery      { grid-template-columns: 64px 1fr }
+        .gallery__thumb { width:64px;height:64px }
+        .gallery__main { position:static;aspect-ratio:4/3;max-height:360px }
+    }
+    @media(max-width:640px) {
+        .pd-grid      { gap:24px }
+        .gallery      { grid-template-columns: 1fr; grid-template-rows: auto auto }
+        .gallery__thumbs { flex-direction:row;overflow-x:auto }
+        .gallery__main { order:-1 }
+        .pd-price     { font-size:28px }
+        .pd-cart      { flex-wrap:wrap }
+        .btn-add-cart { width:100% }
+        .pd-trust     { grid-template-columns:1fr }
+        .pd-bottom    { grid-template-columns:1fr }
+    }
+</style>
+
+{% set allImages = product.allImages %}
+
+<section class="pd-wrap">
+
+    <div class="breadcrumb">
+        <a href="{{ path('app_home') }}">Inicio</a>
+        <span class="breadcrumb__sep">›</span>
+        <a href="{{ path('app_catalog') }}">Catálogo</a>
+        {% if product.family %}
             <span class="breadcrumb__sep">›</span>
-            <a href="{{ path('app_catalog') }}">Catálogo</a>
-            {% if product.family %}
-                <span class="breadcrumb__sep">›</span>
-                <a href="{{ path('app_catalog', {family: product.family.id}) }}">{{ product.family.name }}</a>
-            {% endif %}
-            {% if product.subfamily %}
-                <span class="breadcrumb__sep">›</span>
-                <a href="{{ path('app_catalog', {code: product.subfamily.code}) }}">{{ product.subfamily.name }}</a>
-            {% endif %}
+            <a href="{{ path('app_catalog', {family: product.family.id}) }}">{{ product.family.name }}</a>
+        {% endif %}
+        {% if product.subfamily %}
             <span class="breadcrumb__sep">›</span>
-            <span>{{ (product.title ?: product.model)|u.truncate(40,'…') }}</span>
-        </div>
+            <a href="{{ path('app_catalog', {code: product.subfamily.code}) }}">{{ product.subfamily.name }}</a>
+        {% endif %}
+        <span class="breadcrumb__sep">›</span>
+        <span>{{ (product.title ?: product.model)|u.truncate(50,'…') }}</span>
+    </div>
 
-        <div class="product-detail">
+    <div class="pd-grid">
 
-            <div class="product-detail__image">
-                {% if product.image %}
-                    <img src="{{ product.image }}" alt="{{ product.title ?: product.model }}">
+        {# ── Galería ── #}
+        <div class="gallery">
+            {% if allImages|length > 1 %}
+            <div class="gallery__thumbs" id="thumbs">
+                {% for img in allImages %}
+                    <div class="gallery__thumb {% if loop.first %}active{% endif %}" data-src="{{ img }}">
+                        <img src="{{ img }}" alt="{{ product.title }} imagen {{ loop.index }}" loading="lazy">
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="gallery__main {% if allImages|length <= 1 %}{{ 'style="grid-column:1/-1"'|raw }}{% endif %}">
+                {% if allImages|length > 0 %}
+                    <img src="{{ allImages[0] }}" alt="{{ product.title ?: product.model }}" id="mainImg">
                 {% else %}
-                    <div class="product-detail__placeholder">
-                        <div class="product-detail__placeholder-icon"></div>
-                        {% if product.brand %}<span>{{ product.brand }}</span>{% endif %}
+                    <div class="pd-placeholder">
+                        {% set brandDomains = {
+                            'BOSCH':'bosch.com','SIEMENS':'siemens-home.bsh-group.com','BALAY':'balay.es',
+                            'LG':'lg.com','SAMSUNG':'samsung.com','PHILIPS':'philips.com',
+                            'WHIRLPOOL':'whirlpool.com','ELECTROLUX':'electrolux.es','TEKA':'teka.com',
+                            'BEKO':'beko.com','CANDY':'candy.com','HOTPOINT':'hotpoint.eu',
+                            'LIEBHERR':'liebherr.com','AEG':'aeg.com','MIELE':'miele.es',
+                            'HAIER':'haier.com','HISENSE':'hisense.com','GRUNDIG':'grundig.com',
+                            'EDESA':'edesa.com','INDESIT':'indesit.com','ARISTON':'ariston.com',
+                            'SMEG':'smeg.com','ZANUSSI':'zanussi.com','ROWENTA':'rowenta.es',
+                            'TEFAL':'tefal.es','MOULINEX':'moulinex.es','BRAUN':'braun.com',
+                            'DYSON':'dyson.es','CECOTEC':'cecotec.es','ORBEGOZO':'orbegozo.com',
+                            'TAURUS':'taurus.eu','SVAN':'svan.es','NEFF':'neff-home.com',
+                            'COINTRA':'cointra.es','THOMSON':'thomson-brand.com','ENGEL':'engel-axil.com'
+                        } %}
+                        {% set brandKey = product.brand|upper %}
+                        {% if product.brand and brandKey in brandDomains|keys %}
+                            <img class="pd-placeholder__logo"
+                                 src="https://logo.clearbit.com/{{ brandDomains[brandKey] }}"
+                                 alt="{{ product.brand }}"
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                            <span class="pd-placeholder__text" style="display:none">{{ product.brand }}</span>
+                        {% elseif product.brand %}
+                            <span class="pd-placeholder__text">{{ product.brand }}</span>
+                        {% endif %}
                     </div>
                 {% endif %}
             </div>
+        </div>
 
-            <div class="product-detail__info">
+        {# ── Columna derecha ── #}
+        <div class="pd-col-right">
 
-                {% if product.brand %}
-                    <span class="product-brand-badge">{{ product.brand }}</span>
+            <a href="{{ path('app_catalog', product.subfamily ? {code: product.subfamily.code} : {}) }}" class="btn-back">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                Volver al catálogo
+            </a>
+
+            {% if product.brand %}
+                <span class="pd-brand-badge">{{ product.brand }}</span>
+            {% endif %}
+
+            <h1 class="pd-title">{{ product.title ?: product.model }}</h1>
+
+            <div class="pd-meta">
+                Ref. {{ product.article }}
+                {% if product.model %} · Modelo: {{ product.model }}{% endif %}
+                {% if product.subfamily %}
+                    · <a href="{{ path('app_catalog', {code: product.subfamily.code}) }}">{{ product.subfamily.name }}</a>
                 {% endif %}
+            </div>
 
-                <h1>{{ product.title ?: product.model }}</h1>
-
-                <div class="product-ref">
-                    Ref. {{ product.article }}
-                    {% if product.family %} · {{ product.family.name }}{% endif %}
-                    {% if product.subfamily %} / {{ product.subfamily.name }}{% endif %}
-                </div>
-
-                <div class="product-price-block">
+            <div class="pd-price-block">
+                <div class="pd-price-row">
                     <div>
-                        <div class="product-price">{{ product.price|number_format(2,',','.') }} €</div>
-                        {% if product.pvpr %}
-                            <div class="product-price__pvpr">PVP recomendado: {{ product.pvpr|number_format(2,',','.') }} €</div>
+                        {% if product.pvpr and product.pvpr * 1 > product.price * 1 %}
+                            <div class="pd-pvpr">PVP recomendado: {{ product.pvpr|number_format(2,',','.') }} €</div>
+                        {% endif %}
+                        <div class="pd-price">{{ product.price|number_format(2,',','.') }} €</div>
+                        <div class="pd-vat">IVA incluido</div>
+                        {% if product.pvpr and product.pvpr * 1 > product.price * 1 %}
+                            {% set saving = product.pvpr * 1 - product.price * 1 %}
+                            <span class="pd-saving">Ahorras {{ saving|number_format(2,',','.') }} €</span>
                         {% endif %}
                     </div>
                     {% if product.stock >= 5 %}
-                        <span class="stock-pill stock-pill--ok">En stock</span>
+                        <span class="pd-stock pd-stock--ok">
+                            <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#15803d"/></svg>
+                            En stock
+                        </span>
                     {% elseif product.stock > 0 %}
-                        <span class="stock-pill stock-pill--warn">Pocas unidades</span>
+                        <span class="pd-stock pd-stock--warn">Pocas unidades</span>
                     {% else %}
-                        <span class="stock-pill stock-pill--warn">Consultar disponibilidad</span>
+                        <span class="pd-stock pd-stock--warn">Consultar disponibilidad</span>
                     {% endif %}
                 </div>
+            </div>
 
-                <div class="flash-added" id="flashAdded">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                    Producto añadido al carrito —
-                    <a href="{{ path('app_cart_index') }}" style="color:#15803d;font-weight:800">Ver carrito</a>
+            <div class="flash-ok" id="flashAdded">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Producto añadido al carrito —
+                <a href="{{ path('app_cart_index') }}" style="color:#15803d;font-weight:800">Ver carrito</a>
+            </div>
+
+            <div class="pd-cart">
+                <div class="qty-wrap">
+                    <button class="qty-btn" type="button" id="qtyDec">−</button>
+                    <input class="qty-input" type="number" id="qtyInput" value="1" min="1" max="999">
+                    <button class="qty-btn" type="button" id="qtyInc">+</button>
                 </div>
+                <button class="btn-add-cart" type="button" id="btnAddCart"
+                        data-url="{{ path('app_cart_add', {article: product.article}) }}">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/>
+                    </svg>
+                    Añadir al carrito
+                </button>
+            </div>
 
-                <div class="add-to-cart">
-                    <div class="qty-select">
-                        <button class="qty-select__btn" type="button" id="qtyDec">−</button>
-                        <input class="qty-select__input" type="number" id="qtyInput" value="1" min="1" max="999">
-                        <button class="qty-select__btn" type="button" id="qtyInc">+</button>
-                    </div>
-                    <button class="btn-add-cart" type="button" id="btnAddCart"
-                            data-url="{{ path('app_cart_add', {article: product.article}) }}">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                            <line x1="3" y1="6" x2="21" y2="6"/>
-                            <path d="M16 10a4 4 0 01-8 0"/>
-                        </svg>
-                        Añadir al carrito
-                    </button>
-                </div>
-
-                <a class="btn" href="{{ path('app_catalog') }}" style="width:fit-content">← Volver al catálogo</a>
-
-                {% if product.description %}
+            <div class="pd-trust">
+                <div class="pd-trust-item">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 6v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                     <div>
-                        <h3 style="margin:0 0 8px;font-size:15px">Descripción</h3>
-                        <p style="margin:0;color:var(--muted);font-size:13px;line-height:1.6">{{ product.description }}</p>
+                        <div class="pd-trust-label">Envío a domicilio</div>
+                        <div class="pd-trust-sub">Consultar disponibilidad</div>
+                    </div>
+                </div>
+                <div class="pd-trust-item">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <div>
+                        <div class="pd-trust-label">Garantía oficial</div>
+                        <div class="pd-trust-sub">2 años de garantía</div>
+                    </div>
+                </div>
+                <div class="pd-trust-item">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                    <div>
+                        <div class="pd-trust-label">Devoluciones</div>
+                        <div class="pd-trust-sub">14 días sin compromiso</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {# ── Sección inferior ── #}
+    <div class="pd-bottom">
+        <div>
+            <div class="pd-section-title">Descripción</div>
+            {% if product.description %}
+                <p class="pd-description">{{ product.description }}</p>
+            {% else %}
+                <p class="pd-description">
+                    {% if product.brand %}{{ product.brand }}{% endif %}{% if product.model %} {{ product.model }}{% endif %}{% if product.subfamily %} — {{ product.subfamily.name|lower|capitalize }}{% endif %}.
+                    Para más información contacte con nuestro equipo en el <strong>96 350 16 75</strong> o visítenos en tienda.
+                </p>
+            {% endif %}
+        </div>
+        <div>
+            <div class="pd-section-title">Especificaciones</div>
+            <div class="pd-specs">
+                <div class="pd-specs-row"><div class="pd-specs-key">Referencia</div><div class="pd-specs-val">{{ product.article }}</div></div>
+                {% if product.model %}<div class="pd-specs-row"><div class="pd-specs-key">Modelo</div><div class="pd-specs-val">{{ product.model }}</div></div>{% endif %}
+                {% if product.brand %}<div class="pd-specs-row"><div class="pd-specs-key">Marca</div><div class="pd-specs-val">{{ product.brand }}</div></div>{% endif %}
+                {% if product.subfamily %}
+                    <div class="pd-specs-row">
+                        <div class="pd-specs-key">Categoría</div>
+                        <div class="pd-specs-val"><a href="{{ path('app_catalog', {code: product.subfamily.code}) }}" style="color:var(--brand);text-decoration:none">{{ product.subfamily.name }}</a></div>
                     </div>
                 {% endif %}
-
-                <div class="tech-table">
-                    {% if product.ean %}
-                        <div class="tech-table__row"><div class="tech-table__key">EAN</div><div class="tech-table__val">{{ product.ean }}</div></div>
-                    {% endif %}
-                    <div class="tech-table__row"><div class="tech-table__key">Modelo</div><div class="tech-table__val">{{ product.model }}</div></div>
-                    {% if product.pvpr %}
-                        <div class="tech-table__row"><div class="tech-table__key">PVPR</div><div class="tech-table__val">{{ product.pvpr|number_format(2,',','.') }} €</div></div>
-                    {% endif %}
-                    {% if product.digitalCanon %}
-                        <div class="tech-table__row"><div class="tech-table__key">Canon digital</div><div class="tech-table__val">{{ product.digitalCanon|number_format(2,',','.') }} €</div></div>
-                    {% endif %}
-                    <div class="tech-table__row"><div class="tech-table__key">Stock</div><div class="tech-table__val">{{ product.stock }} uds.</div></div>
-                </div>
-
+                {% if product.ean %}<div class="pd-specs-row"><div class="pd-specs-key">EAN</div><div class="pd-specs-val">{{ product.ean }}</div></div>{% endif %}
+                {% if product.pvpr %}<div class="pd-specs-row"><div class="pd-specs-key">PVP recomendado</div><div class="pd-specs-val">{{ product.pvpr|number_format(2,',','.') }} €</div></div>{% endif %}
+                {% if product.digitalCanon %}<div class="pd-specs-row"><div class="pd-specs-key">Canon digital</div><div class="pd-specs-val">{{ product.digitalCanon|number_format(2,',','.') }} €</div></div>{% endif %}
+                <div class="pd-specs-row"><div class="pd-specs-key">Disponibilidad</div><div class="pd-specs-val">{% if product.stock >= 5 %}En stock{% elseif product.stock > 0 %}Pocas unidades{% else %}Consultar{% endif %}</div></div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <script>
-        (function(){
-            const qtyInput = document.getElementById('qtyInput');
-            document.getElementById('qtyDec').addEventListener('click',()=>{ qtyInput.value=Math.max(1,parseInt(qtyInput.value,10)-1); });
-            document.getElementById('qtyInc').addEventListener('click',()=>{ qtyInput.value=Math.min(999,parseInt(qtyInput.value,10)+1); });
+</section>
 
-            document.getElementById('btnAddCart').addEventListener('click', async function(){
-                const qty=parseInt(qtyInput.value,10)||1;
-                this.disabled=true;
-                try{
-                    const res=await fetch(this.dataset.url,{
-                        method:'POST',
-                        headers:{'X-Requested-With':'XMLHttpRequest','Content-Type':'application/x-www-form-urlencoded'},
-                        body:new URLSearchParams({quantity:qty})
-                    });
-                    const data=await res.json();
-                    // Actualizar badge del header
-                    document.querySelectorAll('[data-cart-count]').forEach(el=>{
-                        el.textContent=data.count;
-                        el.style.display='flex';
-                    });
-                    // Flash local
-                    const flash=document.getElementById('flashAdded');
-                    flash.classList.add('show');
-                    setTimeout(()=>flash.classList.remove('show'),4000);
-                }catch(e){ console.error(e); }
-                finally{ this.disabled=false; }
+<script>
+(function () {
+    /* ── Galería ── */
+    const mainImg = document.getElementById('mainImg');
+    const thumbs  = document.querySelectorAll('.gallery__thumb');
+
+    thumbs.forEach(function (thumb) {
+        thumb.addEventListener('click', function () {
+            thumbs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            if (!mainImg) return;
+            mainImg.classList.add('fade');
+            setTimeout(function () {
+                mainImg.src = thumb.dataset.src;
+                mainImg.classList.remove('fade');
+            }, 180);
+        });
+    });
+
+    /* ── Cantidad ── */
+    const qtyInput = document.getElementById('qtyInput');
+    document.getElementById('qtyDec').addEventListener('click', function () {
+        qtyInput.value = Math.max(1, parseInt(qtyInput.value, 10) - 1);
+    });
+    document.getElementById('qtyInc').addEventListener('click', function () {
+        qtyInput.value = Math.min(999, parseInt(qtyInput.value, 10) + 1);
+    });
+
+    /* ── Añadir al carrito ── */
+    document.getElementById('btnAddCart').addEventListener('click', async function () {
+        var qty = parseInt(qtyInput.value, 10) || 1;
+        this.disabled = true;
+        try {
+            var res  = await fetch(this.dataset.url, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ quantity: qty })
             });
-        })();
-    </script>
+            var data = await res.json();
+            document.querySelectorAll('[data-cart-count]').forEach(function (el) {
+                el.textContent = data.count;
+                el.style.display = 'flex';
+            });
+            var flash = document.getElementById('flashAdded');
+            flash.classList.add('show');
+            setTimeout(function () { flash.classList.remove('show'); }, 5000);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            this.disabled = false;
+        }
+    });
+})();
+</script>
 {% endblock %}

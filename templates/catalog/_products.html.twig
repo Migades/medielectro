@@ -1,137 +1,133 @@
 {% for p in products %}
 
-    {# ── Tarjeta GRID ── #}
-    <div class="product-card--grid">
-        <a href="{{ path('app_product_show', {article: p.article}) }}" class="pc-link">
-            <div class="pc-image">
-                {% if p.image %}
-                    <img src="{{ p.image }}" alt="{{ p.title }}">
-                {% else %}
-                    <div class="pc-placeholder">
-                        {% set brandDomains = {
-                            'BOSCH':      'bosch.com',
-                            'SIEMENS':    'siemens-home.bsh-group.com',
-                            'BALAY':      'balay.es',
-                            'LG':         'lg.com',
-                            'SAMSUNG':    'samsung.com',
-                            'PHILIPS':    'philips.com',
-                            'WHIRLPOOL':  'whirlpool.com',
-                            'ELECTROLUX': 'electrolux.es',
-                            'TEKA':       'teka.com',
-                            'BEKO':       'beko.com',
-                            'CANDY':      'candy.com',
-                            'HOTPOINT':   'hotpoint.eu',
-                            'LIEBHERR':   'liebherr.com',
-                            'AEG':        'aeg.com',
-                            'MIELE':      'miele.es',
-                            'HAIER':      'haier.com',
-                            'HISENSE':    'hisense.com',
-                            'GRUNDIG':    'grundig.com',
-                            'EDESA':      'edesa.com',
-                            'FAGOR':      'fagor.com',
-                            'NODOR':      'nodor.es',
-                            'INDESIT':    'indesit.com',
-                            'ARISTON':    'ariston.com',
-                            'ZANUSSI':    'zanussi.com',
-                            'CECOTEC':    'cecotec.es',
-                            'ROWENTA':    'rowenta.es',
-                            'TEFAL':      'tefal.es',
-                            'MOULINEX':   'moulinex.es',
-                            'BRAUN':      'braun.com',
-                            'DYSON':      'dyson.es',
-                            'KARCHER':    'kaercher.com',
-                            'CORBERO':    'corbero.com',
-                            'TAURUS':     'taurus.eu',
-                            'SVAN':       'svan.es',
-                            'BUTSIR':     'butsir.com',
-                            'NEFF':       'neff-home.com',
-                            'GAGGENAU':   'gaggenau.com',
-                            'SMEG':       'smeg.com',
-                            'GORENJE':    'gorenje.com',
-                            'VESTEL':     'vestel.com.tr',
-                            'SHARP':      'sharp.eu'
-                        } %}
-                        {% set brandKey = p.brand|upper %}
-                        {% if brandKey in brandDomains|keys %}
-                            <img
-                                class="pc-placeholder__logo"
-                                src="https://logo.clearbit.com/{{ brandDomains[brandKey] }}"
-                                alt="{{ p.brand }}"
-                                onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
-                            >
-                            <span class="pc-placeholder__logo-fallback" style="display:none">{{ p.brand }}</span>
-                        {% else %}
-                            <div class="pc-placeholder__icon"></div>
-                            {% if p.brand %}<div class="pc-placeholder__brand">{{ p.brand }}</div>{% endif %}
-                        {% endif %}
-                    </div>
-                {% endif %}
-                {% if p.stock >= 5 %}
-                    <span class="pc-stock-badge pc-stock-badge--ok">Disponible</span>
-                {% else %}
-                    <span class="pc-stock-badge pc-stock-badge--warn">Consultar</span>
-                {% endif %}
-            </div>
-            <div class="pc-body">
-                {% if p.brand %}<div class="pc-brand">{{ p.brand }}</div>{% endif %}
-                <div class="pc-title">{{ p.title|striptags }}</div>
-                <div class="pc-ref">Ref. {{ p.article }}</div>
-                <div class="pc-prices">
-                    {% if p.pvpr and p.pvpr * 1 > p.price * 1 %}
-                        <div class="pc-pvpr">{{ p.pvpr|number_format(2, ',', '.') }} €</div>
-                    {% endif %}
-                    <div class="pc-price">{{ p.price|number_format(2, ',', '.') }} €</div>
-                </div>
-            </div>
-        </a>
-        <div class="pc-cart">
-            <button class="btn-add-cart-catalog"
-                    data-url="{{ path('app_cart_add', {article: p.article}) }}"
-                    data-title="{{ p.title|striptags|u.truncate(40,'…') }}"
-                    type="button">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/>
-                </svg>
-                Añadir al carrito
-            </button>
-        </div>
-    </div>
+                        {# ── Tarjeta GRID ── #}
+                        <div class="product-card--grid">
+                            <a href="{{ path('app_product_show', {article: p.article}) }}" class="pc-link">
+                                <div class="pc-image">
+                                    {% if p.image %}
+                                        <img src="{{ p.image }}" alt="{{ p.title }}">
+                                    {% else %}
+                                        <div class="pc-placeholder">
+                                            {% set brandDomains = {
+                                                'BOSCH':      'bosch.com',
+                                                'SIEMENS':    'siemens-home.bsh-group.com',
+                                                'BALAY':      'balay.es',
+                                                'LG':         'lg.com',
+                                                'SAMSUNG':    'samsung.com',
+                                                'PHILIPS':    'philips.com',
+                                                'WHIRLPOOL':  'whirlpool.com',
+                                                'ELECTROLUX': 'electrolux.es',
+                                                'TEKA':       'teka.com',
+                                                'BEKO':       'beko.com',
+                                                'CANDY':      'candy.com',
+                                                'HOTPOINT':   'hotpoint.eu',
+                                                'LIEBHERR':   'liebherr.com',
+                                                'AEG':        'aeg.com',
+                                                'MIELE':      'miele.es',
+                                                'HAIER':      'haier.com',
+                                                'HISENSE':    'hisense.com',
+                                                'GRUNDIG':    'grundig.com',
+                                                'EDESA':      'edesa.com',
+                                                'FAGOR':      'fagor.com',
+                                                'NODOR':      'nodor.es',
+                                                'INDESIT':    'indesit.com',
+                                                'ARISTON':    'ariston.com',
+                                                'ZANUSSI':    'zanussi.com',
+                                                'CECOTEC':    'cecotec.es',
+                                                'ROWENTA':    'rowenta.es',
+                                                'TEFAL':      'tefal.es',
+                                                'MOULINEX':   'moulinex.es',
+                                                'BRAUN':      'braun.com',
+                                                'DYSON':      'dyson.es',
+                                                'KARCHER':    'kaercher.com',
+                                                'CORBERO':    'corbero.com',
+                                                'TAURUS':     'taurus.eu',
+                                                'SVAN':       'svan.es',
+                                                'BALAY':      'balay.es',
+                                                'BUTSIR':     'butsir.com',
+                                                'NEFF':       'neff-home.com',
+                                                'GAGGENAU':   'gaggenau.com',
+                                                'SMEG':       'smeg.com',
+                                                'GORENJE':    'gorenje.com',
+                                                'VESTEL':     'vestel.com.tr',
+                                                'SHARP':      'sharp.eu'
+                                            } %}
+                                            {% set brandKey = p.brand|upper %}
+                                            {% if brandKey in brandDomains|keys %}
+                                                <img
+                                                    class="pc-placeholder__logo"
+                                                    src="https://logo.clearbit.com/{{ brandDomains[brandKey] }}"
+                                                    alt="{{ p.brand }}"
+                                                    onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
+                                                >
+                                                <span class="pc-placeholder__logo-fallback" style="display:none">{{ p.brand }}</span>
+                                            {% else %}
+                                                <div class="pc-placeholder__icon"></div>
+                                                {% if p.brand %}<div class="pc-placeholder__brand">{{ p.brand }}</div>{% endif %}
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    {% if p.stock >= 5 %}
+                                        <span class="pc-stock-badge pc-stock-badge--ok">Disponible</span>
+                                    {% else %}
+                                        <span class="pc-stock-badge pc-stock-badge--warn">Consultar</span>
+                                    {% endif %}
+                                </div>
+                                <div class="pc-body">
+                                    {% if p.brand %}<div class="pc-brand">{{ p.brand }}</div>{% endif %}
+                                    <div class="pc-title">{{ p.title|striptags }}</div>
+                                    <div class="pc-ref">Ref. {{ p.article }}</div>
+                                    <div class="pc-footer">
+                                        <div class="pc-price">{{ p.price|number_format(2, ',', '.') }} €</div>
+                                        <div class="pc-cta">Ver detalle →</div>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="pc-cart">
+                                <button class="btn-add-cart-catalog"
+                                        data-url="{{ path('app_cart_add', {article: p.article}) }}"
+                                        data-title="{{ p.title|striptags|u.truncate(40,'…') }}"
+                                        type="button">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+                                    </svg>
+                                    Añadir al carrito
+                                </button>
+                            </div>
+                        </div>
 
-    {# ── Fila LISTA ── #}
-    <a class="product-row" href="{{ path('app_product_show', {article: p.article}) }}">
-        <div class="pr-image">
-            {% if p.image %}
-                <img src="{{ p.image }}" alt="{{ p.title }}">
-            {% else %}
-                <div class="pr-placeholder"></div>
-            {% endif %}
-        </div>
-        <div class="pr-info">
-            {% if p.brand %}<div class="pr-brand">{{ p.brand }}</div>{% endif %}
-            <div class="pr-title">{{ p.title|striptags }}</div>
-            <div class="pr-meta">
-                Ref. {{ p.article }}
-                {% if p.family %} · {{ p.family.name }}{% endif %}
-                {% if p.subfamily %} / {{ p.subfamily.name }}{% endif %}
-            </div>
-        </div>
-        <div class="pr-right">
-            {% if p.pvpr and p.pvpr * 1 > p.price * 1 %}
-                <div class="pr-pvpr">{{ p.pvpr|number_format(2, ',', '.') }} €</div>
-            {% endif %}
-            <div class="pr-price">{{ p.price|number_format(2, ',', '.') }} €</div>
-            {% if p.stock >= 5 %}
-                <span class="pr-stock pr-stock--ok">Disponible</span>
-            {% else %}
-                <span class="pr-stock pr-stock--warn">Consultar</span>
-            {% endif %}
-        </div>
-    </a>
+                        {# ── Fila LISTA ── #}
+                        <a class="product-row" href="{{ path('app_product_show', {article: p.article}) }}">
+                            <div class="pr-image">
+                                {% if p.image %}
+                                    <img src="{{ p.image }}" alt="{{ p.title }}">
+                                {% else %}
+                                    <div class="pr-placeholder"></div>
+                                {% endif %}
+                            </div>
+                            <div class="pr-info">
+                                {% if p.brand %}<div class="pr-brand">{{ p.brand }}</div>{% endif %}
+                                <div class="pr-title">{{ p.title|striptags }}</div>
+                                <div class="pr-meta">
+                                    Ref. {{ p.article }}
+                                    {% if p.family %} · {{ p.family.name }}{% endif %}
+                                    {% if p.subfamily %} / {{ p.subfamily.name }}{% endif %}
+                                </div>
+                            </div>
+                            <div class="pr-right">
+                                <div class="pr-price">{{ p.price|number_format(2, ',', '.') }} €</div>
+                                {% if p.stock >= 5 %}
+                                    <span class="pr-stock pr-stock--ok">Disponible</span>
+                                {% else %}
+                                    <span class="pr-stock pr-stock--warn">Consultar</span>
+                                {% endif %}
+                                <span class="pr-cta">Ver detalle →</span>
+                            </div>
+                        </a>
 
 {% else %}
-    <div class="empty-state">
-                <div class="empty-state__title">Sin resultados</div>
-        <div class="empty-state__sub">Prueba con otros filtros o <a href="{{ path('app_catalog') }}" style="color:var(--brand);">limpia la búsqueda</a>.</div>
-    </div>
+<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--muted)">
+    <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px">Sin resultados</div>
+    <div>Prueba con otros filtros o <a href="{{ path('app_catalog') }}" style="color:var(--brand)">limpia la búsqueda</a>.</div>
+</div>
 {% endfor %}

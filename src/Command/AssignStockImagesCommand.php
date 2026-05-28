@@ -213,7 +213,21 @@ class AssignStockImagesCommand extends Command
                 continue;
             }
 
-            $product->setImage(self::SUBFAMILY_IMAGES[$code]);
+            $baseUrl  = self::SUBFAMILY_IMAGES[$code];
+            $baseLock = (int) preg_replace('/.*lock=(\d+).*/', '$1', $baseUrl);
+            $baseKw   = preg_replace('/https:\/\/loremflickr\.com\/600\/600\/([^\/]+).*/', '$1', $baseUrl);
+
+            // Imagen principal
+            $product->setImage($baseUrl);
+
+            // Galeria: 4 imagenes con locks distintos
+            $gallery = [];
+            foreach ([0, 10, 20, 30] as $offset) {
+                $lock      = (($baseLock + $offset - 1) % 100) + 1;
+                $gallery[] = "https://loremflickr.com/600/600/{$baseKw}/all?lock={$lock}";
+            }
+            $product->setImages($gallery);
+
             $stats['assigned']++;
             $n++;
 
