@@ -3,7 +3,12 @@
 
 {% block body %}
 <style>
-    /* ── Hero ── */
+    .hero-quicklinks { background: #2d2d2d; }
+    .hero-quicklinks__inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; }
+    .hero-quicklinks__item { flex: 1; display: flex; align-items: center; justify-content: center; padding: 14px 16px; font-size: 13px; font-weight: 700; color: rgba(255,255,255,.85); text-decoration: none; border-right: 1px solid rgba(255,255,255,.12); transition: color .15s, background .15s; text-align: center; }
+    .hero-quicklinks__item:last-child { border-right: none; }
+    .hero-quicklinks__item:hover { color: white; background: rgba(255,255,255,.06); }
+
     .hero-banner-v2 { background: var(--brand); position: relative; overflow: hidden; min-height: 320px; display: flex; align-items: center; border-radius: 20px; margin: 12px 32px; }
     .hero-banner-v2::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(255,255,255,.15) 0%, transparent 60%), radial-gradient(ellipse at 90% 10%, rgba(0,0,0,.2) 0%, transparent 50%); }
     .hero-banner-v2::after { content: ''; position: absolute; right: -60px; top: -60px; width: 400px; height: 400px; background: rgba(255,255,255,.06); border-radius: 50%; pointer-events: none; }
@@ -15,56 +20,34 @@
     .hero-banner-v2__sub { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.15); border-radius: 8px; padding: 8px 16px; font-size: 14px; font-weight: 700; color: white; width: fit-content; }
     .hero-banner-v2__btn { display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--brand); border-radius: 12px; padding: 14px 28px; font-size: 15px; font-weight: 900; text-decoration: none; transition: opacity .15s; width: fit-content; margin-top: 4px; }
     .hero-banner-v2__btn:hover { opacity: .9; }
+    .hero-banner-v2__right { display: flex; align-items: center; justify-content: center; position: relative; height: 260px; }
+    .hero-product { position: absolute; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; transition: transform .2s, background .2s; }
+    .hero-product:hover { transform: translateY(-4px); background: rgba(255,255,255,.2); }
+    .hero-product--1 { width: 140px; top: 10px; left: 20px; }
+    .hero-product--2 { width: 160px; top: 40px; left: 180px; }
+    .hero-product--3 { width: 130px; bottom: 10px; left: 60px; }
+    .hero-product__icon { font-size: 48px; }
+    .hero-product__name { font-size: 11px; font-weight: 700; color: white; text-align: center; line-height: 1.3; }
 
-    /* ── Secciones ── */
     .home-section { margin: 48px 0; }
     .home-section__header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 20px; gap: 12px; }
     .home-section__title { font-size: 22px; font-weight: 900; margin: 0 0 4px; letter-spacing: -.3px; }
     .home-section__sub { font-size: 13px; color: var(--muted); margin: 0; }
 
-    /* ── Cards productos destacados ── */
     .featured-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-    .featured-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; color: inherit; transition: box-shadow .18s, transform .18s; display: flex; flex-direction: column; text-decoration: none; }
+    .featured-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; text-decoration: none; color: inherit; transition: box-shadow .18s, transform .18s; display: flex; flex-direction: column; }
     .featured-card:hover { box-shadow: 0 8px 28px rgba(17,24,39,.1); transform: translateY(-2px); }
     .featured-card__img { aspect-ratio: 1/1; background: #f8fafc; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid var(--border); }
-    .featured-card__img img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
-    .featured-card:hover .featured-card__img img { transform: scale(1.04); }
+    .featured-card__img img { width: 100%; height: 100%; object-fit: cover; }
     .featured-card__body { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
     .featured-card__brand { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
     .featured-card__title { font-size: 13px; font-weight: 700; line-height: 1.3; }
-    .featured-card__prices { margin-top: auto; padding-top: 8px; }
-    .featured-card__pvpr { font-size: 11px; color: var(--muted); text-decoration: line-through; }
-    .featured-card__price { font-size: 18px; font-weight: 900; letter-spacing: -.4px; color: var(--brand); }
-    .featured-card__footer { padding: 0 12px 12px; }
-    .btn-add-cart-home {
-        width: 100%; background: var(--brand); color: #fff; border: none;
-        border-radius: 8px; padding: 10px; font-size: 13px; font-weight: 700;
-        cursor: pointer; display: flex; align-items: center; justify-content: center;
-        gap: 6px; transition: background .15s; font-family: inherit;
-    }
-    .btn-add-cart-home:hover { background: #c0040f; }
-    .btn-add-cart-home.added { background: #c0040f; }
-    .btn-add-cart-home:disabled { opacity: .6; cursor: not-allowed; }
+    .featured-card__footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 10px; }
+    .featured-card__price { font-size: 17px; font-weight: 900; letter-spacing: -.4px; }
+    .featured-card__stock { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
+    .featured-card__stock--ok { background: #effbf3; color: #15803d; }
+    .featured-card__stock--warn { background: #fff7ea; color: #92400e; }
 
-    /* ── Categorías visuales ── */
-    .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-    .cat-card { position: relative; border-radius: 16px; overflow: hidden; aspect-ratio: 3/2; text-decoration: none; display: flex; align-items: flex-end; background: #1f2937; }
-    .cat-card__bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform .4s; }
-    .cat-card:hover .cat-card__bg { transform: scale(1.06); }
-    .cat-card__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.65) 0%, rgba(0,0,0,.1) 60%); }
-    .cat-card__body { position: relative; z-index: 1; padding: 16px; width: 100%; }
-    .cat-card__name { font-size: 15px; font-weight: 900; color: #fff; margin: 0 0 2px; letter-spacing: -.2px; }
-    .cat-card__sub { font-size: 11px; color: rgba(255,255,255,.75); font-weight: 600; }
-
-    /* ── Marcas con logo ── */
-    .brands-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
-    .brand-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-decoration: none; transition: border-color .15s, box-shadow .15s; min-height: 90px; }
-    .brand-card:hover { border-color: var(--brand); box-shadow: 0 4px 16px rgba(227,6,19,.1); }
-    .brand-card__logo { height: 36px; width: auto; max-width: 90px; object-fit: contain; filter: grayscale(1) opacity(.7); transition: filter .2s; }
-    .brand-card:hover .brand-card__logo { filter: none; }
-    .brand-card__name { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); }
-
-    /* ── Servicios ── */
     .services-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .svc-banner { border-radius: 16px; padding: 32px; text-decoration: none; color: white; display: flex; flex-direction: column; gap: 12px; transition: opacity .15s; position: relative; overflow: hidden; min-height: 180px; }
     .svc-banner:hover { opacity: .92; }
@@ -76,7 +59,13 @@
     .svc-banner__title { font-size: 20px; font-weight: 900; margin: 0; letter-spacing: -.3px; position: relative; z-index: 1; }
     .svc-banner__cta { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: rgba(255,255,255,.8); margin-top: auto; position: relative; z-index: 1; }
 
-    /* ── CTA ── */
+    .brands-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .brand-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-decoration: none; transition: border-color .18s, box-shadow .18s, transform .18s; min-height: 100px; }
+    .brand-card:hover { border-color: var(--brand); box-shadow: 0 4px 20px rgba(227,6,19,.1); transform: translateY(-2px); }
+    .brand-card__logo { height: 44px; width: 100%; max-width: 130px; object-fit: contain; filter: grayscale(1) opacity(.65); transition: filter .2s; }
+    .brand-card:hover .brand-card__logo { filter: grayscale(0) opacity(1); }
+    .brand-card__name { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); text-align: center; }
+
     .home-cta { background: var(--brand); border-radius: 20px; padding: 40px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
     .home-cta h2 { font-size: 24px; font-weight: 900; color: white; margin: 0 0 6px; letter-spacing: -.3px; }
     .home-cta p { font-size: 14px; color: rgba(255,255,255,.8); margin: 0; }
@@ -84,15 +73,16 @@
     .home-cta__btn:hover { opacity: .9; }
 
     @media (max-width: 900px) {
+        .hero-banner-v2__inner { grid-template-columns: 1fr; }
+        .hero-banner-v2__right { display: none; }
         .hero-banner-v2__title { font-size: 36px; }
         .featured-grid { grid-template-columns: repeat(2, 1fr); }
-        .cat-grid { grid-template-columns: repeat(2, 1fr); }
-        .brands-grid { grid-template-columns: repeat(3, 1fr); }
         .services-duo { grid-template-columns: 1fr; }
+        .hero-quicklinks__item { flex: none; width: 50%; border-right: none; border-bottom: 1px solid rgba(255,255,255,.1); }
     }
 </style>
 
-{# ── HERO ── #}
+{# ── HERO BANNER ── #}
 <div class="hero-banner-v2">
     <div class="hero-banner-v2__inner">
         <div class="hero-banner-v2__left">
@@ -108,7 +98,6 @@
 </div>
 
 <div class="container">
-
     {# ── PRODUCTOS DESTACADOS ── #}
     <section class="home-section">
         <div class="home-section__header">
@@ -119,107 +108,30 @@
             <a class="btn" href="{{ path('app_catalog', {inStock: 1}) }}">Ver más</a>
         </div>
         <div class="featured-grid">
-            {% for p in featuredProducts %}
-                <div class="featured-card">
-                    <a href="{{ path('app_product_show', {article: p.article}) }}" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;flex:1">
-                        <div class="featured-card__img">
-                            {% if p.image %}
-                                <img src="{{ p.image }}" alt="{{ p.title }}">
+            {% for p in featuredProducts|slice(0, 4) %}
+                <a class="featured-card" href="{{ path('app_product_show', {article: p.article}) }}">
+                    <div class="featured-card__img">
+                        {% if p.image %}
+                            <img src="{{ p.image }}" alt="{{ p.title }}">
+                        {% else %}
+                            
+                        {% endif %}
+                    </div>
+                    <div class="featured-card__body">
+                        {% if p.brand %}<div class="featured-card__brand">{{ p.brand }}</div>{% endif %}
+                        <div class="featured-card__title">{{ p.title|striptags }}</div>
+                        <div class="featured-card__footer">
+                            <span class="featured-card__price">{{ p.price|number_format(2,',','.') }} €</span>
+                            {% if p.stock >= 5 %}
+                                <span class="featured-card__stock featured-card__stock--ok">Disponible</span>
+                            {% else %}
+                                <span class="featured-card__stock featured-card__stock--warn">Consultar</span>
                             {% endif %}
                         </div>
-                        <div class="featured-card__body">
-                            {% if p.brand %}<div class="featured-card__brand">{{ p.brand }}</div>{% endif %}
-                            <div class="featured-card__title">{{ p.title|striptags }}</div>
-                            <div class="featured-card__prices">
-                                {% if p.pvpr and p.pvpr * 1 > p.price * 1 %}
-                                    <div class="featured-card__pvpr">{{ p.pvpr|number_format(2,',','.') }} €</div>
-                                {% endif %}
-                                <div class="featured-card__price">{{ p.price|number_format(2,',','.') }} €</div>
-                            </div>
-                        </div>
-                    </a>
-                    <div class="featured-card__footer">
-                        <button class="btn-add-cart-home"
-                                type="button"
-                                data-url="{{ path('app_cart_add', {article: p.article}) }}"
-                                data-title="{{ p.title|striptags|u.truncate(40,'…') }}">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                                <path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/>
-                            </svg>
-                            Añadir al carrito
-                        </button>
                     </div>
-                </div>
+                </a>
             {% else %}
                 <p style="color:var(--muted)">No hay productos destacados.</p>
-            {% endfor %}
-        </div>
-    </section>
-
-    {# ── CATEGORÍAS VISUALES ── #}
-    <section class="home-section">
-        <div class="home-section__header">
-            <div>
-                <h2 class="home-section__title">Categorías</h2>
-                <p class="home-section__sub">Encuentra lo que necesitas</p>
-            </div>
-        </div>
-        <div class="cat-grid">
-            {% set categories = [
-                {name: 'Frigoríficos',    sub: 'Todas las gamas',      code: 'FRI', img: 'https://loremflickr.com/600/400/refrigerator,kitchen/all?lock=2'},
-                {name: 'Lavadoras',       sub: 'Carga frontal y superior', code: 'LAV', img: 'https://loremflickr.com/600/400/washing,machine/all?lock=7'},
-                {name: 'Hornos',          sub: 'Encastre y polivalente', code: 'HNO', img: 'https://loremflickr.com/600/400/oven,kitchen/all?lock=10'},
-                {name: 'Televisores',     sub: '4K, LED y Smart TV',   code: 'TVK', img: 'https://loremflickr.com/600/400/television,4k/all?lock=8'},
-                {name: 'Aire acondicionado', sub: 'Split y portátil',  code: 'ACO', img: 'https://loremflickr.com/600/400/air,conditioner/all?lock=5'},
-                {name: 'Cafeteras',       sub: 'Espresso y cápsulas',  code: 'CAE', img: 'https://loremflickr.com/600/400/espresso,machine/all?lock=70'},
-                {name: 'Aspiradores',     sub: 'Robot y sin cable',    code: 'ASR', img: 'https://loremflickr.com/600/400/robot,vacuum/all?lock=77'},
-                {name: 'Calefacción',     sub: 'Radiadores y estufas', code: 'RAD', img: 'https://loremflickr.com/600/400/radiator,electric/all?lock=7'}
-            ] %}
-            {% for cat in categories %}
-                <a class="cat-card" href="{{ path('app_catalog', {code: cat.code}) }}">
-                    <div class="cat-card__bg" style="background-image:url('{{ cat.img }}')"></div>
-                    <div class="cat-card__overlay"></div>
-                    <div class="cat-card__body">
-                        <div class="cat-card__name">{{ cat.name }}</div>
-                        <div class="cat-card__sub">{{ cat.sub }}</div>
-                    </div>
-                </a>
-            {% endfor %}
-        </div>
-    </section>
-
-    {# ── MARCAS CON LOGO ── #}
-    <section class="home-section">
-        <div class="home-section__header">
-            <div>
-                <h2 class="home-section__title">Marcas</h2>
-                <p class="home-section__sub">Trabajamos con los principales fabricantes</p>
-            </div>
-        </div>
-        <div class="brands-grid">
-            {% set topBrands = [
-                {name: 'BOSCH',    domain: 'bosch.com'},
-                {name: 'BALAY',    domain: 'balay.es'},
-                {name: 'SIEMENS',  domain: 'siemens-home.bsh-group.com'},
-                {name: 'LG',       domain: 'lg.com'},
-                {name: 'SAMSUNG',  domain: 'samsung.com'},
-                {name: 'WHIRLPOOL',domain: 'whirlpool.com'},
-                {name: 'AEG',      domain: 'aeg.com'},
-                {name: 'BEKO',     domain: 'beko.com'},
-                {name: 'TEKA',     domain: 'teka.com'},
-                {name: 'CECOTEC',  domain: 'cecotec.es'},
-                {name: 'PHILIPS',  domain: 'philips.com'},
-                {name: 'ROWENTA',  domain: 'rowenta.es'}
-            ] %}
-            {% for b in topBrands %}
-                <a class="brand-card" href="{{ path('app_catalog', {brand: b.name}) }}">
-                    <img class="brand-card__logo"
-                         src="https://logo.clearbit.com/{{ b.domain }}"
-                         alt="{{ b.name }}"
-                         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-                    <span class="brand-card__name" style="display:none">{{ b.name|title }}</span>
-                </a>
             {% endfor %}
         </div>
     </section>
@@ -246,6 +158,35 @@
         </div>
     </section>
 
+    {# ── MARCAS ── #}
+    <section class="home-section">
+        <div class="home-section__header">
+            <div>
+                <h2 class="home-section__title">Marcas</h2>
+                <p class="home-section__sub">Trabajamos con los principales fabricantes</p>
+            </div>
+        </div>
+        <div class="brands-grid">
+            {% set topBrands = [
+                {name: 'BOSCH',     logo: '/img/brands/bosch.svg'},
+                {name: 'BALAY',     logo: '/img/brands/balay.png'},
+                {name: 'SIEMENS',   logo: '/img/brands/siemens.png'},
+                {name: 'LG',        logo: '/img/brands/lg.svg'},
+                {name: 'SAMSUNG',   logo: '/img/brands/samsung.png'},
+                {name: 'AEG',       logo: '/img/brands/aeg.svg'},
+                {name: 'PHILIPS',   logo: '/img/brands/Phillips-Logo-2008.png'},
+                {name: 'TEKA',      logo: '/img/brands/teka.svg',      scale: '1.6'},
+                {name: 'WHIRLPOOL', logo: '/img/brands/whirlpool.jpg', scale: '1.5'},
+                {name: 'ROWENTA',   logo: '/img/brands/rowenta.jpg'}
+            ] %}
+            {% for b in topBrands %}
+                <a class="brand-card" href="{{ path('app_catalog', {brand: b.name}) }}">
+                    <img class="brand-card__logo" src="{{ b.logo }}" alt="{{ b.name }}" {% if b.scale is defined %}style="transform:scale({{ b.scale }})"{% endif %}>
+                </a>
+            {% endfor %}
+        </div>
+    </section>
+
     {# ── CTA FINAL ── #}
     <section class="home-section">
         <div class="home-cta">
@@ -256,41 +197,6 @@
             <a class="home-cta__btn" href="{{ path('app_catalog') }}">Ver catálogo completo</a>
         </div>
     </section>
-
 </div>
-
-<script>
-(function () {
-    document.querySelectorAll('.btn-add-cart-home').forEach(function (btn) {
-        btn.addEventListener('click', async function () {
-            var originalHTML = this.innerHTML;
-            this.disabled = true;
-            try {
-                var res  = await fetch(this.dataset.url, {
-                    method: 'POST',
-                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({ quantity: 1 })
-                });
-                var data = await res.json();
-                document.querySelectorAll('[data-cart-count]').forEach(function (el) {
-                    el.textContent = data.count;
-                    el.style.display = 'flex';
-                });
-                this.classList.add('added');
-                this.innerHTML = 'Añadido';
-                var self = this;
-                setTimeout(function () {
-                    self.innerHTML = originalHTML;
-                    self.classList.remove('added');
-                    self.disabled = false;
-                }, 2000);
-            } catch (e) {
-                this.innerHTML = originalHTML;
-                this.disabled = false;
-            }
-        });
-    });
-})();
-</script>
 
 {% endblock %}
