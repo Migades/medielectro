@@ -9,25 +9,25 @@
     .hero-quicklinks__item:last-child { border-right: none; }
     .hero-quicklinks__item:hover { color: white; background: rgba(255,255,255,.06); }
 
-    .hero-banner-v2 { background: var(--brand); position: relative; overflow: hidden; min-height: 320px; display: flex; align-items: center; border-radius: 20px; margin: 12px 32px; }
-    .hero-banner-v2::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(255,255,255,.15) 0%, transparent 60%), radial-gradient(ellipse at 90% 10%, rgba(0,0,0,.2) 0%, transparent 50%); }
-    .hero-banner-v2::after { content: ''; position: absolute; right: -60px; top: -60px; width: 400px; height: 400px; background: rgba(255,255,255,.06); border-radius: 50%; pointer-events: none; }
-    .hero-banner-v2__inner { max-width: 100%; margin: 0; padding: 48px 56px; display: flex; align-items: center; width: 100%; position: relative; z-index: 1; gap: 40px; }
-    .hero-banner-v2__left { display: flex; flex-direction: column; gap: 16px; }
-    .hero-banner-v2__tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.2); border-radius: 999px; padding: 5px 14px; font-size: 12px; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: .5px; width: fit-content; }
-    .hero-banner-v2__title { font-size: 52px; font-weight: 900; color: white; line-height: 1; letter-spacing: -1.5px; margin: 0; text-shadow: 0 2px 20px rgba(0,0,0,.15); }
-    .hero-banner-v2__title small { display: block; font-size: 22px; font-weight: 700; letter-spacing: -.3px; opacity: .9; margin-bottom: 4px; }
-    .hero-banner-v2__sub { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.15); border-radius: 8px; padding: 8px 16px; font-size: 14px; font-weight: 700; color: white; width: fit-content; }
-    .hero-banner-v2__btn { display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--brand); border-radius: 12px; padding: 14px 28px; font-size: 15px; font-weight: 900; text-decoration: none; transition: opacity .15s; width: fit-content; margin-top: 4px; }
-    .hero-banner-v2__btn:hover { opacity: .9; }
-    .hero-banner-v2__right { display: flex; align-items: center; justify-content: center; position: relative; height: 260px; }
-    .hero-product { position: absolute; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; transition: transform .2s, background .2s; }
-    .hero-product:hover { transform: translateY(-4px); background: rgba(255,255,255,.2); }
-    .hero-product--1 { width: 140px; top: 10px; left: 20px; }
-    .hero-product--2 { width: 160px; top: 40px; left: 180px; }
-    .hero-product--3 { width: 130px; bottom: 10px; left: 60px; }
-    .hero-product__icon { font-size: 48px; }
-    .hero-product__name { font-size: 11px; font-weight: 700; color: white; text-align: center; line-height: 1.3; }
+    /* ── Carousel ── */
+    .hero-carousel { position: relative; margin: 12px 32px; border-radius: 20px; overflow: hidden; height: 240px; }
+    .hero-carousel__track { display: flex; height: 100%; transition: transform .5s cubic-bezier(.4,0,.2,1); }
+    .hero-slide { min-width: 100%; height: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 56px; position: relative; overflow: hidden; }
+    .hero-slide::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 50%, rgba(0,0,0,.2) 0%, transparent 55%); }
+    .hero-slide--catalog { background: var(--brand); }
+    .hero-slide--install { background: linear-gradient(135deg, #0f3460 0%, #1a4a8a 100%); }
+    .hero-slide__left { display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 1; }
+    .hero-slide__tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.2); border-radius: 999px; padding: 4px 14px; font-size: 11px; font-weight: 800; color: white; text-transform: uppercase; letter-spacing: .6px; width: fit-content; }
+    .hero-slide__title { font-size: 38px; font-weight: 900; color: white; line-height: 1.05; letter-spacing: -1px; margin: 0; }
+    .hero-slide__sub { font-size: 14px; color: rgba(255,255,255,.8); margin: 0; }
+    .hero-slide__right { position: relative; z-index: 1; flex-shrink: 0; }
+    .hero-slide__btn { display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--brand); border-radius: 12px; padding: 14px 28px; font-size: 15px; font-weight: 900; text-decoration: none; transition: opacity .15s; white-space: nowrap; }
+    .hero-slide--install .hero-slide__btn { color: #0f3460; }
+    .hero-slide__btn:hover { opacity: .9; }
+    /* Dots */
+    .hero-dots { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; gap: 7px; z-index: 10; }
+    .hero-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); border: none; cursor: pointer; padding: 0; transition: background .2s, transform .2s; }
+    .hero-dot.active { background: #fff; transform: scale(1.3); }
 
     .home-section { margin: 48px 0; }
     .home-section__header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 20px; gap: 12px; }
@@ -47,6 +47,10 @@
     .featured-card__stock { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
     .featured-card__stock--ok { background: #effbf3; color: #15803d; }
     .featured-card__stock--warn { background: #fff7ea; color: #92400e; }
+    .btn-cart-home { width: 100%; background: var(--brand); color: #fff; border: none; border-radius: 8px; padding: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s; font-family: inherit; margin-top: 10px; }
+    .btn-cart-home:hover { background: #c0040f; }
+    .btn-cart-home.added { background: #c0040f; }
+    .btn-cart-home:disabled { opacity: .6; cursor: not-allowed; }
 
     .services-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .svc-banner { border-radius: 16px; padding: 32px; text-decoration: none; color: white; display: flex; flex-direction: column; gap: 12px; transition: opacity .15s; position: relative; overflow: hidden; min-height: 180px; }
@@ -73,27 +77,52 @@
     .home-cta__btn:hover { opacity: .9; }
 
     @media (max-width: 900px) {
-        .hero-banner-v2__inner { grid-template-columns: 1fr; }
-        .hero-banner-v2__right { display: none; }
-        .hero-banner-v2__title { font-size: 36px; }
+        .hero-slide { padding: 0 28px; }
+        .hero-slide__title { font-size: 28px; }
         .featured-grid { grid-template-columns: repeat(2, 1fr); }
         .services-duo { grid-template-columns: 1fr; }
         .hero-quicklinks__item { flex: none; width: 50%; border-right: none; border-bottom: 1px solid rgba(255,255,255,.1); }
     }
 </style>
 
-{# ── HERO BANNER ── #}
-<div class="hero-banner-v2">
-    <div class="hero-banner-v2__inner">
-        <div class="hero-banner-v2__left">
-            <span class="hero-banner-v2__tag">Catálogo actualizado a diario</span>
-            <h1 class="hero-banner-v2__title">
-                <small>Electrodomésticos en Valencia</small>
-                +600 productos<br>disponibles
-            </h1>
-            <span class="hero-banner-v2__sub">Instalación y servicio técnico</span>
-            <a class="hero-banner-v2__btn" href="{{ path('app_catalog') }}">Ver catálogo →</a>
+{# ── HERO CAROUSEL ── #}
+<div class="hero-carousel" id="heroCarousel">
+    <div class="hero-carousel__track" id="heroTrack">
+
+        {# Slide 1: Catálogo #}
+        <div class="hero-slide hero-slide--catalog">
+            <div class="hero-slide__left">
+                <span class="hero-slide__tag">Catálogo actualizado a diario</span>
+                <h1 class="hero-slide__title">+600 productos<br>disponibles</h1>
+                <p class="hero-slide__sub">Electrodomésticos en Valencia con instalación y servicio técnico</p>
+            </div>
+            <div class="hero-slide__right">
+                <a class="hero-slide__btn" href="{{ path('app_catalog') }}">
+                    Ver catálogo
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
         </div>
+
+        {# Slide 2: Instalación #}
+        <div class="hero-slide hero-slide--install">
+            <div class="hero-slide__left">
+                <span class="hero-slide__tag">Servicio profesional</span>
+                <h2 class="hero-slide__title">Instalación<br>a domicilio</h2>
+                <p class="hero-slide__sub">Instalamos tu electrodoméstico donde lo necesites, con garantía</p>
+            </div>
+            <div class="hero-slide__right">
+                <a class="hero-slide__btn" href="{{ path('app_service_instalacion') }}">
+                    Solicitar instalación
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <div class="hero-dots">
+        <button class="hero-dot active" data-slide="0"></button>
+        <button class="hero-dot" data-slide="1"></button>
     </div>
 </div>
 
@@ -109,27 +138,37 @@
         </div>
         <div class="featured-grid">
             {% for p in featuredProducts|slice(0, 4) %}
-                <a class="featured-card" href="{{ path('app_product_show', {article: p.article}) }}">
-                    <div class="featured-card__img">
-                        {% if p.image %}
-                            <img src="{{ p.image }}" alt="{{ p.title }}">
-                        {% else %}
-                            
-                        {% endif %}
-                    </div>
-                    <div class="featured-card__body">
-                        {% if p.brand %}<div class="featured-card__brand">{{ p.brand }}</div>{% endif %}
-                        <div class="featured-card__title">{{ p.title|striptags }}</div>
-                        <div class="featured-card__footer">
-                            <span class="featured-card__price">{{ p.price|number_format(2,',','.') }} €</span>
-                            {% if p.stock >= 5 %}
-                                <span class="featured-card__stock featured-card__stock--ok">Disponible</span>
-                            {% else %}
-                                <span class="featured-card__stock featured-card__stock--warn">Consultar</span>
+                <div class="featured-card">
+                    <a href="{{ path('app_product_show', {article: p.article}) }}" style="text-decoration:none;color:inherit">
+                        <div class="featured-card__img">
+                            {% if p.image %}
+                                <img src="{{ p.image }}" alt="{{ p.title }}">
                             {% endif %}
                         </div>
+                        <div class="featured-card__body">
+                            {% if p.brand %}<div class="featured-card__brand">{{ p.brand }}</div>{% endif %}
+                            <div class="featured-card__title">{{ p.title|striptags }}</div>
+                            <div class="featured-card__footer">
+                                <span class="featured-card__price">{{ p.price|number_format(2,',','.') }} €</span>
+                                {% if p.stock >= 5 %}
+                                    <span class="featured-card__stock featured-card__stock--ok">Disponible</span>
+                                {% else %}
+                                    <span class="featured-card__stock featured-card__stock--warn">Consultar</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                    <div style="padding:0 12px 12px">
+                        <button class="btn-cart-home" type="button"
+                                data-url="{{ path('app_cart_add', {article: p.article}) }}">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/>
+                            </svg>
+                            Añadir al carrito
+                        </button>
                     </div>
-                </a>
+                </div>
             {% else %}
                 <p style="color:var(--muted)">No hay productos destacados.</p>
             {% endfor %}
@@ -199,4 +238,60 @@
     </section>
 </div>
 
+<script>
+(function () {
+    var track  = document.getElementById('heroTrack');
+    var dots   = document.querySelectorAll('.hero-dot');
+    var current = 0;
+    var total   = 2;
+    var timer;
+
+    function goTo(idx) {
+        current = idx;
+        track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+        dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
+    }
+
+    function next() { goTo((current + 1) % total); }
+
+    dots.forEach(function (dot) {
+        dot.addEventListener('click', function () {
+            clearInterval(timer);
+            goTo(parseInt(this.dataset.slide));
+            timer = setInterval(next, 5000);
+        });
+    });
+
+    timer = setInterval(next, 5000);
+})();
+</script>
+<script>
+(function () {
+    document.querySelectorAll('.btn-cart-home').forEach(function (btn) {
+        btn.addEventListener('click', async function () {
+            var orig = this.innerHTML;
+            this.disabled = true;
+            try {
+                var res  = await fetch(this.dataset.url, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ quantity: 1 })
+                });
+                var data = await res.json();
+                document.querySelectorAll('[data-cart-count]').forEach(function (el) {
+                    el.textContent = data.count;
+                    el.style.display = 'flex';
+                });
+                this.classList.add('added');
+                this.innerHTML = 'Añadido';
+                var self = this;
+                setTimeout(function () { self.innerHTML = orig; self.classList.remove('added'); self.disabled = false; }, 2000);
+            } catch (e) {
+                this.innerHTML = orig;
+                this.disabled = false;
+            }
+        });
+    });
+})();
+</script>
 {% endblock %}
