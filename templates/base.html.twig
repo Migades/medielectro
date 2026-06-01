@@ -239,6 +239,18 @@
         }
         .nav-link:hover { background: #f3f4f6; color: var(--text); }
     </style>
+
+    <!-- Google Analytics 4 - carga solo con consentimiento -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        gtag('consent', 'default', {
+            'analytics_storage': 'denied'
+        });
+        gtag('js', new Date());
+        gtag('config', 'G-74PTX4E8B1');
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-74PTX4E8B1"></script>
 </head>
 <body>
 
@@ -662,5 +674,46 @@
         window.addEventListener('scroll', closeAll, { passive: true });
 })();
 </script>
+
+    <!-- Banner de cookies -->
+    <div id="cookieBanner" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:9999; background:#1e293b; color:#f8fafc; padding:18px 24px; box-shadow:0 -4px 24px rgba(0,0,0,.18);">
+        <div style="max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+            <p style="margin:0; font-size:14px; line-height:1.6; flex:1; min-width:220px;">
+                Usamos cookies propias y de terceros (Google Analytics) para analizar el uso de la web y mejorar tu experiencia.
+                <a href="/legal/cookies" style="color:#e30613; text-decoration:underline;">Política de cookies</a>
+            </p>
+            <div style="display:flex; gap:10px; flex-shrink:0;">
+                <button id="cookieReject" style="background:transparent; color:#94a3b8; border:1.5px solid #475569; border-radius:8px; padding:9px 18px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit;">Solo necesarias</button>
+                <button id="cookieAccept" style="background:#e30613; color:#fff; border:none; border-radius:8px; padding:9px 18px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit;">Aceptar todas</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            var consent = localStorage.getItem('medielectro_cookies');
+
+            function loadGA() {
+                gtag('consent', 'update', { 'analytics_storage': 'granted' });
+            }
+
+            if (consent === 'accepted') {
+                loadGA();
+            } else if (consent === null) {
+                document.getElementById('cookieBanner').style.display = 'block';
+            }
+
+            document.getElementById('cookieAccept').addEventListener('click', function() {
+                localStorage.setItem('medielectro_cookies', 'accepted');
+                document.getElementById('cookieBanner').style.display = 'none';
+                loadGA();
+            });
+
+            document.getElementById('cookieReject').addEventListener('click', function() {
+                localStorage.setItem('medielectro_cookies', 'rejected');
+                document.getElementById('cookieBanner').style.display = 'none';
+            });
+        })();
+    </script>
 </body>
 </html>
