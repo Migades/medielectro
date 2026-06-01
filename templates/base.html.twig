@@ -145,6 +145,13 @@
         .nav-mega__col:first-child { padding-left: 0; }
         .nav-mega__col:last-child  { padding-right: 0; }
 
+        .nav-mega__col-title--link {
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .nav-mega__col-title--link:hover {
+            opacity: .75;
+        }
         .nav-mega__col-title {
             font-size: 11px;
             font-weight: 800;
@@ -282,7 +289,7 @@
         <p class="nav-mega__heading">Electrodomésticos</p>
         <div class="nav-mega__cols">
             <div class="nav-mega__col">
-                <span class="nav-mega__col-title">Frigoríficos</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'FRI,FRS,FRH,FRO,FRP,FRJ,VIN,MQH'}) }}">Frigoríficos</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'FRI'}) }}">2 puertas</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'FRS'}) }}">Americano</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'FRH'}) }}">1 puerta</a>
@@ -291,21 +298,21 @@
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'VIN'}) }}">Vinoteca</a>
             </div>
             <div class="nav-mega__col">
-                <span class="nav-mega__col-title">Congeladores</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'COP,CON,COQ'}) }}">Congeladores</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'COP'}) }}">Vertical</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CON'}) }}">Horizontal</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'COQ'}) }}">Integrable</a>
-                <span class="nav-mega__col-title" style="margin-top:16px">Lavado y Secado</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'LAV,LAS,LAW,LAI,LAX,SCD,SCE'}) }}" style="margin-top:16px">Lavado y Secado</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'LAV'}) }}">Lavadora frontal</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'LAS'}) }}">Lavadora superior</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'LAW'}) }}">Lavadora-secadora</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'SCD'}) }}">Secadora</a>
-                <span class="nav-mega__col-title" style="margin-top:16px">Lavavajillas</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'LVI'}) }}" style="margin-top:16px">Lavavajillas</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'LVI'}) }}">Libre instalación</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'LVI'}) }}">Integrable</a>
             </div>
             <div class="nav-mega__col">
-                <span class="nav-mega__col-title">Cocina</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'ENC,ENI,ENX,ENV,ENT,INC,HNO,HNP,HNN,HES,HNI,HNE,CHP,COC,PVP,PID,VTE'}) }}">Cocina</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'ENI'}) }}">Encimera inducción</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'ENV'}) }}">Encimera vitrocerámica</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'ENC'}) }}">Encimera gas</a>
@@ -317,13 +324,13 @@
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'PID'}) }}">Placa inducción portátil</a>
             </div>
             <div class="nav-mega__col">
-                <span class="nav-mega__col-title">Campanas</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'CAM,CAP,CAS,CAO,CAK,CTH,CAY,GRF,EXT,FIL'}) }}">Campanas</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CAM'}) }}">Decorativa</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CAP'}) }}">Extraíble</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CAK'}) }}">Isla</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CAO'}) }}">Integrable</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'EXT'}) }}">Extractor</a>
-                <span class="nav-mega__col-title" style="margin-top:16px">Integrables</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'HMD,CFI,LVI'}) }}" style="margin-top:16px">Integrables</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'HMD'}) }}">Microondas integrable</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CFI'}) }}">Cafetera integrable</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'LVI'}) }}">Lavavajillas integrable</a>
@@ -342,7 +349,6 @@
                 <a class="nav-mega__sub nav-mega__sub--brand" href="{{ path('app_catalog', {brand: 'MIELE'}) }}">Miele</a>
             </div>
         </div>
-        <a class="nav-mega__see-all" href="{{ path('app_catalog') }}">Ver todo el catálogo →</a>
     </div>
 </div>
 
@@ -352,7 +358,7 @@
         <p class="nav-mega__heading">Climatización</p>
         <div class="nav-mega__cols">
             <div class="nav-mega__col">
-                <span class="nav-mega__col-title">Aire Acondicionado</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'ACO,ACN,ACH,ACQ,ACS,AER,CLI'}) }}">Aire Acondicionado</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'ACO'}) }}">Split</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'ACN'}) }}">Portátil</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'ACH'}) }}">De techo</a>
@@ -362,11 +368,11 @@
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CLI'}) }}">Climatizador</a>
             </div>
             <div class="nav-mega__col">
-                <span class="nav-mega__col-title">Calidad del Aire</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'PUR,HUM,DES'}) }}">Calidad del Aire</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'PUR'}) }}">Purificador</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'HUM'}) }}">Humidificador</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'DES'}) }}">Deshumidificador</a>
-                <span class="nav-mega__col-title" style="margin-top:16px">Ventiladores</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'VEN'}) }}" style="margin-top:16px">Ventiladores</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'VEN'}) }}">Ventilador</a>
             </div>
             <div class="nav-mega__col">
@@ -378,7 +384,6 @@
                 <a class="nav-mega__sub nav-mega__sub--brand" href="{{ path('app_catalog', {brand: 'ROWENTA'}) }}">Rowenta</a>
             </div>
         </div>
-        <a class="nav-mega__see-all" href="{{ path('app_catalog') }}">Ver todo el catálogo →</a>
     </div>
 </div>
 
@@ -388,7 +393,7 @@
         <p class="nav-mega__heading">Calefacción</p>
         <div class="nav-mega__cols">
             <div class="nav-mega__col">
-                <span class="nav-mega__col-title">Calefacción Eléctrica</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'RAD,ESE,CNV,TEV,EMI,BRA,SCT,CLP,CLM,MAN,TER'}) }}">Calefacción Eléctrica</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'RAD'}) }}">Radiador eléctrico</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'ESE'}) }}">Estufa eléctrica</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CNV'}) }}">Convector</a>
@@ -400,10 +405,10 @@
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'TER'}) }}">Termo eléctrico</a>
             </div>
             <div class="nav-mega__col">
-                <span class="nav-mega__col-title">Calentadores y Calderas</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'CAL,CLD'}) }}">Calentadores y Calderas</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CAL'}) }}">Calentador de agua</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CLD'}) }}">Caldera</a>
-                <span class="nav-mega__col-title" style="margin-top:16px">Sistemas Avanzados</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'ESP'}) }}" style="margin-top:16px">Sistemas Avanzados</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'ESP'}) }}">Estufa de pellets</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'ESB'}) }}">Estufa butano</a>
             </div>
@@ -417,7 +422,6 @@
                 <a class="nav-mega__sub nav-mega__sub--brand" href="{{ path('app_catalog', {brand: 'TEFAL'}) }}">Tefal</a>
             </div>
         </div>
-        <a class="nav-mega__see-all" href="{{ path('app_catalog') }}">Ver todo el catálogo →</a>
     </div>
 </div>
 
@@ -427,14 +431,14 @@
         <p class="nav-mega__heading">TV y Sonido</p>
         <div class="nav-mega__cols">
             <div class="nav-mega__col">
-                <span class="nav-mega__col-title">Televisores</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'TVK,TVD,TVE,SOP'}) }}">Televisores</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'TVK'}) }}">Televisor 4K</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'TVD'}) }}">Televisor LED</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'TVE'}) }}">Smart TV</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'SOP'}) }}">Soportes TV</a>
             </div>
             <div class="nav-mega__col">
-                <span class="nav-mega__col-title">Imagen y Sonido</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'ALT,CAH,CAD,RCD,REL,DSP,GIR,MIC,VIP'}) }}">Imagen y Sonido</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'ALT'}) }}">Altavoz</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CAH'}) }}">Barra de sonido</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CAD'}) }}">Cadena de sonido</a>
@@ -455,7 +459,6 @@
                 <a class="nav-mega__sub nav-mega__sub--brand" href="{{ path('app_catalog', {brand: 'TCL'}) }}">TCL</a>
             </div>
         </div>
-        <a class="nav-mega__see-all" href="{{ path('app_catalog') }}">Ver todo el catálogo →</a>
     </div>
 </div>
 
@@ -465,19 +468,19 @@
         <p class="nav-mega__heading">Pequeños Electrodomésticos</p>
         <div class="nav-mega__cols">
             <div class="nav-mega__col">
-                <span class="nav-mega__col-title">Cafeteras</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'CAF,CAG,CAE,CFA,CFI'}) }}">Cafeteras</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CAF'}) }}">De goteo</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CAG'}) }}">Cápsulas</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CAE'}) }}">Espresso</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CFA'}) }}">Automática</a>
-                <span class="nav-mega__col-title" style="margin-top:16px">Batidoras</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'BAT,BAV,BAM,LIC'}) }}" style="margin-top:16px">Batidoras</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'BAT'}) }}">Batidora</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'BAV'}) }}">Batidora de vaso</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'BAM'}) }}">Amasadora</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'LIC'}) }}">Licuadora</a>
             </div>
             <div class="nav-mega__col">
-                <span class="nav-mega__col-title">Preparación de Alimentos</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'TOS,FRE,FRA,ROB,GOF,CRE,PNF,GRI,ARR,HEL'}) }}">Preparación de Alimentos</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'FRA'}) }}">Freidora de aire</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'FRE'}) }}">Freidora</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'ROB'}) }}">Robot de cocina</a>
@@ -486,7 +489,7 @@
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'GOF'}) }}">Gofrera</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'PNF'}) }}">Panificadora</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'HEL'}) }}">Heladera</a>
-                <span class="nav-mega__col-title" style="margin-top:16px">Ollas y Sartenes</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'OLL,CAC,CAZ,SAR'}) }}" style="margin-top:16px">Ollas y Sartenes</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'OLL'}) }}">Olla a presión</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'SAR'}) }}">Sartén</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'CAC'}) }}">Cacerola</a>
@@ -500,7 +503,7 @@
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'LSV'}) }}">Limpiadora vapor</a>
             </div>
             <div class="nav-mega__col">
-                <span class="nav-mega__col-title">Cuidado Personal</span>
+                <a class="nav-mega__col-title nav-mega__col-title--link" href="{{ path('app_catalog', {codes: 'SEC,AFE,DEP,PLP,RIZ,RID,CTP,MGR,CEP'}) }}">Cuidado Personal</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'SEC'}) }}">Secador</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'PLP'}) }}">Plancha de pelo</a>
                 <a class="nav-mega__sub" href="{{ path('app_catalog', {code: 'RIZ'}) }}">Rizador</a>
@@ -527,7 +530,6 @@
                 <a class="nav-mega__sub nav-mega__sub--brand" href="{{ path('app_catalog', {brand: 'TAURUS'}) }}">Taurus</a>
             </div>
         </div>
-        <a class="nav-mega__see-all" href="{{ path('app_catalog') }}">Ver todo el catálogo →</a>
     </div>
 </div>
 

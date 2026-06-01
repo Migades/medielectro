@@ -24,6 +24,11 @@ class CatalogController extends AbstractController
         $familyId      = $request->query->getInt('family', 0);
         $subfamilyId   = $request->query->getInt('subfamily', 0);
         $subfamilyCode = trim((string) $request->query->get('code', ''));
+        $familyCode    = trim((string) $request->query->get('familyCode', ''));
+        $codesRaw      = trim((string) $request->query->get('codes', ''));
+        $codesList     = $codesRaw !== '' ? array_filter(array_map('trim', explode(',', $codesRaw))) : [];
+        $attrsRaw = $request->query->all('attrs');
+        $attrs = is_array($attrsRaw) ? array_filter($attrsRaw, fn($v) => $v !== null && $v !== '') : [];
         $inStock       = $request->query->getInt('inStock', 0);
         $brand         = trim((string) $request->query->get('brand', ''));
         $sort          = trim((string) $request->query->get('sort', 'recent'));
@@ -81,6 +86,14 @@ class CatalogController extends AbstractController
             $qb->andWhere('s.code = :code')->setParameter('code', $subfamilyCode);
         }
 
+        if ($familyCode !== '') {
+            $qb->andWhere('f.code = :fcode')->setParameter('fcode', $familyCode);
+        }
+
+        if (!empty($codesList)) {
+            $qb->andWhere('s.code IN (:codesList)')->setParameter('codesList', $codesList);
+        }
+
         // Regla: "Solo disponibles" = stock >= 5
         if ($inStock === 1) {
             $qb->andWhere('p.stock >= :minStock')->setParameter('minStock', 5);
@@ -131,17 +144,66 @@ class CatalogController extends AbstractController
 
         $subfamilies = $subQb->getQuery()->getResult();
 
-        // ── Marcas ──
-        $brands = $productRepo->createQueryBuilder('p')
+        // ── Marcas (filtradas por la misma query de productos activos) ──
+        $brandsQb = $productRepo->createQueryBuilder('p')
             ->select('DISTINCT p.brand AS brand')
+            ->leftJoin('p.family', 'f')
+            ->leftJoin('p.subfamily', 's')
+            ->andWhere('p.isActive = true')
             ->andWhere('p.brand IS NOT NULL')
             ->andWhere('p.brand != :empty')
-            ->setParameter('empty', '')
-            ->orderBy('p.brand', 'ASC')
-            ->getQuery()
-            ->getScalarResult();
+            ->setParameter('empty', '');
 
-        $brands = array_map(static fn(array $row) => $row['brand'], $brands);
+        if ($q !== '') {
+            $brandsQb->andWhere('(p.article LIKE :q2 OR p.model LIKE :q2 OR p.brand LIKE :q2 OR p.description LIKE :q2)')
+                ->setParameter('q2', '%' . $q . '%');
+        }
+        if ($familyId > 0) {
+            $brandsQb->andWhere('f.id = :fid2')->setParameter('fid2', $familyId);
+        }
+        if ($subfamilyCode !== '') {
+            $brandsQb->andWhere('s.code = :code2')->setParameter('code2', $subfamilyCode);
+        }
+        if ($familyCode !== '') {
+            $brandsQb->andWhere('f.code = :fcode2')->setParameter('fcode2', $familyCode);
+        }
+        if (!empty($codesList)) {
+            $brandsQb->andWhere('s.code IN (:codesList2)')->setParameter('codesList2', $codesList);
+        }
+
+        $brandsQb->orderBy('p.brand', 'ASC');
+        $brands = array_map(
+            static fn(array $row) => $row['brand'],
+            $brandsQb->getQuery()->getScalarResult()
+        );
+
+        // Opciones de atributos para los filtros del sidebar (solo si hay subfamilia)
+        $attributeOptions = [];
+        if ($subfamilyCode !== '') {
+            $attrQb = $productRepo->createQueryBuilder('p')
+                ->select('p.attributes')
+                ->leftJoin('p.subfamily', 's')
+                ->andWhere('p.isActive = true')
+                ->andWhere('s.code = :sc')
+                ->setParameter('sc', $subfamilyCode)
+                ->andWhere('p.attributes IS NOT NULL');
+
+            $allAttrs = $attrQb->getQuery()->getScalarResult();
+            $collected = [];
+            foreach ($allAttrs as $row) {
+                $decoded = is_array($row['attributes']) ? $row['attributes'] : json_decode((string)$row['attributes'], true);
+                if (!is_array($decoded)) continue;
+                foreach ($decoded as $k => $v) {
+                    if ($v === null || $v === '') continue;
+                    $collected[$k][$v] = true;
+                }
+            }
+            foreach ($collected as $k => $vals) {
+                $keys = array_keys($vals);
+                sort($keys);
+                $attributeOptions[$k] = $keys;
+            }
+        }
 
         // Respuesta AJAX (load more)
         if ($request->isXmlHttpRequest()) {
@@ -166,6 +228,9 @@ class CatalogController extends AbstractController
                 'family'        => $familyId,
                 'subfamily'     => $subfamilyId,
                 'subfamilyCode' => $subfamilyCode,
+                'familyCode'    => $familyCode,
+                'codes'         => $codesRaw,
+                'attrs'         => $attrs,
                 'inStock'       => $inStock,
                 'brand'         => $brand,
                 'sort'          => $sort,

@@ -25,12 +25,8 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: var(--border) transparent;
+            overflow: hidden;
         }
-        .sidebar::-webkit-scrollbar { width: 4px; }
-        .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
         .sidebar__header {
             display: flex;
@@ -60,7 +56,14 @@
             display: flex;
             flex-direction: column;
             gap: 18px;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
         }
+        .sidebar__body::-webkit-scrollbar { width: 4px; }
+        .sidebar__body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
         /* ── Grupos de filtro ── */
         .filter-group__label {
@@ -343,6 +346,7 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 14px;
+            overflow: hidden;
             transition: box-shadow .18s, transform .18s;
             text-decoration: none;
             color: inherit;
@@ -361,6 +365,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
             border-bottom: 1px solid var(--border);
             position: relative;
         }
@@ -444,6 +449,7 @@
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .pc-ref {
@@ -452,32 +458,14 @@
             margin-top: 2px;
         }
 
-        .pc-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            margin-top: auto;
-            padding-top: 10px;
-            border-top: 1px solid #f3f4f6;
-        }
-
-        .pc-price {
-            font-size: 18px;
-            font-weight: 900;
-            letter-spacing: -.5px;
-            color: var(--text);
-        }
-
-        .pc-cta {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--brand);
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            white-space: nowrap;
-        }
+        .pc-prices { margin-top: auto; padding-top: 8px; }
+        .pc-pvpr { font-size: 12px; color: var(--muted); text-decoration: line-through; line-height: 1.4; }
+        .pc-price { font-size: 22px; font-weight: 900; letter-spacing: -.5px; color: var(--brand); line-height: 1.1; }
+        .pc-cart { padding: 0 12px 12px; }
+        .btn-add-cart-catalog { width: 100%; background: var(--brand); color: #fff; border: none; border-radius: 10px; padding: 11px 14px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: background .15s; white-space: nowrap; }
+        .btn-add-cart-catalog:hover { background: #c0040f; }
+        .btn-add-cart-catalog.added { background: #c0040f; }
+        .btn-add-cart-catalog:disabled { opacity: .7; cursor: not-allowed; }
 
         /* ── Vista LISTA ── */
         .product-row { display: none; }
@@ -557,57 +545,13 @@
             .pr-right .pr-cta { display: none; }
             .pr-image { flex: 0 0 56px; width: 56px; height: 56px; }
         }
-        /* ── Categoría details ── */
-        .cat-details summary { list-style: none; }
-        .cat-details summary::-webkit-details-marker { display: none; }
-        .cat-details__summary {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 10px;
-            background: #fff; cursor: pointer; font-size: 13px; color: var(--text);
-            user-select: none;
-        }
-        .cat-details__summary::after {
-            content: ''; display: block; width: 10px; height: 10px; flex-shrink: 0;
-            border-right: 2px solid #9ca3af; border-bottom: 2px solid #9ca3af;
-            transform: rotate(45deg); margin-top: -4px; transition: transform .2s;
-        }
-        .cat-details[open] .cat-details__summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-color: var(--brand); }
-        .cat-details[open] .cat-details__summary::after { transform: rotate(-135deg); margin-top: 4px; }
-        .cat-details__list {
-            border: 1.5px solid var(--brand); border-top: none;
-            border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;
-            background: #fff; padding: 4px;
-            }
-        .cat-details__list::-webkit-scrollbar { width: 3px; }
-        .cat-details__list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
-        .cat-details__item {
-            display: block; padding: 7px 10px; border-radius: 7px;
-            font-size: 13px; color: var(--text); text-decoration: none;
-            transition: background .12s;
-        }
-        .cat-details__item:hover { background: #f3f4f6; }
-        .cat-details__item.active { background: #fff1f2; color: var(--brand); font-weight: 700; }
-
-        /* ── Botón añadir al carrito (cards catálogo) ── */
-        .pc-cart { padding: 0 12px 12px; }
-        .btn-add-cart-catalog {
-            width: 100%; background: var(--brand); color: #fff; border: none;
-            border-radius: 10px; padding: 11px 14px; font-size: 14px; font-weight: 700;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            gap: 7px; transition: background .15s;
-        }
-        .btn-add-cart-catalog:hover  { background: #c0040f; }
-        .btn-add-cart-catalog.added  { background: #c0040f; }
-        .btn-add-cart-catalog:disabled { opacity: .7; cursor: not-allowed; }
-
-        .brand-search {
-            width: 100%; box-sizing: border-box; border: 1.5px solid var(--border);
-            border-radius: 8px; padding: 7px 10px; font-size: 12px; outline: none;
-            margin-bottom: 4px; transition: border-color .15s; font-family: inherit; display: block;
-        }
-        .brand-search:focus { border-color: var(--brand); }
-        /* ── Botón Ver más ── */
-        .btn-load-more {
+        .active-cat-pill { display:flex; align-items:center; justify-content:space-between; background:#fff1f2; border:1.5px solid var(--brand); border-radius:10px; padding:10px 12px; }
+        .active-cat-pill__name { font-size:13px; font-weight:700; color:var(--brand); }
+        .active-cat-pill__clear { display:flex; align-items:center; color:var(--brand); opacity:.6; transition:opacity .15s; text-decoration:none; }
+        .active-cat-pill__clear:hover { opacity:1; }
+        .brand-search { width:100%; box-sizing:border-box; border:1.5px solid var(--border); border-radius:8px; padding:7px 10px; font-size:12px; outline:none; margin-bottom:4px; transition:border-color .15s; font-family:inherit; display:block; }
+        .brand-search:focus { border-color:var(--brand); }
+                .btn-load-more {
             display: inline-flex; align-items: center; gap: 8px;
             background: #fff; color: var(--brand); border: 2px solid var(--brand);
             border-radius: 10px; padding: 13px 32px; font-size: 15px; font-weight: 700;
@@ -616,7 +560,7 @@
         .btn-load-more:hover { background: var(--brand); color: #fff; }
         .btn-load-more:disabled { opacity: .6; cursor: not-allowed; }
 
-    </style>
+            </style>
 
     <section class="section">
         <div class="section-title" style="margin-bottom:16px;">
@@ -644,6 +588,57 @@
                             <input class="filter-input" name="q" value="{{ filters.q }}" placeholder="Modelo, marca, referencia…">
                         </div>
 
+
+                        {# Categoría #}
+                        <div>
+                            <span class="filter-group__label">Categoría</span>
+                            {% if filters.codes %}
+                                {% set codesLabel = {
+                                    'FRI,FRS,FRH,FRO,FRP,FRJ,VIN,MQH': 'Frigoríficos',
+                                    'COP,CON,COQ': 'Congeladores',
+                                    'LAV,LAS,LAW,LAI,LAX,SCD,SCE': 'Lavado y Secado',
+                                    'LVI': 'Lavavajillas',
+                                    'ENC,ENI,ENX,ENV,ENT,INC,HNO,HNP,HNN,HES,HNI,HNE,CHP,COC,PVP,PID,VTE': 'Cocina',
+                                    'CAM,CAP,CAS,CAO,CAK,CTH,CAY,GRF,EXT,FIL': 'Campanas',
+                                    'HMD,CFI,LVI': 'Integrables',
+                                    'ACO,ACN,ACH,ACQ,ACS,AER,CLI': 'Aire Acondicionado',
+                                    'PUR,HUM,DES': 'Calidad del Aire',
+                                    'VEN': 'Ventiladores',
+                                    'RAD,ESE,CNV,TEV,EMI,BRA,SCT,CLP,CLM,MAN,TER': 'Calefacción Eléctrica',
+                                    'CAL,CLD': 'Calentadores y Calderas',
+                                    'ESP': 'Sistemas Avanzados',
+                                    'TVK,TVD,TVE,SOP': 'Televisores',
+                                    'ALT,CAH,CAD,RCD,REL,DSP,GIR,MIC,VIP': 'Imagen y Sonido',
+                                    'CAF,CAG,CAE,CFA,CFI': 'Cafeteras',
+                                    'BAT,BAV,BAM,LIC': 'Batidoras',
+                                    'TOS,FRE,FRA,ROB,GOF,CRE,PNF,GRI,ARR,HEL': 'Preparación de Alimentos',
+                                    'ASP,ASE,ASM,ASR,LSV,LIM': 'Aspiradores',
+                                    'SEC,AFE,DEP,PLP,RIZ,RID,CTP,MGR,CEP': 'Cuidado Personal',
+                                    'OLL,CAC,CAZ,SAR': 'Ollas y Sartenes',
+                                    'TEN,TMM,ALM,SYB': 'Salud y Bienestar'
+                                } %}
+                                <div class="active-cat-pill">
+                                    <span class="active-cat-pill__name">{{ codesLabel[filters.codes] ?? 'Categoría activa' }}</span>
+                                    <a class="active-cat-pill__clear" href="{{ path('app_catalog') }}">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    </a>
+                                </div>
+                            {% else %}
+                            <select class="filter-input" name="family" onchange="this.form.submit()">
+                                <option value="0">Todas las categorías</option>
+                                {% set seenFamilies = [] %}
+                                {% for f in families %}
+                                    {% set key = (f.name ?? '')|lower|trim %}
+                                    {% if key and (key not in seenFamilies) %}
+                                        {% set seenFamilies = seenFamilies|merge([key]) %}
+                                        <option value="{{ f.id }}" {% if filters.family == f.id %}selected{% endif %}>{{ f.name|lower|capitalize }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% endif %}
+                        </div>
+
+                        {% if filters.family > 0 or filters.subfamilyCode or filters.brand or filters.codes or filters.familyCode %}
                         {# Rango de precio #}
                         <div>
                             <span class="filter-group__label">Precio</span>
@@ -684,62 +679,19 @@
                             </div>
                         </div>
 
-                        {# Categoría #}
-                        <div>
-                            <span class="filter-group__label">Categoría</span>
-                            <details class="cat-details" {% if filters.family > 0 %}open{% endif %}>
-                                <summary class="cat-details__summary">
-                                    {% if filters.family > 0 %}
-                                        {% for f in families %}{% if f.id == filters.family %}{{ f.name|lower|capitalize }}{% endif %}{% endfor %}
-                                    {% else %}
-                                        Todas las categorías
-                                    {% endif %}
-                                </summary>
-                                <div class="cat-details__list">
-                                    <a class="cat-details__item {% if filters.family == 0 %}active{% endif %}"
-                                       href="{{ path('app_catalog', filters|merge({family: 0, page: 1})) }}">
-                                        Todas las categorías
-                                    </a>
-                                    {% set seenFamilies = [] %}
-                                    {% for f in families %}
-                                        {% set key = (f.name ?? '')|lower|trim %}
-                                        {% if key and (key not in seenFamilies) %}
-                                            {% set seenFamilies = seenFamilies|merge([key]) %}
-                                            <a class="cat-details__item {% if filters.family == f.id %}active{% endif %}"
-                                               href="{{ path('app_catalog', filters|merge({family: f.id, page: 1})) }}">
-                                                {{ f.name|lower|capitalize }}
-                                            </a>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </details>
-                        </div>
-
                         {# Marca #}
                         <div>
                             <span class="filter-group__label">Marca</span>
-                            <details class="cat-details">
-                                <summary class="cat-details__summary">
-                                    {% if filters.brand %}{{ filters.brand }}{% else %}Todas las marcas{% endif %}
-                                </summary>
-                                <div class="cat-details__list">
-                                    <input class="brand-search" type="text" placeholder="Buscar marca…" id="brandSearch" autocomplete="off">
-                                    <a class="cat-details__item {% if not filters.brand %}active{% endif %}"
-                                       href="{{ path('app_catalog', {brand: '', offset: 0}) }}">
-                                        Todas las marcas
-                                    </a>
-                                    {% for item in brands %}
-                                        <a class="cat-details__item {% if filters.brand == item %}active{% endif %}"
-                                           href="{{ path('app_catalog', {brand: item, offset: 0}) }}"
-                                           data-brand="{{ item|lower }}">
-                                            {{ item }}
-                                        </a>
-                                    {% endfor %}
-                                </div>
-                            </details>
+                            <select class="filter-input" name="brand" onchange="this.form.submit()">
+                                <option value="">Todas las marcas</option>
+                                {% for item in brands %}
+                                    <option value="{{ item }}" {% if filters.brand == item %}selected{% endif %}>{{ item }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
+                        {% endif %}
 
-                                                <button class="sidebar__apply" type="submit">Aplicar filtros</button>
+                        <button class="sidebar__apply" type="submit">Aplicar filtros</button>
 
                     </div>
                 </form>
@@ -827,10 +779,143 @@
 
                 {# Grid #}
                 <div id="productGrid">
-                    {% include 'catalog/_products.html.twig' %}
+                    {% for p in products %}
+
+                        {# ── Tarjeta GRID ── #}
+                        <div class="product-card--grid">
+                            <a href="{{ path('app_product_show', {article: p.article}) }}" class="pc-link">
+                                <div class="pc-image">
+                                    {% if p.image %}
+                                        <img src="{{ p.image }}" alt="{{ p.title }}">
+                                    {% else %}
+                                        <div class="pc-placeholder">
+                                            {% set brandDomains = {
+                                                'BOSCH':      'bosch.com',
+                                                'SIEMENS':    'siemens-home.bsh-group.com',
+                                                'BALAY':      'balay.es',
+                                                'LG':         'lg.com',
+                                                'SAMSUNG':    'samsung.com',
+                                                'PHILIPS':    'philips.com',
+                                                'WHIRLPOOL':  'whirlpool.com',
+                                                'ELECTROLUX': 'electrolux.es',
+                                                'TEKA':       'teka.com',
+                                                'BEKO':       'beko.com',
+                                                'CANDY':      'candy.com',
+                                                'HOTPOINT':   'hotpoint.eu',
+                                                'LIEBHERR':   'liebherr.com',
+                                                'AEG':        'aeg.com',
+                                                'MIELE':      'miele.es',
+                                                'HAIER':      'haier.com',
+                                                'HISENSE':    'hisense.com',
+                                                'GRUNDIG':    'grundig.com',
+                                                'EDESA':      'edesa.com',
+                                                'FAGOR':      'fagor.com',
+                                                'NODOR':      'nodor.es',
+                                                'INDESIT':    'indesit.com',
+                                                'ARISTON':    'ariston.com',
+                                                'ZANUSSI':    'zanussi.com',
+                                                'CECOTEC':    'cecotec.es',
+                                                'ROWENTA':    'rowenta.es',
+                                                'TEFAL':      'tefal.es',
+                                                'MOULINEX':   'moulinex.es',
+                                                'BRAUN':      'braun.com',
+                                                'DYSON':      'dyson.es',
+                                                'KARCHER':    'kaercher.com',
+                                                'CORBERO':    'corbero.com',
+                                                'TAURUS':     'taurus.eu',
+                                                'SVAN':       'svan.es',
+                                                'BALAY':      'balay.es',
+                                                'BUTSIR':     'butsir.com',
+                                                'NEFF':       'neff-home.com',
+                                                'GAGGENAU':   'gaggenau.com',
+                                                'SMEG':       'smeg.com',
+                                                'GORENJE':    'gorenje.com',
+                                                'VESTEL':     'vestel.com.tr',
+                                                'SHARP':      'sharp.eu'
+                                            } %}
+                                            {% set brandKey = p.brand|upper %}
+                                            {% if brandKey in brandDomains|keys %}
+                                                <img
+                                                    class="pc-placeholder__logo"
+                                                    src="https://logo.clearbit.com/{{ brandDomains[brandKey] }}"
+                                                    alt="{{ p.brand }}"
+                                                    onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
+                                                >
+                                                <span class="pc-placeholder__logo-fallback" style="display:none">{{ p.brand }}</span>
+                                            {% else %}
+                                                <div class="pc-placeholder__icon"></div>
+                                                {% if p.brand %}<div class="pc-placeholder__brand">{{ p.brand }}</div>{% endif %}
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    {% if p.stock >= 5 %}
+                                        <span class="pc-stock-badge pc-stock-badge--ok">Disponible</span>
+                                    {% else %}
+                                        <span class="pc-stock-badge pc-stock-badge--warn">Consultar</span>
+                                    {% endif %}
+                                </div>
+                                <div class="pc-body">
+                                    {% if p.brand %}<div class="pc-brand">{{ p.brand }}</div>{% endif %}
+                                    <div class="pc-title">{{ p.title|striptags }}</div>
+                                    <div class="pc-ref">Ref. {{ p.article }}</div>
+                                    <div class="pc-footer">
+                                        <div class="pc-price">{{ p.price|number_format(2, ',', '.') }} €</div>
+                                        <div class="pc-cta">Ver detalle →</div>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="pc-cart">
+                                <button class="btn-add-cart-catalog"
+                                        data-url="{{ path('app_cart_add', {article: p.article}) }}"
+                                        data-title="{{ p.title|striptags|u.truncate(40,'…') }}"
+                                        type="button">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+                                    </svg>
+                                    Añadir al carrito
+                                </button>
+                            </div>
+                        </div>
+
+                        {# ── Fila LISTA ── #}
+                        <a class="product-row" href="{{ path('app_product_show', {article: p.article}) }}">
+                            <div class="pr-image">
+                                {% if p.image %}
+                                    <img src="{{ p.image }}" alt="{{ p.title }}">
+                                {% else %}
+                                    <div class="pr-placeholder"></div>
+                                {% endif %}
+                            </div>
+                            <div class="pr-info">
+                                {% if p.brand %}<div class="pr-brand">{{ p.brand }}</div>{% endif %}
+                                <div class="pr-title">{{ p.title|striptags }}</div>
+                                <div class="pr-meta">
+                                    Ref. {{ p.article }}
+                                    {% if p.family %} · {{ p.family.name }}{% endif %}
+                                    {% if p.subfamily %} / {{ p.subfamily.name }}{% endif %}
+                                </div>
+                            </div>
+                            <div class="pr-right">
+                                <div class="pr-price">{{ p.price|number_format(2, ',', '.') }} €</div>
+                                {% if p.stock >= 5 %}
+                                    <span class="pr-stock pr-stock--ok">Disponible</span>
+                                {% else %}
+                                    <span class="pr-stock pr-stock--warn">Consultar</span>
+                                {% endif %}
+                                <span class="pr-cta">Ver detalle →</span>
+                            </div>
+                        </a>
+
+                    {% else %}
+                        <div class="empty-state">
+                            <div class="empty-state__icon">🔍</div>
+                            <div class="empty-state__title">Sin resultados</div>
+                            <div class="empty-state__sub">Prueba con otros filtros o <a href="{{ path('app_catalog') }}" style="color:var(--brand);">limpia la búsqueda</a>.</div>
+                        </div>
+                    {% endfor %}
                 </div>
 
-                {# Carga progresiva #}
+                {# Paginación #}
                 {% if hasMore %}
                 <div style="display:flex;justify-content:center;padding:24px 0 8px">
                     <button class="btn-load-more" id="btnLoadMore" type="button"
@@ -1052,11 +1137,9 @@
                     tmp.innerHTML = data.html;
                     while (tmp.firstChild) grid.appendChild(tmp.firstChild);
 
-                    /* Actualizar contador */
                     var count = document.getElementById('catalogCount');
                     if (count) count.textContent = data.loaded;
 
-                    /* Actualizar offset en el botón */
                     btn.dataset.offset = data.loaded;
 
                     if (data.hasMore) {
