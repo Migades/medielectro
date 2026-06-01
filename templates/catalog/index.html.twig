@@ -25,8 +25,12 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            overflow: hidden;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
         }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
         .sidebar__header {
             display: flex;
@@ -56,14 +60,7 @@
             display: flex;
             flex-direction: column;
             gap: 18px;
-            overflow-y: auto;
-            flex: 1;
-            min-height: 0;
-            scrollbar-width: thin;
-            scrollbar-color: var(--border) transparent;
         }
-        .sidebar__body::-webkit-scrollbar { width: 4px; }
-        .sidebar__body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
         /* ── Grupos de filtro ── */
         .filter-group__label {
@@ -560,7 +557,18 @@
         .btn-load-more:hover { background: var(--brand); color: #fff; }
         .btn-load-more:disabled { opacity: .6; cursor: not-allowed; }
 
-            </style>
+                .cat-details summary { list-style: none; }
+        .cat-details summary::-webkit-details-marker { display: none; }
+        .cat-details__summary { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 10px; background: #fff; cursor: pointer; font-size: 13px; color: var(--text); user-select: none; }
+        .cat-details[open] .cat-details__summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-color: var(--brand); }
+        .cat-details__summary::after { content: ''; display: block; width: 10px; height: 10px; flex-shrink: 0; border-right: 2px solid #9ca3af; border-bottom: 2px solid #9ca3af; transform: rotate(45deg); margin-top: -4px; transition: transform .2s; }
+        .cat-details[open] .cat-details__summary::after { transform: rotate(-135deg); margin-top: 4px; }
+        .cat-details__list { border: 1.5px solid var(--brand); border-top: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; background: #fff; padding: 4px; }
+        .cat-details__item { display: block; padding: 7px 10px; border-radius: 7px; font-size: 13px; color: var(--text); text-decoration: none; transition: background .12s; }
+        .cat-details__item:hover { background: #f3f4f6; }
+        .cat-details__item.active { background: #fff1f2; color: var(--brand); font-weight: 700; }
+    
+    </style>
 
     <section class="section">
         <div class="section-title" style="margin-bottom:16px;">
@@ -592,53 +600,35 @@
                         {# Categoría #}
                         <div>
                             <span class="filter-group__label">Categoría</span>
-                            {% if filters.codes %}
-                                {% set codesLabel = {
-                                    'FRI,FRS,FRH,FRO,FRP,FRJ,VIN,MQH': 'Frigoríficos',
-                                    'COP,CON,COQ': 'Congeladores',
-                                    'LAV,LAS,LAW,LAI,LAX,SCD,SCE': 'Lavado y Secado',
-                                    'LVI': 'Lavavajillas',
-                                    'ENC,ENI,ENX,ENV,ENT,INC,HNO,HNP,HNN,HES,HNI,HNE,CHP,COC,PVP,PID,VTE': 'Cocina',
-                                    'CAM,CAP,CAS,CAO,CAK,CTH,CAY,GRF,EXT,FIL': 'Campanas',
-                                    'HMD,CFI,LVI': 'Integrables',
-                                    'ACO,ACN,ACH,ACQ,ACS,AER,CLI': 'Aire Acondicionado',
-                                    'PUR,HUM,DES': 'Calidad del Aire',
-                                    'VEN': 'Ventiladores',
-                                    'RAD,ESE,CNV,TEV,EMI,BRA,SCT,CLP,CLM,MAN,TER': 'Calefacción Eléctrica',
-                                    'CAL,CLD': 'Calentadores y Calderas',
-                                    'ESP': 'Sistemas Avanzados',
-                                    'TVK,TVD,TVE,SOP': 'Televisores',
-                                    'ALT,CAH,CAD,RCD,REL,DSP,GIR,MIC,VIP': 'Imagen y Sonido',
-                                    'CAF,CAG,CAE,CFA,CFI': 'Cafeteras',
-                                    'BAT,BAV,BAM,LIC': 'Batidoras',
-                                    'TOS,FRE,FRA,ROB,GOF,CRE,PNF,GRI,ARR,HEL': 'Preparación de Alimentos',
-                                    'ASP,ASE,ASM,ASR,LSV,LIM': 'Aspiradores',
-                                    'SEC,AFE,DEP,PLP,RIZ,RID,CTP,MGR,CEP': 'Cuidado Personal',
-                                    'OLL,CAC,CAZ,SAR': 'Ollas y Sartenes',
-                                    'TEN,TMM,ALM,SYB': 'Salud y Bienestar'
-                                } %}
-                                <div class="active-cat-pill">
-                                    <span class="active-cat-pill__name">{{ codesLabel[filters.codes] ?? 'Categoría activa' }}</span>
-                                    <a class="active-cat-pill__clear" href="{{ path('app_catalog') }}">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                                    </a>
-                                </div>
-                            {% else %}
-                            <select class="filter-input" name="family" onchange="this.form.submit()">
-                                <option value="0">Todas las categorías</option>
-                                {% set seenFamilies = [] %}
-                                {% for f in families %}
-                                    {% set key = (f.name ?? '')|lower|trim %}
-                                    {% if key and (key not in seenFamilies) %}
-                                        {% set seenFamilies = seenFamilies|merge([key]) %}
-                                        <option value="{{ f.id }}" {% if filters.family == f.id %}selected{% endif %}>{{ f.name|lower|capitalize }}</option>
+                            <details class="cat-details" {% if filters.family > 0 %}open{% endif %}>
+                                <summary class="cat-details__summary">
+                                    {% if filters.family > 0 %}
+                                        {% for f in families %}{% if f.id == filters.family %}{{ f.name|lower|capitalize }}{% endif %}{% endfor %}
+                                    {% else %}
+                                        Todas las categorías
                                     {% endif %}
-                                {% endfor %}
-                            </select>
-                            {% endif %}
+                                </summary>
+                                <div class="cat-details__list">
+                                    <a class="cat-details__item {% if filters.family == 0 %}active{% endif %}"
+                                       href="{{ path('app_catalog', filters|merge({family: 0, offset: 0})) }}">
+                                        Todas las categorías
+                                    </a>
+                                    {% set seenFamilies = [] %}
+                                    {% for f in families %}
+                                        {% set key = (f.name ?? '')|lower|trim %}
+                                        {% if key and (key not in seenFamilies) %}
+                                            {% set seenFamilies = seenFamilies|merge([key]) %}
+                                            <a class="cat-details__item {% if filters.family == f.id %}active{% endif %}"
+                                               href="{{ path('app_catalog', filters|merge({family: f.id, offset: 0})) }}">
+                                                {{ f.name|lower|capitalize }}
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </details>
                         </div>
 
-                        {% if filters.family > 0 or filters.subfamilyCode or filters.brand or filters.codes or filters.familyCode %}
+                                                {% if filters.family > 0 or filters.subfamilyCode or filters.brand or filters.codes or filters.familyCode %}
                         {# Rango de precio #}
                         <div>
                             <span class="filter-group__label">Precio</span>
@@ -682,12 +672,23 @@
                         {# Marca #}
                         <div>
                             <span class="filter-group__label">Marca</span>
-                            <select class="filter-input" name="brand" onchange="this.form.submit()">
-                                <option value="">Todas las marcas</option>
-                                {% for item in brands %}
-                                    <option value="{{ item }}" {% if filters.brand == item %}selected{% endif %}>{{ item }}</option>
-                                {% endfor %}
-                            </select>
+                            <details class="cat-details" {% if filters.brand %}open{% endif %}>
+                                <summary class="cat-details__summary">
+                                    {% if filters.brand %}{{ filters.brand }}{% else %}Todas las marcas{% endif %}
+                                </summary>
+                                <div class="cat-details__list">
+                                    <a class="cat-details__item {% if not filters.brand %}active{% endif %}"
+                                       href="{{ path('app_catalog', filters|merge({brand: '', offset: 0})) }}">
+                                        Todas las marcas
+                                    </a>
+                                    {% for item in brands %}
+                                        <a class="cat-details__item {% if filters.brand == item %}active{% endif %}"
+                                           href="{{ path('app_catalog', {brand: item, offset: 0}) }}">
+                                            {{ item }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </details>
                         </div>
                         {% endif %}
 
