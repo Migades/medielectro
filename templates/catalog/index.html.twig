@@ -600,7 +600,7 @@
                         {# Categoría #}
                         <div>
                             <span class="filter-group__label">Categoría</span>
-                            <details class="cat-details" {% if filters.family > 0 %}open{% endif %}>
+                            <details class="cat-details">
                                 <summary class="cat-details__summary">
                                     {% if filters.family > 0 %}
                                         {% for f in families %}{% if f.id == filters.family %}{{ f.name|lower|capitalize }}{% endif %}{% endfor %}
@@ -672,7 +672,7 @@
                         {# Marca #}
                         <div>
                             <span class="filter-group__label">Marca</span>
-                            <details class="cat-details" {% if filters.brand %}open{% endif %}>
+                            <details class="cat-details">
                                 <summary class="cat-details__summary">
                                     {% if filters.brand %}{{ filters.brand }}{% else %}Todas las marcas{% endif %}
                                 </summary>
