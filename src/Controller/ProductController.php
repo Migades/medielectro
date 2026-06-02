@@ -19,8 +19,28 @@ class ProductController extends AbstractController
             throw $this->createNotFoundException('Producto no encontrado');
         }
 
+        // Related products: same subfamily, exclude current, limit 4
+        $qb = $em->createQueryBuilder();
+        $qb->select('p')
+            ->from(Product::class, 'p')
+            ->where('p.article != :article')
+            ->andWhere('p.isActive = true')
+            ->setParameter('article', $article)
+            ->setMaxResults(4);
+
+        if ($product->getSubfamily()) {
+            $qb->andWhere('p.subfamily = :subfamily')
+               ->setParameter('subfamily', $product->getSubfamily());
+        } elseif ($product->getFamily()) {
+            $qb->andWhere('p.family = :family')
+               ->setParameter('family', $product->getFamily());
+        }
+
+        $related = $qb->getQuery()->getResult();
+
         return $this->render('product/show.html.twig', [
             'product' => $product,
+            'related' => $related,
         ]);
     }
 }
