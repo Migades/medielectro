@@ -1,0 +1,188 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contacto · Medielectro{% endblock %}
+
+{% block body %}
+<style>
+    .contact-page { max-width: 1100px; margin: 48px auto; padding: 0 24px; }
+    .contact-page__header { margin-bottom: 36px; }
+    .contact-page__title { font-size: 28px; font-weight: 900; margin: 0 0 8px; }
+    .contact-page__subtitle { font-size: 15px; color: var(--muted); margin: 0; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 32px; }
+    @media(max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
+
+    /* Info block */
+    .contact-info { display: flex; flex-direction: column; gap: 24px; }
+    .contact-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+    .contact-card__title { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin: 0 0 16px; }
+    .contact-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+    .contact-row:last-child { margin-bottom: 0; }
+    .contact-row__icon { width: 36px; height: 36px; background: #fff1f2; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .contact-row__icon svg { width: 18px; height: 18px; stroke: var(--brand); }
+    .contact-row__label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 2px; }
+    .contact-row__value { font-size: 14px; font-weight: 600; color: var(--text); }
+    .contact-row__value a { color: var(--text); text-decoration: none; }
+    .contact-row__value a:hover { color: var(--brand); }
+    .contact-map { width: 100%; height: 200px; border-radius: 12px; border: none; margin-top: 4px; }
+    .contact-response { background: #effbf3; border: 1px solid #b7ebc6; border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+    .contact-response__text { font-size: 13px; color: #15803d; font-weight: 600; }
+
+    /* Form block */
+    .contact-form-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+    .contact-form-wrap__title { font-size: 18px; font-weight: 800; margin: 0 0 24px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media(max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-group label { font-size: 13px; font-weight: 700; color: var(--text); }
+    .form-group label span { color: var(--brand); }
+    .form-group input,
+    .form-group select,
+    .form-group textarea { border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 14px; font-family: inherit; background: #fff; color: var(--text); transition: border-color .15s; outline: none; }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--brand); }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-submit { width: 100%; background: var(--brand); color: #fff; border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background .15s; margin-top: 4px; }
+    .form-submit:hover { background: #c0040f; }
+    .contact-success { background: #effbf3; border: 1.5px solid #b7ebc6; border-radius: 12px; padding: 20px 24px; text-align: center; }
+    .contact-success__title { font-size: 18px; font-weight: 800; color: #15803d; margin: 0 0 8px; }
+    .contact-success__text { font-size: 14px; color: #166534; margin: 0; }
+    .contact-error { background: #fff1f2; border: 1.5px solid #fecaca; border-radius: 12px; padding: 14px 16px; font-size: 14px; color: var(--brand); font-weight: 600; margin-bottom: 16px; }
+</style>
+
+<div class="contact-page">
+    <div class="contact-page__header">
+        <h1 class="contact-page__title">Contacto</h1>
+        <p class="contact-page__subtitle">Estamos aquí para ayudarte. Escríbenos o llámanos.</p>
+    </div>
+
+    <div class="contact-grid">
+
+        {# Columna izquierda — Información #}
+        <div class="contact-info">
+            <div class="contact-card">
+                <p class="contact-card__title">Información de contacto</p>
+
+                <div class="contact-row">
+                    <div class="contact-row__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 .18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="contact-row__label">Teléfono</div>
+                        <div class="contact-row__value"><a href="tel:963501675">96 350 16 75</a></div>
+                    </div>
+                </div>
+
+                <div class="contact-row">
+                    <div class="contact-row__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="contact-row__label">Email</div>
+                        <div class="contact-row__value"><a href="mailto:info@medielectro.es">info@medielectro.es</a></div>
+                    </div>
+                </div>
+
+                <div class="contact-row">
+                    <div class="contact-row__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="contact-row__label">Dirección</div>
+                        <div class="contact-row__value">C/ Lorem Ipsum, 12 · Valencia</div>
+                    </div>
+                </div>
+
+                <div class="contact-row">
+                    <div class="contact-row__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="contact-row__label">Horario</div>
+                        <div class="contact-row__value">
+                            Lunes a viernes: 9:00 – 14:00 y 16:00 – 19:30<br>
+                            Sábados: 9:00 – 13:30
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-response">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span class="contact-response__text">Respondemos en menos de 24 horas laborables</span>
+            </div>
+
+            <iframe
+                class="contact-map"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3080!2d-0.3763!3d39.4699!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMznCsDI4JzExLjYiTiAwwrAyMic1NC43Ilc!5e0!3m2!1ses!2ses!4v1234567890"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+
+        {# Columna derecha — Formulario #}
+        <div class="contact-form-wrap">
+            <h2 class="contact-form-wrap__title">Envíanos un mensaje</h2>
+
+            {% if sent %}
+                <div class="contact-success">
+                    <p class="contact-success__title">Mensaje enviado</p>
+                    <p class="contact-success__text">Hemos recibido tu consulta. Nos pondremos en contacto contigo en menos de 24 horas.</p>
+                </div>
+            {% else %}
+                {% if error %}
+                    <div class="contact-error">Por favor rellena todos los campos obligatorios.</div>
+                {% endif %}
+
+                <form method="POST" action="{{ path('app_contact') }}">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nombre <span>*</span></label>
+                            <input type="text" name="name" placeholder="Tu nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="tel" name="phone" placeholder="600 000 000" inputmode="numeric" maxlength="11" oninput="var v=this.value.replace(/[^0-9]/g,'').slice(0,9);this.value=v.replace(/(\d{3})(?=\d)/g,'$1 ').trim()">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email <span>*</span></label>
+                        <input type="email" name="email" placeholder="tu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tipo de consulta</label>
+                        <select name="type">
+                            <option value="Consulta general">Consulta general</option>
+                            <option value="Presupuesto">Presupuesto</option>
+                            <option value="Reparación">Reparación</option>
+                            <option value="Instalación">Instalación</option>
+                            <option value="Pedido">Pedido</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mensaje <span>*</span></label>
+                        <textarea name="message" placeholder="Escribe tu consulta aquí..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="form-submit">Enviar mensaje</button>
+                </form>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

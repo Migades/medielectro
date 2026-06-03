@@ -253,6 +253,8 @@
         .search-history { padding: 8px 14px 4px; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
         .search-footer { padding: 10px 14px; text-align: center; font-size: 13px; color: var(--brand); font-weight: 700; border-top: 1px solid #f3f4f6; cursor: pointer; }
         .search-footer:hover { background: #fff1f2; }
+        .search-clear { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--muted); display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 50%; transition: color .15s, background .15s; }
+        .search-clear:hover { color: var(--brand); background: #fff1f2; }
     </style>
 
     <!-- Google Analytics 4 - carga solo con consentimiento -->
@@ -282,6 +284,9 @@
                 <input id="searchInput" name="q" value="{{ app.request.query.get('q') }}"
                        placeholder="Buscar por artículo, modelo, marca o descripción…"
                        autocomplete="off">
+                <button type="button" id="searchClear" class="search-clear" style="display:{{ app.request.query.get('q') ? 'flex' : 'none' }};" aria-label="Borrar búsqueda">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
                 <div id="searchDropdown" class="search-dropdown" style="display:none;"></div>
             </form>
             <div class="header-actions">
@@ -597,7 +602,7 @@
                     <li><a href="{{ path('app_service_reparacion') }}">Reparación de electrodomésticos</a></li>
                     <li><a href="{{ path('app_service_instalacion') }}">Instalación a domicilio</a></li>
                     <li><a href="#">Presupuesto sin compromiso</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
+                    <li><a href="{{ path('app_contact') }}">Contacto</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -739,8 +744,22 @@
     (function() {
         var input = document.getElementById('searchInput');
         var dropdown = document.getElementById('searchDropdown');
+        var clearBtn = document.getElementById('searchClear');
         var form = input ? input.closest('form') : null;
         if (!input || !dropdown) return;
+
+        function toggleClear() {
+            if (clearBtn) clearBtn.style.display = input.value.length > 0 ? 'flex' : 'none';
+        }
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function() {
+                input.value = '';
+                toggleClear();
+                dropdown.style.display = 'none';
+                input.focus();
+            });
+        }
 
         var timer = null;
         var activeIndex = -1;
@@ -802,6 +821,7 @@
 
         input.addEventListener('input', function() {
             var q = this.value.trim();
+            toggleClear();
             clearTimeout(timer);
             if (q.length < 2) { showHistory(); return; }
             timer = setTimeout(function() { search(q); }, 250);
