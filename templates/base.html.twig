@@ -238,6 +238,21 @@
             white-space: nowrap;
         }
         .nav-link:hover { background: #f3f4f6; color: var(--text); }
+
+        /* ── Buscador desplegable ── */
+        .search { position: relative; }
+        .search-dropdown { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: #fff; border: 1.5px solid var(--border); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,.12); z-index: 9999; overflow: hidden; }
+        .search-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; text-decoration: none; color: var(--text); border-bottom: 1px solid #f3f4f6; transition: background .12s; }
+        .search-item:last-child { border-bottom: none; }
+        .search-item:hover, .search-item.active { background: #f8f9fa; }
+        .search-item__img { width: 44px; height: 44px; object-fit: contain; border-radius: 8px; background: #f3f4f6; flex-shrink: 0; }
+        .search-item__info { flex: 1; min-width: 0; }
+        .search-item__brand { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+        .search-item__name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .search-item__price { font-size: 14px; font-weight: 800; color: var(--brand); flex-shrink: 0; }
+        .search-history { padding: 8px 14px 4px; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+        .search-footer { padding: 10px 14px; text-align: center; font-size: 13px; color: var(--brand); font-weight: 700; border-top: 1px solid #f3f4f6; cursor: pointer; }
+        .search-footer:hover { background: #fff1f2; }
     </style>
 
     <!-- Google Analytics 4 - carga solo con consentimiento -->
@@ -262,9 +277,12 @@
             <a class="logo" href="{{ path('app_home') }}">
                 <img class="logo-img" src="/assets/logo1-mediaelectro.webp" alt="Medielectro">
             </a>
-            <form class="search" action="{{ path('app_catalog') }}" method="get">
+            <form class="search" action="{{ path('app_catalog') }}" method="get" autocomplete="off">
                 <span style="color:var(--muted)"></span>
-                <input name="q" value="{{ app.request.query.get('q') }}" placeholder="Buscar por artículo, modelo, marca o descripción…">
+                <input id="searchInput" name="q" value="{{ app.request.query.get('q') }}"
+                       placeholder="Buscar por artículo, modelo, marca o descripción…"
+                       autocomplete="off">
+                <div id="searchDropdown" class="search-dropdown" style="display:none;"></div>
             </form>
             <div class="header-actions">
                 <span class="pill">96 350 16 75</span>
@@ -714,6 +732,112 @@
                 document.getElementById('cookieBanner').style.display = 'none';
             });
         })();
+    </script>
+
+    <script>
+    {% verbatim %}
+    (function() {
+        var input = document.getElementById('searchInput');
+        var dropdown = document.getElementById('searchDropdown');
+        var form = input ? input.closest('form') : null;
+        if (!input || !dropdown) return;
+
+        var timer = null;
+        var activeIndex = -1;
+        var HISTORY_KEY = 'medielectro_search_history';
+
+        function getHistory() {
+            try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch(e) { return []; }
+        }
+
+        function saveHistory(q) {
+            if (!q || q.length < 2) return;
+            var h = getHistory().filter(function(i) { return i !== q; });
+            h.unshift(q);
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(h.slice(0, 5)));
+        }
+
+        function showHistory() {
+            var h = getHistory();
+            if (!h.length) { dropdown.style.display = 'none'; return; }
+            var html = '<div class="search-history">Búsquedas recientes</div>';
+            h.forEach(function(q) {
+                html += '<a class="search-item" href="' + form.action + '?q=' + encodeURIComponent(q) + '">' +
+                    '<div class="search-item__info"><div class="search-item__name">' + q + '</div></div>' +
+                    '</a>';
+            });
+            dropdown.innerHTML = html;
+            dropdown.style.display = 'block';
+            activeIndex = -1;
+        }
+
+        function showResults(items, q) {
+            if (!items.length) { dropdown.style.display = 'none'; return; }
+            var html = '';
+            items.forEach(function(item) {
+                var img = item.image
+                    ? '<img class="search-item__img" src="' + item.image + '" alt="' + item.name + '" loading="lazy">'
+                    : '<div class="search-item__img search-item__img--placeholder">Sin img</div>';
+                html += '<a class="search-item" href="' + item.url + '">' +
+                    img +
+                    '<div class="search-item__info">' +
+                        '<div class="search-item__brand">' + (item.brand || '') + '</div>' +
+                        '<div class="search-item__name">' + item.name + '</div>' +
+                    '</div>' +
+                    '<div class="search-item__price">' + item.price + '</div>' +
+                    '</a>';
+            });
+            html += '<div class="search-footer" onclick="document.getElementById(\'searchInput\').closest(\'form\').submit()">Ver todos los resultados</div>';
+            dropdown.innerHTML = html;
+            dropdown.style.display = 'block';
+            activeIndex = -1;
+        }
+
+        function search(q) {
+            fetch('/api/search?q=' + encodeURIComponent(q))
+                .then(function(r) { return r.json(); })
+                .then(function(data) { showResults(data, q); })
+                .catch(function() { dropdown.style.display = 'none'; });
+        }
+
+        input.addEventListener('input', function() {
+            var q = this.value.trim();
+            clearTimeout(timer);
+            if (q.length < 2) { showHistory(); return; }
+            timer = setTimeout(function() { search(q); }, 250);
+        });
+
+        input.addEventListener('focus', function() {
+            if (this.value.trim().length < 2) showHistory();
+        });
+
+        input.addEventListener('keydown', function(e) {
+            var items = dropdown.querySelectorAll('.search-item');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = Math.min(activeIndex + 1, items.length - 1);
+                items.forEach(function(el, i) { el.classList.toggle('active', i === activeIndex); });
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = Math.max(activeIndex - 1, -1);
+                items.forEach(function(el, i) { el.classList.toggle('active', i === activeIndex); });
+            } else if (e.key === 'Enter' && activeIndex >= 0) {
+                e.preventDefault();
+                items[activeIndex].click();
+            } else if (e.key === 'Escape') {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        form.addEventListener('submit', function() {
+            saveHistory(input.value.trim());
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!form.contains(e.target)) dropdown.style.display = 'none';
+        });
+    })();
+    {% endverbatim %}
     </script>
 </body>
 </html>
