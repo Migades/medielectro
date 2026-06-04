@@ -86,6 +86,58 @@
         .services-duo { grid-template-columns: 1fr; }
         .hero-quicklinks__item { flex: none; width: 50%; border-right: none; border-bottom: 1px solid rgba(255,255,255,.1); }
     }
+    @media (max-width: 600px) {
+        .featured-grid {
+            display: flex !important;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 12px;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+        }
+        .featured-grid::-webkit-scrollbar { display: none; }
+        .featured-card {
+            flex: 0 0 72vw !important;
+            scroll-snap-align: start;
+        }
+    }
+    @media (max-width: 600px) {
+        .brands-grid {
+            display: flex !important;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 10px;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+            grid-template-columns: unset;
+        }
+        .brands-grid::-webkit-scrollbar { display: none; }
+        .brand-card {
+            flex: 0 0 28vw;
+            scroll-snap-align: start;
+            min-height: 80px;
+            padding: 16px 10px;
+        }
+        .brand-card__logo-wrap { height: 40px; }
+    }
+    @media (max-width: 600px) {
+        .hero-carousel { height: 160px !important; margin: 8px 12px !important; border-radius: 14px !important; }
+        .hero-slide { padding: 16px 20px !important; flex-direction: column !important; align-items: flex-start !important; justify-content: center !important; gap: 8px !important; }
+        .hero-slide__left { gap: 6px !important; }
+        .hero-slide__tag { font-size: 9px !important; padding: 3px 8px !important; }
+        .hero-slide__title { font-size: 20px !important; letter-spacing: -.5px !important; }
+        .hero-slide__sub { font-size: 11px !important; display: none; }
+        .hero-slide__right { width: 100%; }
+        .hero-slide__btn { font-size: 11px !important; padding: 7px 14px !important; border-radius: 8px !important; }
+        .hero-quicklinks { display: none; }
+        .featured-grid { display: flex !important; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding-bottom: 8px; scrollbar-width: none; }
+        .featured-grid::-webkit-scrollbar { display: none; }
+        .featured-card { flex: 0 0 72vw !important; scroll-snap-align: start; }
+        .brands-grid { display: flex !important; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; padding-bottom: 8px; scrollbar-width: none; grid-template-columns: unset; }
+        .brands-grid::-webkit-scrollbar { display: none; }
+        .brand-card { flex: 0 0 28vw; scroll-snap-align: start; min-height: 80px; padding: 16px 10px; }
+        .brand-card__logo-wrap { height: 40px; }
+    }
 </style>
 
 {# ── HERO CAROUSEL ── #}
@@ -98,6 +150,12 @@
                 <span class="hero-slide__tag">Catálogo actualizado a diario</span>
                 <h1 class="hero-slide__title">+600 productos<br>disponibles</h1>
                 <p class="hero-slide__sub">Electrodomésticos en Valencia con instalación y servicio técnico</p>
+            </div>
+            <div class="hero-slide__right">
+                <a class="hero-slide__btn" href="{{ path('app_catalog') }}">
+                    Ver catálogo
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
             </div>
         </div>
 
@@ -230,7 +288,7 @@
         <div class="home-cta" style="justify-content:center;text-align:center">
             <div>
                 <h2>¿Necesitas ayuda para elegir?</h2>
-                <p>Te orientamos sin compromiso. Llámanos al <strong style="color:#fff">96 350 16 75</strong> </p>
+                <p>Te orientamos sin compromiso. Llámanos al <strong style="color:#fff">96 350 16 75</strong> o visítanos en tienda.</p>
             </div>
         </div>
     </section>

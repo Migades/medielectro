@@ -1514,3 +1514,40 @@ a{ color:inherit; text-decoration:none; }
 @media (max-width: 580px) {
     .footer-v2__top { grid-template-columns: 1fr; }
 }
+
+
+/* ===== RESPONSIVE MÓVIL ===== */
+@media (max-width: 600px) {
+
+    /* Header */
+    .header-top { gap: 8px; padding: 10px 0; }
+    .logo { flex: 0 0 auto; }
+    .logo-wrap { width: 160px; height: 42px; }
+    .logo-img { height: 52px; }
+    .search { flex: 1; min-width: 0; padding: 0 10px; }
+    .search input { font-size: 13px; }
+    .pill { display: none; }
+    .cart-btn-main__label { display: none; }
+    .cart-btn-main { padding: 6px 8px; gap: 0; border-radius: 50%; width: 44px; height: 44px; justify-content: center; }
+    .cart-btn-main__icon { width: 28px; height: 28px; background: transparent; }
+
+    /* Nav */
+    .nav { gap: 2px; padding: 8px 0 10px; overflow-x: auto; flex-wrap: nowrap; }
+    .nav-cat__btn, .nav-link { font-size: 13px; padding: 8px 10px; white-space: nowrap; }
+
+    /* Catálogo — 2 columnas en móvil */
+    .catalog-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
+
+    /* Breadcrumb */
+    .breadcrumb { overflow-x: auto; white-space: nowrap; flex-wrap: nowrap; }
+
+    /* Productos relacionados — 2 columnas */
+    .related__grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+    /* Home productos destacados — 2 columnas */
+    .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+
+    /* Marcas — scroll horizontal */
+    .brands-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+
+}

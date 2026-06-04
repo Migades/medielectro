@@ -255,6 +255,52 @@
         .search-footer:hover { background: #fff1f2; }
         .search-clear { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--muted); display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 50%; transition: color .15s, background .15s; }
         .search-clear:hover { color: var(--brand); background: #fff1f2; }
+    @media (max-width: 600px) {
+        .pill { display: none !important; }
+        .cart-btn-main { padding: 0 !important; width: 44px !important; height: 44px !important; border-radius: 50% !important; gap: 0 !important; justify-content: center !important; }
+        .cart-btn-main__label { display: none !important; }
+        .cart-btn-main__icon { background: transparent !important; }
+    }
+    @media (max-width: 600px) {
+        .pill { display: none !important; }
+        .cart-btn-main { padding: 0 !important; width: 44px !important; height: 44px !important; border-radius: 50% !important; gap: 0 !important; justify-content: center !important; }
+        .cart-btn-main__label { display: none !important; }
+        .cart-btn-main__icon { background: transparent !important; }
+        .header-top { flex-wrap: wrap; gap: 8px; padding: 10px 0 6px; }
+        .logo { order: 1; flex: 0 0 auto; }
+        .header-actions { order: 2; flex: 0 0 auto; margin-left: auto; }
+        .search { order: 3; flex: 0 0 100% !important; width: 100% !important; margin: 0; }
+    }
+    @media (max-width: 600px) {
+        .pill { display: none !important; }
+        .header-top { flex-wrap: wrap; gap: 8px; padding: 10px 0 6px; }
+        .logo { order: 1; flex: 0 0 auto; }
+        .header-actions { order: 2; flex: 0 0 auto; margin-left: auto; }
+        .search { order: 3; flex: 0 0 100% !important; width: 100% !important; margin: 0; }
+
+        /* Carrito móvil — icono simple negro */
+        .cart-btn-main {
+            background: transparent !important;
+            padding: 0 !important;
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 50% !important;
+            gap: 0 !important;
+            justify-content: center !important;
+            position: relative;
+        }
+        .cart-btn-main__label { display: none !important; }
+        .cart-btn-main__icon {
+            background: transparent !important;
+            width: 28px !important;
+            height: 28px !important;
+        }
+        .cart-btn-main__icon svg { stroke: #111 !important; }
+        .cart-btn-main__badge {
+            background: var(--brand) !important;
+            color: white !important;
+        }
+    }
     </style>
 
     <!-- Google Analytics 4 - carga solo con consentimiento -->

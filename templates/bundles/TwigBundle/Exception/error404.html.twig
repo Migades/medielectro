@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Página no encontrada · Medielectro{% endblock %}
+
+{% block body %}
+<style>
+    .error-page {
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 24px;
+    }
+    .error-page__inner {
+        text-align: center;
+        max-width: 520px;
+    }
+    .error-page__code {
+        font-size: 120px;
+        font-weight: 900;
+        color: var(--brand);
+        line-height: 1;
+        margin: 0;
+        letter-spacing: -4px;
+    }
+    .error-page__title {
+        font-size: 24px;
+        font-weight: 800;
+        margin: 16px 0 12px;
+        color: var(--text);
+    }
+    .error-page__text {
+        font-size: 15px;
+        color: var(--muted);
+        line-height: 1.6;
+        margin: 0 0 32px;
+    }
+    .error-page__actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .error-page__btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: opacity .15s;
+    }
+    .error-page__btn:hover { opacity: .85; }
+    .error-page__btn--primary { background: var(--brand); color: #fff; }
+    .error-page__btn--secondary { background: var(--card); color: var(--text); border: 1.5px solid var(--border); }
+</style>
+
+<div class="error-page">
+    <div class="error-page__inner">
+        <p class="error-page__code">404</p>
+        <h1 class="error-page__title">Página no encontrada</h1>
+        <p class="error-page__text">
+            La página que buscas no existe o ha sido eliminada.<br>
+            Puede que hayas seguido un enlace incorrecto.
+        </p>
+        <div class="error-page__actions">
+            <a href="{{ path('app_home') }}" class="error-page__btn error-page__btn--primary">
+                Ir al inicio
+            </a>
+            <a href="{{ path('app_catalog') }}" class="error-page__btn error-page__btn--secondary">
+                Ver catálogo
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
