@@ -16,25 +16,28 @@ security:
             security: false
 
         admin:
-            pattern: ^/admin
+            pattern: ^/core-access-mel
             provider: admin_in_memory
             form_login:
                 login_path: app_admin_login
                 check_path: app_admin_login
-                default_target_path: /admin
+                default_target_path: /core-access-mel
                 username_parameter: _username
                 password_parameter: _password
             logout:
                 path: app_admin_logout
                 target: app_admin_login
+            login_throttling:
+                max_attempts: 5
+                interval: '15 minutes'
 
         main:
             lazy: true
             provider: admin_in_memory
 
     access_control:
-        - { path: ^/admin/login, roles: PUBLIC_ACCESS }
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/core-access-mel/login, roles: PUBLIC_ACCESS }
+        - { path: ^/core-access-mel, roles: ROLE_ADMIN }
 
 when@test:
     security:

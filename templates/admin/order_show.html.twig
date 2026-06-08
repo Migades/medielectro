@@ -141,7 +141,12 @@
         {% endfor %}
 
         <div style="margin-bottom:16px">
-            <a href="{{ path('app_admin_index') }}" style="color:var(--muted);font-size:13px;text-decoration:none">← Volver a pedidos</a>
+            <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+                <a href="{{ path('app_admin_index') }}" style="color:var(--muted);font-size:13px;text-decoration:none">← Volver a pedidos</a>
+                <form method="post" action="{{ path('app_admin_order_delete', {id: order.id}) }}" onsubmit="return confirm('¿Eliminar este pedido? Esta acción no se puede deshacer.')">
+                    <button type="submit" style="background:#fff1f2;color:var(--brand);border:1.5px solid #fecaca;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">Eliminar pedido</button>
+                </form>
+            </div>
         </div>
 
         <div class="order-detail__header">

@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ product ? 'Editar' : 'Nuevo' }} producto · Admin · Medielectro{% endblock %}
+
+{% block body %}
+<style>
+    .admin-wrap { max-width: 800px; margin: 32px auto; padding: 0 24px; }
+    .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+    .admin-header h1 { font-size: 22px; font-weight: 900; margin: 0; }
+    .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media(max-width:600px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+    .form-group label { font-size: 13px; font-weight: 700; }
+    .form-group label span { color: var(--brand); }
+    .form-group input, .form-group select, .form-group textarea {
+        border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 14px;
+        font-size: 14px; font-family: inherit; background: #fff; outline: none;
+        transition: border-color .15s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--brand); }
+    .form-group textarea { min-height: 100px; resize: vertical; }
+    .form-actions { display: flex; gap: 12px; margin-top: 8px; }
+    .btn-save { background: var(--brand); color: white; border: none; border-radius: 10px; padding: 12px 28px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .btn-cancel { background: var(--card); color: var(--text); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 24px; font-size: 15px; font-weight: 600; text-decoration: none; }
+    .flash-success { background: #effbf3; border: 1.5px solid #b7ebc6; border-radius: 10px; padding: 12px 16px; font-size: 14px; color: #15803d; margin-bottom: 20px; font-weight: 600; }
+</style>
+
+<div class="admin-wrap">
+    <div class="admin-header">
+        <h1>{{ product ? 'Editar producto' : 'Nuevo producto' }}</h1>
+        <a href="{{ path('app_admin_product_index') }}" class="btn" style="font-size:13px;">Volver a productos</a>
+    </div>
+
+    {% for msg in app.flashes('admin_success') %}
+        <div class="flash-success">{{ msg }}</div>
+    {% endfor %}
+
+    <div class="form-card">
+        <form method="post" action="{{ product ? path('app_admin_product_edit', {id: product.id}) : path('app_admin_product_new') }}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Referencia <span>*</span></label>
+                    <input type="text" name="article" value="{{ product ? product.article : '' }}" required {{ product ? 'readonly' : '' }}>
+                </div>
+                <div class="form-group">
+                    <label>Modelo <span>*</span></label>
+                    <input type="text" name="model" value="{{ product ? product.model : '' }}" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Marca</label>
+                    <input type="text" name="brand" value="{{ product ? product.brand : '' }}">
+                </div>
+                <div class="form-group">
+                    <label>EAN</label>
+                    <input type="text" name="ean" value="{{ product ? product.ean : '' }}">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Precio (IVA incluido) <span>*</span></label>
+                    <input type="number" step="0.01" name="price" value="{{ product ? product.price : '' }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Stock <span>*</span></label>
+                    <input type="number" name="stock" value="{{ product ? product.stock : 0 }}" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Familia <span>*</span></label>
+                    <select name="family" id="familySelect" required>
+                        <option value="">Selecciona familia</option>
+                        {% for family in families %}
+                            <option value="{{ family.id }}" {{ product and product.family and product.family.id == family.id ? 'selected' : '' }}>
+                                {{ family.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Subfamilia</label>
+                    <select name="subfamily" id="subfamilySelect">
+                        <option value="">Selecciona subfamilia</option>
+                        {% if product and product.subfamily %}
+                            <option value="{{ product.subfamily.id }}" selected>{{ product.subfamily.name }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Descripción</label>
+                <textarea name="description">{{ product ? product.description : '' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Imagen (URL)</label>
+                <input type="text" name="image" value="{{ product ? product.image : '' }}" placeholder="https://...">
+            </div>
+
+            <div class="form-group">
+                <label>Estado</label>
+                <select name="isActive">
+                    <option value="1" {{ not product or product.isActive ? 'selected' : '' }}>Activo</option>
+                    <option value="0" {{ product and not product.isActive ? 'selected' : '' }}>Inactivo</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">{{ product ? 'Guardar cambios' : 'Crear producto' }}</button>
+                <a href="{{ path('app_admin_product_index') }}" class="btn-cancel">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('familySelect').addEventListener('change', function() {
+    var familyId = this.value;
+    var subfamilySelect = document.getElementById('subfamilySelect');
+    subfamilySelect.innerHTML = '<option value="">Cargando...</option>';
+
+    if (!familyId) {
+        subfamilySelect.innerHTML = '<option value="">Selecciona subfamilia</option>';
+        return;
+    }
+
+    fetch('/admin/productos/subfamilias/' + familyId)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            subfamilySelect.innerHTML = '<option value="">Sin subfamilia</option>';
+            data.forEach(function(s) {
+                subfamilySelect.innerHTML += '<option value="' + s.id + '">' + s.name + '</option>';
+            });
+        });
+});
+</script>
+{% endblock %}

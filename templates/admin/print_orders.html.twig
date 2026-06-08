@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedidos del día — {{ date|date('d/m/Y') }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; font-size: 13px; color: #111; }
+        .page-header { border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .page-header__title { font-size: 20px; font-weight: bold; }
+        .page-header__date { font-size: 12px; color: #555; }
+        .order { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 16px; page-break-inside: avoid; }
+        .order__head { background: #f3f3f3; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ccc; }
+        .order__ref { font-weight: bold; font-size: 14px; }
+        .order__status { font-size: 11px; font-weight: bold; text-transform: uppercase; background: #111; color: white; padding: 2px 8px; border-radius: 4px; }
+        .order__body { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; }
+        .order__section-title { font-size: 10px; font-weight: bold; text-transform: uppercase; color: #777; margin-bottom: 4px; }
+        .order__items { padding: 0 12px 12px; border-top: 1px solid #eee; }
+        .order__items table { width: 100%; border-collapse: collapse; }
+        .order__items th { font-size: 10px; text-transform: uppercase; color: #777; text-align: left; padding: 4px 0; border-bottom: 1px solid #ddd; }
+        .order__items td { padding: 4px 0; border-bottom: 1px solid #f0f0f0; font-size: 12px; }
+        .order__total { text-align: right; font-weight: bold; font-size: 14px; padding: 8px 12px; border-top: 1px solid #ccc; }
+        .no-orders { text-align: center; color: #777; padding: 40px; font-size: 16px; }
+        .signature-box { border: 1px solid #ccc; height: 60px; margin-top: 8px; border-radius: 4px; }
+        @media print {
+            body { font-size: 12px; }
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="no-print" style="padding: 12px; background: #f3f4f6; border-bottom: 1px solid #ddd; margin-bottom: 16px;">
+    <button onclick="window.print()" style="background: #e30613; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer;">Imprimir</button>
+    <a href="/admin" style="margin-left: 12px; font-size: 13px; color: #333;">Volver al panel</a>
+</div>
+
+<div style="padding: 20px;">
+    <div class="page-header">
+        <div>
+            <div class="page-header__title">Pedidos del día — medielectro.es</div>
+            <div class="page-header__date">{{ date|date('d/m/Y') }} · {{ orders|length }} pedido{{ orders|length != 1 ? 's' : '' }}</div>
+        </div>
+        <div style="font-size: 11px; color: #777;">Generado: {{ date|date('H:i') }}</div>
+    </div>
+
+    {% if orders|length == 0 %}
+        <div class="no-orders">No hay pedidos para hoy.</div>
+    {% else %}
+        {% for order in orders %}
+        <div class="order">
+            <div class="order__head">
+                <span class="order__ref">{{ order.reference }}</span>
+                <span>{{ order.createdAt|date('H:i') }}</span>
+                <span class="order__status">{{ order.status }}</span>
+            </div>
+
+            <div class="order__body">
+                <div>
+                    <div class="order__section-title">Cliente</div>
+                    <div>{{ order.customer ? order.customer.name : '—' }}</div>
+                    <div style="color:#555">{{ order.customer ? order.customer.email : '' }}</div>
+                    <div style="color:#555">{{ order.customer ? order.customer.phone : '' }}</div>
+                </div>
+                <div>
+                    <div class="order__section-title">Dirección de entrega</div>
+                    <div>{{ order.customer ? order.customer.address : '—' }}</div>
+                </div>
+            </div>
+
+            <div class="order__items">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Referencia</th>
+                            <th>Descripción</th>
+                            <th style="text-align:center">Cant.</th>
+                            <th style="text-align:right">Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items %}
+                        <tr>
+                            <td>{{ item.productArticle }}</td>
+                            <td>{{ item.productTitle ?: item.productArticle }}</td>
+                            <td style="text-align:center">{{ item.quantity }}</td>
+                            <td style="text-align:right">{{ (item.price * item.quantity)|number_format(2, ',', '.') }} €</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="order__total">Total: {{ order.total|number_format(2, ',', '.') }} €</div>
+
+            <div style="padding: 8px 12px 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                    <div class="order__section-title">Preparado por</div>
+                    <div class="signature-box"></div>
+                </div>
+                <div>
+                    <div class="order__section-title">Entregado / Recogido</div>
+                    <div class="signature-box"></div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+</body>
+</html>

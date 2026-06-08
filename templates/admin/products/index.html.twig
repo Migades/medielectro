@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+{% block title %}Productos · Admin · Medielectro{% endblock %}
+
+{% block body %}
+<style>
+    .admin-wrap { max-width: 1200px; margin: 32px auto; padding: 0 24px; }
+    .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .admin-header h1 { font-size: 22px; font-weight: 900; margin: 0; }
+    .admin-nav { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+    .admin-nav a { font-size: 13px; padding: 8px 16px; border-radius: 8px; text-decoration: none; border: 1.5px solid var(--border); color: var(--text); font-weight: 600; }
+    .admin-nav a.active, .admin-nav a:hover { background: var(--brand); color: white; border-color: var(--brand); }
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .filter-bar input { flex: 1; min-width: 200px; border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 14px; font-family: inherit; }
+    .filter-bar select { border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 14px; font-family: inherit; }
+    .filter-bar button { background: var(--brand); color: white; border: none; border-radius: 8px; padding: 8px 18px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .product-table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .product-table th { background: #f8f9fa; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    .product-table td { padding: 12px 16px; border-bottom: 1px solid #f3f4f6; font-size: 13px; vertical-align: middle; }
+    .product-table tr:last-child td { border-bottom: none; }
+    .product-table tr:hover td { background: #fafafa; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+    .badge--active { background: #effbf3; color: #15803d; }
+    .badge--inactive { background: #f3f4f6; color: var(--muted); }
+    .btn-sm { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; text-decoration: none; border: none; cursor: pointer; font-family: inherit; }
+    .btn-edit { background: #eff6ff; color: #1d4ed8; }
+    .btn-delete { background: #fff1f2; color: var(--brand); }
+    .btn-delete:hover { background: var(--brand); color: white; }
+    .flash-success { background: #effbf3; border: 1.5px solid #b7ebc6; border-radius: 10px; padding: 12px 16px; font-size: 14px; color: #15803d; margin-bottom: 20px; font-weight: 600; }
+</style>
+
+<div class="admin-wrap">
+    <div class="admin-header">
+        <div>
+            <h1>Productos</h1>
+            <p style="margin:2px 0 0;color:var(--muted);font-size:13px">Gestión del catálogo</p>
+        </div>
+        <div style="display:flex;gap:10px;">
+            <a href="{{ path('app_admin_product_new') }}" class="btn" style="background:var(--brand);color:white;font-size:13px;">+ Añadir producto</a>
+            <a href="{{ path('app_admin_logout') }}" class="btn" style="font-size:13px;">Cerrar sesión</a>
+        </div>
+    </div>
+
+    <div class="admin-nav">
+        <a href="{{ path('app_admin_index') }}">Pedidos</a>
+        <a href="{{ path('app_admin_product_index') }}" class="active">Productos</a>
+    </div>
+
+    {% for msg in app.flashes('admin_success') %}
+        <div class="flash-success">{{ msg }}</div>
+    {% endfor %}
+
+    <form method="get" class="filter-bar">
+        <input type="text" name="q" value="{{ filterQ }}" placeholder="Buscar por referencia, modelo o marca...">
+        <select name="active">
+            <option value="">Todos</option>
+            <option value="1" {{ filterActive == '1' ? 'selected' : '' }}>Activos</option>
+            <option value="0" {{ filterActive == '0' ? 'selected' : '' }}>Inactivos</option>
+        </select>
+        <button type="submit">Buscar</button>
+    </form>
+
+    <table class="product-table">
+        <thead>
+            <tr>
+                <th>Referencia</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if products is empty %}
+                <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted);">No se encontraron productos.</td></tr>
+            {% else %}
+                {% for product in products %}
+                <tr>
+                    <td><code style="font-size:12px;">{{ product.article }}</code></td>
+                    <td>{{ product.brand ?: '—' }}</td>
+                    <td>{{ product.model }}</td>
+                    <td><strong>{{ product.price|number_format(2, ',', '.') }} €</strong></td>
+                    <td>{{ product.stock }}</td>
+                    <td>
+                        {% if product.isActive %}
+                            <span class="badge badge--active">Activo</span>
+                        {% else %}
+                            <span class="badge badge--inactive">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td style="display:flex;gap:6px;">
+                        <a href="{{ path('app_admin_product_edit', {id: product.id}) }}" class="btn-sm btn-edit">Editar</a>
+                        <form method="post" action="{{ path('app_admin_product_delete', {id: product.id}) }}" onsubmit="return confirm('¿Eliminar este producto?')">
+                            <button type="submit" class="btn-sm btn-delete">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+
+    <p style="margin-top:12px;font-size:12px;color:var(--muted);">Mostrando los primeros 50 resultados. Usa el buscador para filtrar.</p>
+</div>
+{% endblock %}

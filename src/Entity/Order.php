@@ -13,11 +13,13 @@ use Doctrine\ORM\Mapping as ORM;
 class Order
 {
     // Estados del pedido
-    public const STATUS_PENDING   = 'pending';    // recibido, pendiente de confirmar
-    public const STATUS_CONFIRMED = 'confirmed';  // confirmado por el equipo
-    public const STATUS_SHIPPED   = 'shipped';    // enviado
-    public const STATUS_DELIVERED = 'delivered';  // entregado
-    public const STATUS_CANCELLED = 'cancelled';  // cancelado
+    public const STATUS_PENDING     = 'pending';       // recibido, pendiente de confirmar
+    public const STATUS_CONFIRMED   = 'confirmed';     // confirmado por el equipo
+    public const STATUS_PREPARING   = 'preparing';     // en preparación en almacén
+    public const STATUS_READY       = 'ready';         // listo para envío
+    public const STATUS_SHIPPED     = 'shipped';       // enviado
+    public const STATUS_DELIVERED   = 'delivered';     // entregado
+    public const STATUS_CANCELLED   = 'cancelled';     // cancelado
 
     // Estados de sincronización con ERP
     public const ERP_PENDING = 'pending';
